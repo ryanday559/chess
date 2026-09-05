@@ -22,6 +22,7 @@ public class ChessMove {
     /**
      * @return ChessPosition of ending location
      */
+    // Remember that chess positions start w/ 1 while arrays start at index 0
     public ChessPosition getEndPosition() {
         throw new RuntimeException("Not implemented");
     }
