@@ -10,11 +10,12 @@ import java.util.Collection;
  */
 public class ChessPiece {
     private ChessGame.TeamColor color;
-    private ChessPiece.PieceType pieceType;
+    private ChessPiece.PieceType pieceTypeInstance;
+    private int[] currentPosition = new int[2];
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         color = pieceColor;
-        pieceType = type;
+        pieceTypeInstance = type;
     }
 
     @Override
@@ -50,7 +51,7 @@ public class ChessPiece {
      * @return which type of chess piece this piece is
      */
     public PieceType getPieceType() {
-        return pieceType;
+        return pieceTypeInstance;
     }
 
     /**
@@ -62,5 +63,9 @@ public class ChessPiece {
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         throw new RuntimeException("Not implemented");
+    }
+
+    public void updatePosition(int[] newPosition) {
+        currentPosition = newPosition;
     }
 }
