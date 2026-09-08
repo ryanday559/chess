@@ -1,6 +1,7 @@
 package chess;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 /**
  * Represents a single chess piece
@@ -11,7 +12,6 @@ import java.util.Collection;
 public class ChessPiece {
     private ChessGame.TeamColor color;
     private ChessPiece.PieceType pieceTypeInstance;
-    private int[] currentPosition = new int[2];
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         color = pieceColor;
@@ -62,10 +62,12 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        throw new RuntimeException("Not implemented");
+        HashSet<ChessMove> moveOptions = new HashSet<ChessMove>();
+        moveOptions = pieceSpecificMoves(moveOptions);
+        return moveOptions;
     }
 
-    public void updatePosition(int[] newPosition) {
-        currentPosition = newPosition;
+    private HashSet<ChessMove> pieceSpecificMoves(HashSet<ChessMove> moveOptions, ChessBoard board, ChessPosition myPosition) {
+        return moveOptions;
     }
 }
