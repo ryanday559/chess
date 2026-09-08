@@ -7,16 +7,17 @@ public class Bishop extends ChessPiece {
     private HashSet<ChessMove> pieceSpecificMoves(HashSet<ChessMove> moveOptions, ChessBoard board, ChessPosition myPosition) {
         int startingRow = myPosition.getRow();
         int startingColumn = myPosition.getColumn();
-        int northWestPosition = new ChessPosition(startingRow + 1, startingColumn - 1);
-        while (isValidBishopMove())
+        ChessPosition northWestPosition = new ChessPosition(startingRow + 1, startingColumn - 1);
+        while (isValidBishopMove(board, northWestPosition)) {
+            moveOptions.add(northWestPosition);
+        }
         return moveOptions;
     }
 
-    private boolean isValidBishopMove(ChessBoard board, ChessPosition position) {
+    private boolean PieceMoveType(ChessBoard board, ChessPosition position) {
         ChessPiece spaceOccupant = board.getPiece(position);
-        if ((spaceOccupant == null || spaceOccupant.getTeamColor() != this.getTeamColor()) && position.isValidPosition()) {
-            return true;
-        }
-        return false;
+        if (!position.isValidPosition() || spaceOccupant.getTeamColor() == this.getTeamColor()) return PieceMoveType.INVALID;
+        else if (spaceOccupant == null) return PieceMoveType.EMPTY;
+        else if (spaceOccupant.getTeamColor() != this.getTeamColor()) return PieceMoveType.TAKE;
     }
 }
