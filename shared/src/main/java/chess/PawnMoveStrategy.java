@@ -1,5 +1,6 @@
 package chess;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 class PawnMoveStrategy implements MoveStrategy {
@@ -12,36 +13,39 @@ class PawnMoveStrategy implements MoveStrategy {
 
 
     @Override
-    public List<ChessPosition> getValidMoves(ChessPosition position, ChessBoard board) {
-        List<ChessPosition> validMoves = new ArrayList<>();
-        validMoves = MoveStrategy.super.addSingleMoves(position, board);
-        validMoves = checkFirstMove(position, board, validMoves);
+    public Collection<ChessMove> getValidMoves(ChessPosition position, ChessBoard board, ChessPiece.PieceType piece) {
+        Collection<ChessMove> validMoves = new ArrayList<>();
+        validMoves = MoveStrategy.super.addSingleMoves(position, board, piece);
+        validMoves = checkFirstMove(position, board, validMoves, piece);
 
         return validMoves;
     }
 
 
-    private List<ChessPosition> checkFirstMove(ChessPosition position, ChessBoard board, List<ChessPosition> validMoves) {
+    private Collection<ChessMove> checkFirstMove(ChessPosition position, ChessBoard board, Collection<ChessMove> validMoves, ChessPiece.PieceType piece) {
         int startingRow = position.getRow();
         int startingColumn = position.getColumn();
         if (board.canMove(position) && startingRow == 2) {
             ChessPosition newPosition = new ChessPosition(startingRow + 2, startingColumn);
-            validMoves.add(newPosition);
+            ChessMove move = new ChessMove(position, newPosition, piece);
+            validMoves.add(move);
         }
         return validMoves;
     }
 
 
-    private List<ChessPosition> checkDiagonalMove(ChessPosition position, ChessBoard board, List<ChessPosition> validMoves) {
+    private Collection<ChessMove> checkDiagonalMove(ChessPosition position, ChessBoard board, Collection<ChessMove> validMoves, ChessPiece.PieceType piece) {
         int startingRow = position.getRow();
         int startingColumn = position.getColumn();
         ChessPosition upperLeft = new ChessPosition(startingRow + 1, startingColumn - 1);
         ChessPosition upperRight = new ChessPosition(startingRow + 1, startingColumn + 1);
         if (board.canTake(position, upperLeft)) {
-            validMoves.add(upperLeft);
+            ChessMove move = new ChessMove(position, upperLeft, piece);
+            validMoves.add(move);
         }
         if (board.canTake(position, upperRight)) {
-            validMoves.add(upperRight);
+            ChessMove move = new ChessMove(position, upperRight, piece);
+            validMoves.add(move);
         }
         return validMoves;
     }
