@@ -1,5 +1,6 @@
 package chess;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 interface MoveStrategy {
@@ -13,14 +14,14 @@ interface MoveStrategy {
         return singleMoveOffsets;
     }
 
-    default List<ChessPosition> getValidMoves(ChessPosition position, ChessBoard board) {
-        List<ChessPosition> validMoves = new ArrayList<>();
-        validMoves = addLoopMoves(position, board, validMoves);
-        validMoves = addSingleMoves(position, board, validMoves);
+    default Collection<ChessMove> getValidMoves(ChessPosition position, ChessBoard board, ChessPiece.PieceType piece) {
+        Collection<ChessMove> validMoves = new ArrayList<>();
+        validMoves = addLoopMoves(position, board, validMoves, piece);
+        validMoves = addSingleMoves(position, board, validMoves, piece);
         return validMoves;
     }
 
-    default List<ChessPosition> addLoopMoves(ChessPosition position, ChessBoard board, List<ChessPosition> validMoves) {
+    default Collection<ChessMove> addLoopMoves(ChessPosition position, ChessBoard board, Collection<ChessMove> validMoves, ChessPiece.PieceType piece) {
         int startingRow = position.getRow();
         int startingColumn = position.getColumn();
         for (int[] offset : getLoopMoveOffsets()){
@@ -28,7 +29,8 @@ interface MoveStrategy {
             int nextColumn = startingRow + offset[1];
             ChessPosition nextPosition = new ChessPosition(nextRow, nextColumn);
             while (board.canMove(position, nextPosition)) {
-                validMoves.add(nextPosition);
+                ChessMove move = new ChessMove(position, nextPosition, piece);
+                validMoves.add(move);
                 nextRow += offset[0];
                 nextColumn += offset[1];
                 nextPosition = new ChessPosition(nextRow, nextColumn);
@@ -37,7 +39,7 @@ interface MoveStrategy {
         return validMoves;
     }
 
-    default List<ChessPosition> addSingleMoves(ChessPosition position, ChessBoard board, List<ChessPosition> validMoves) {
+    default Collection<ChessMove> addSingleMoves(ChessPosition position, ChessBoard board, Collection<ChessMove> validMoves, ChessPiece.PieceType piece) {
         int startingRow = position.getRow();
         int startingColumn = position.getColumn();
         for (int[] offset : getSingleMoveOffsets()) {
@@ -45,7 +47,8 @@ interface MoveStrategy {
             int nextColumn = startingRow + offset[1];
             ChessPosition nextPosition = new ChessPosition(nextRow, nextColumn);
             if (board.canMove(position, nextPosition)) {
-                validMoves.add(nextPosition);
+                ChessMove move = new ChessMove(position, nextPosition, piece);
+                validMoves.add(move);
             }
         }
         return validMoves;
