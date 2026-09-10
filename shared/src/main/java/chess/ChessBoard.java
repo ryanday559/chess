@@ -44,6 +44,10 @@ public class ChessBoard {
         board = new ChessPiece[8][8];
     }
 
+    public boolean canTake(ChessPosition startingPosition, ChessPosition finalPosition) {
+        // Check the starting position piece then check the final position piece and compare teams
+    }
+
     public boolean canMove(ChessPosition startingPosition, ChessPosition finalPosition) {
 
     }
