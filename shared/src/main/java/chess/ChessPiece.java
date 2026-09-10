@@ -2,6 +2,7 @@ package chess;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Map;
 
 /**
  * Represents a single chess piece
@@ -60,6 +61,15 @@ public class ChessPiece {
         TAKE
     }
 
+    private Map<PieceType, MoveStrategy> movementRules = Map.of(
+        PieceType.KING, new KingMoveStrategy(),
+        PieceType.QUEEN, new QueenMoveStrategy(),
+        PieceType.BISHOP, new BishopMoveStrategy(),
+        PieceType.KNIGHT, new KnightMoveStrategy(),
+        PieceType.ROOK, new RookMoveStrategy(),
+        PieceType.PAWN, new PawnMoveStrategy()
+    );
+
     /**
      * Calculates all the positions a chess piece can move to
      * Does not take into account moves that are illegal due to leaving the king in
@@ -68,12 +78,8 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        HashSet<ChessMove> moveOptions = new HashSet<ChessMove>();
-        moveOptions = pieceSpecificMoves(moveOptions);
-        return moveOptions;
+        MoveStrategy pieceMovementRules = movementRules.get(getPieceType());
+        return pieceMovementRules.getValidMoves(myPosition, board);
     }
 
-    private HashSet<ChessMove> pieceSpecificMoves(HashSet<ChessMove> moveOptions, ChessBoard board, ChessPosition myPosition) {
-        return moveOptions;
-    }
 }
