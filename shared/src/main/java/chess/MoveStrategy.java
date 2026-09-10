@@ -3,8 +3,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 interface MoveStrategy {
-    int[][] loopMoveOffsets = {};
-    int[][] singleMoveOffsets = {};
+    default int[][] getLoopMoveOffsets() {
+        int[][] loopMoveOffsets = {};
+        return loopMoveOffsets;
+    }
+
+    default int[][] getSingleMoveOffsets() {
+        int[][] singleMoveOffsets = {};
+        return singleMoveOffsets;
+    }
 
     default List<ChessPosition> getValidMoves(ChessPosition position, ChessBoard board) {
         List<ChessPosition> validMoves = new ArrayList<>();
@@ -16,7 +23,7 @@ interface MoveStrategy {
     default List<ChessPosition> addLoopMoves(ChessPosition position, ChessBoard board, List<ChessPosition> validMoves) {
         int startingRow = position.getRow();
         int startingColumn = position.getColumn();
-        for (int[] offset : loopMoveOffsets){
+        for (int[] offset : getLoopMoveOffsets()){
             int nextRow = startingColumn + offset[0];
             int nextColumn = startingRow + offset[1];
             ChessPosition nextPosition = new ChessPosition(nextRow, nextColumn);
@@ -33,7 +40,7 @@ interface MoveStrategy {
     default List<ChessPosition> addSingleMoves(ChessPosition position, ChessBoard board, List<ChessPosition> validMoves) {
         int startingRow = position.getRow();
         int startingColumn = position.getColumn();
-        for (int[] offset : singleMoveOffsets) {
+        for (int[] offset : getSingleMoveOffsets()) {
             int nextRow = startingColumn + offset[0];
             int nextColumn = startingRow + offset[1];
             ChessPosition nextPosition = new ChessPosition(nextRow, nextColumn);
