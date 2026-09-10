@@ -15,7 +15,7 @@ class PawnMoveStrategy implements MoveStrategy {
     @Override
     public Collection<ChessMove> getValidMoves(ChessPosition position, ChessBoard board, ChessPiece.PieceType piece) {
         Collection<ChessMove> validMoves = new ArrayList<>();
-        validMoves = MoveStrategy.super.addSingleMoves(position, board, piece);
+        validMoves = MoveStrategy.super.addSingleMoves(position, board, validMoves, piece);
         validMoves = checkFirstMove(position, board, validMoves, piece);
 
         return validMoves;
@@ -25,8 +25,8 @@ class PawnMoveStrategy implements MoveStrategy {
     private Collection<ChessMove> checkFirstMove(ChessPosition position, ChessBoard board, Collection<ChessMove> validMoves, ChessPiece.PieceType piece) {
         int startingRow = position.getRow();
         int startingColumn = position.getColumn();
-        if (board.canMove(position) && startingRow == 2) {
-            ChessPosition newPosition = new ChessPosition(startingRow + 2, startingColumn);
+        ChessPosition newPosition = new ChessPosition(startingRow + 2, startingColumn);
+        if (board.canMove(position, newPosition) && startingRow == 2) {
             ChessMove move = new ChessMove(position, newPosition, piece);
             validMoves.add(move);
         }

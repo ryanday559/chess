@@ -60,7 +60,9 @@ public class ChessBoard {
 
 
     public boolean canMove(ChessPosition startingPosition, ChessPosition finalPosition) {
-        if (getPiece(finalPosition) == null || canTake(startingPosition, finalPosition)) {
+        int finalRow = finalPosition.getRow();
+        int finalColumn = finalPosition.getColumn();
+        if (finalPosition.isInBounds() && (getPiece(finalPosition) == null || canTake(startingPosition, finalPosition))) {
             return true;
         }
         return false;

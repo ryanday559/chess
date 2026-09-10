@@ -37,8 +37,8 @@ public class ChessPosition {
         return col;
     }
 
-    public boolean isValidPosition() {
-        if (row >= 0 && row <= 8 && col >= 0 && col <= 8) {
+    public boolean isInBounds() {
+        if (row >= 1 && row <= 8 && col >= 1 && col <= 8) {
             return true;
         }
         return false;
