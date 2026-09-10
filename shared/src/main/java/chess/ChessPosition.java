@@ -11,10 +11,6 @@ public class ChessPosition {
     private final int row;
     private final int col;
 
-    @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
-    }
 
     public ChessPosition(int row, int col) {
         this.row = row;
@@ -47,5 +43,25 @@ public class ChessPosition {
     @Override
     public int hashCode() {
         return super.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "(" + String.valueOf(row) + "," + String.valueOf(col) + ")";
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        // 1. Check for reference equality
+        if (this == o) return true;
+        // 2. Check for null and ensure the classes match
+        if (o == null || getClass() != o.getClass()) return false;
+        // 3. Cast and compare field values
+        ChessPosition that = (ChessPosition) o;
+        if (that.row == row && that.col == col) {
+            return true;
+        }
+        return false;
     }
 }

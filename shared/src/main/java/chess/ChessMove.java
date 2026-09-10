@@ -51,4 +51,9 @@ public class ChessMove {
     public boolean equals(Object obj) {
         return super.equals(obj);
     }
+
+    @Override
+    public String toString() {
+        return "Move: " + startPosition + "->" + endPosition;
+    }
 }
