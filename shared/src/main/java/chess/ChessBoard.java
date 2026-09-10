@@ -43,4 +43,8 @@ public class ChessBoard {
     public void resetBoard() {
         board = new ChessPiece[8][8];
     }
+
+    public boolean canMove(ChessPosition startingPosition, ChessPosition finalPosition) {
+
+    }
 }
