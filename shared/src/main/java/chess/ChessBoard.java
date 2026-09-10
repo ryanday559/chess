@@ -14,6 +14,7 @@ public class ChessBoard {
         
     }
 
+
     /**
      * Adds a chess piece to the chessboard
      *
@@ -24,6 +25,7 @@ public class ChessBoard {
         // Check position first before I do the below
         board[position.getRow() - 1][position.getColumn() - 1] = piece;
     }
+
 
     /**
      * Gets a chess piece on the chessboard
@@ -36,6 +38,7 @@ public class ChessBoard {
         return board[position.getRow() - 1][position.getColumn() - 1];
     }
 
+
     /**
      * Sets the board to the default starting board
      * (How the game of chess normally starts)
@@ -44,11 +47,22 @@ public class ChessBoard {
         board = new ChessPiece[8][8];
     }
 
+
     public boolean canTake(ChessPosition startingPosition, ChessPosition finalPosition) {
         // Check the starting position piece then check the final position piece and compare teams
+        ChessGame.TeamColor attackingColor = getPiece(startingPosition).getTeamColor();
+        ChessGame.TeamColor defendingColor = getPiece(finalPosition).getTeamColor();
+        if (attackingColor == defendingColor) {
+            return true;
+        }
+        return false;
     }
 
-    public boolean canMove(ChessPosition startingPosition, ChessPosition finalPosition) {
 
+    public boolean canMove(ChessPosition startingPosition, ChessPosition finalPosition) {
+        if (getPiece(finalPosition) == null || canTake(startingPosition, finalPosition)) {
+            return true;
+        }
+        return false;
     }
 }
