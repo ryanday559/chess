@@ -17,7 +17,6 @@ class PawnMoveStrategy implements MoveStrategy {
         Collection<ChessMove> validMoves = new ArrayList<>();
         validMoves = MoveStrategy.super.addSingleMoves(position, board, validMoves, piece);
         validMoves = checkFirstMove(position, board, validMoves, piece);
-
         return validMoves;
     }
 
