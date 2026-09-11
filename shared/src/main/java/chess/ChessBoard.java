@@ -50,7 +50,7 @@ public class ChessBoard {
 
     public boolean canTake(ChessPosition startingPosition, ChessPosition finalPosition) {
         // Check the starting position piece then check the final position piece and compare teams
-        if (!finalPosition.isInBounds()) return false;
+        if (!finalPosition.isInBounds() || getPiece(finalPosition) == null) return false;
         ChessGame.TeamColor attackingColor = getPiece(startingPosition).getTeamColor();
         ChessGame.TeamColor defendingColor = getPiece(finalPosition).getTeamColor();
         if (!attackingColor.equals(defendingColor)) return true;

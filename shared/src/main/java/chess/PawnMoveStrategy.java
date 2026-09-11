@@ -4,10 +4,16 @@ import java.util.Collection;
 import java.util.List;
 
 class PawnMoveStrategy implements MoveStrategy {
-    // N, S, E, W
-    @Override
-    public int[][] getSingleMoveOffsets() {
+    // N, S
+
+    public int[][] getWhiteMoveOffsets() {
         int[][] loopMoveOffsets = {{1,0}};
+        return loopMoveOffsets;
+    }
+
+
+    public int[][] getBlackMoveOffsets() {
+        int[][] loopMoveOffsets = {{-1,0}};
         return loopMoveOffsets;
     }
 
@@ -15,8 +21,34 @@ class PawnMoveStrategy implements MoveStrategy {
     @Override
     public Collection<ChessMove> getValidMoves(ChessPosition position, ChessBoard board, ChessPiece.PieceType piece) {
         Collection<ChessMove> validMoves = new ArrayList<>();
-        validMoves = MoveStrategy.super.addSingleMoves(position, board, validMoves, piece);
+        validMoves = addSingleMoves(position, board, validMoves, piece);
         validMoves = checkFirstMove(position, board, validMoves, piece);
+        validMoves = checkDiagonalMove(position, board, validMoves, piece);
+        return validMoves;
+    }
+
+
+    @Override
+    public Collection<ChessMove> addSingleMoves(ChessPosition position, ChessBoard board, Collection<ChessMove> validMoves, ChessPiece.PieceType piece) {
+        int[][] moveOffsets;
+        ChessGame.TeamColor pawnColor = getPawnColor(position, board);
+        if (pawnColor == ChessGame.TeamColor.WHITE) {
+            moveOffsets = getWhiteMoveOffsets();
+        }
+        else {
+            moveOffsets = getBlackMoveOffsets();
+        }
+        int startingRow = position.getRow();
+        int startingColumn = position.getColumn();
+        for (int[] offset : moveOffsets) {
+            int nextRow = startingRow + offset[0];
+            int nextColumn = startingColumn + offset[1];
+            ChessPosition nextPosition = new ChessPosition(nextRow, nextColumn);
+            if (board.canMove(position, nextPosition)) {
+                ChessMove move = new ChessMove(position, nextPosition, piece);
+                validMoves.add(move);
+            }
+        }
         return validMoves;
     }
 
@@ -24,6 +56,7 @@ class PawnMoveStrategy implements MoveStrategy {
     private Collection<ChessMove> checkFirstMove(ChessPosition position, ChessBoard board, Collection<ChessMove> validMoves, ChessPiece.PieceType piece) {
         int startingRow = position.getRow();
         int startingColumn = position.getColumn();
+        // Add get starting offsets here for team color
         ChessPosition newPosition = new ChessPosition(startingRow + 2, startingColumn);
         if (board.canMove(position, newPosition) && startingRow == 2) {
             ChessMove move = new ChessMove(position, newPosition, piece);
@@ -36,18 +69,35 @@ class PawnMoveStrategy implements MoveStrategy {
     private Collection<ChessMove> checkDiagonalMove(ChessPosition position, ChessBoard board, Collection<ChessMove> validMoves, ChessPiece.PieceType piece) {
         int startingRow = position.getRow();
         int startingColumn = position.getColumn();
-        ChessPosition upperLeft = new ChessPosition(startingRow + 1, startingColumn - 1);
-        ChessPosition upperRight = new ChessPosition(startingRow + 1, startingColumn + 1);
-        if (board.canTake(position, upperLeft)) {
-            ChessMove move = new ChessMove(position, upperLeft, piece);
+        ChessGame.TeamColor pawnColor = getPawnColor(position, board);
+        int[][] diagonalOffsets = getDiagonalOffsets(pawnColor);
+        ChessPosition left = new ChessPosition(startingRow + diagonalOffsets[0][0], startingColumn + diagonalOffsets[0][1]);
+        ChessPosition right = new ChessPosition(startingRow + diagonalOffsets[1][0], startingColumn + diagonalOffsets[1][1]);
+        // Need to add in color check on take still
+        if (board.canTake(position, left)) {
+            ChessMove move = new ChessMove(position, left, piece);
             validMoves.add(move);
         }
-        if (board.canTake(position, upperRight)) {
-            ChessMove move = new ChessMove(position, upperRight, piece);
+        if (board.canTake(position, right)) {
+            ChessMove move = new ChessMove(position, right, piece);
             validMoves.add(move);
         }
         return validMoves;
     }
 
+
+    private ChessGame.TeamColor getPawnColor(ChessPosition position, ChessBoard board) {
+        return board.getPiece(position).getTeamColor();
+    }
+
+
+    private int[][] getDiagonalOffsets(ChessGame.TeamColor pawnColor) {
+        if (pawnColor == ChessGame.TeamColor.WHITE) {
+            return new int[][]{{1, -1}, {1, 1}};
+        }
+        else {
+            return new int[][] {{-1, -1}, {-1, -1}};
+        }
+    }
 
 }
