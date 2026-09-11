@@ -56,9 +56,10 @@ class PawnMoveStrategy implements MoveStrategy {
     private Collection<ChessMove> checkFirstMove(ChessPosition position, ChessBoard board, Collection<ChessMove> validMoves, ChessPiece.PieceType piece) {
         int startingRow = position.getRow();
         int startingColumn = position.getColumn();
-        // Add get starting offsets here for team color
-        ChessPosition newPosition = new ChessPosition(startingRow + 2, startingColumn);
-        if (board.canMove(position, newPosition) && startingRow == 2) {
+        ChessGame.TeamColor pawnColor = getPawnColor(position, board);
+        int[] startingOffset = getStartingOffset(pawnColor);
+        ChessPosition newPosition = new ChessPosition(startingRow + startingOffset[0], startingColumn);
+        if (board.canMove(position, newPosition) && ((startingRow == 2 && pawnColor == ChessGame.TeamColor.WHITE) || (startingRow == 7 && pawnColor == ChessGame.TeamColor.BLACK))) {
             ChessMove move = new ChessMove(position, newPosition, piece);
             validMoves.add(move);
         }
@@ -96,7 +97,17 @@ class PawnMoveStrategy implements MoveStrategy {
             return new int[][]{{1, -1}, {1, 1}};
         }
         else {
-            return new int[][] {{-1, -1}, {-1, -1}};
+            return new int[][] {{-1, -1}, {-1, 1}};
+        }
+    }
+
+
+    private int[] getStartingOffset(ChessGame.TeamColor pawnColor) {
+        if (pawnColor == ChessGame.TeamColor.WHITE) {
+            return new int[] {2, 0};
+        }
+        else {
+            return new int[] {-2, 0};
         }
     }
 
