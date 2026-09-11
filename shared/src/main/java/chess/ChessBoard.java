@@ -52,7 +52,7 @@ public class ChessBoard {
         // Check the starting position piece then check the final position piece and compare teams
         ChessGame.TeamColor attackingColor = getPiece(startingPosition).getTeamColor();
         ChessGame.TeamColor defendingColor = getPiece(finalPosition).getTeamColor();
-        if (attackingColor == defendingColor) {
+        if (!attackingColor.equals(defendingColor)) {
             return true;
         }
         return false;

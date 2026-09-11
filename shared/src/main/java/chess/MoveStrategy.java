@@ -25,8 +25,8 @@ interface MoveStrategy {
         int startingRow = position.getRow();
         int startingColumn = position.getColumn();
         for (int[] offset : getLoopMoveOffsets()){
-            int nextRow = startingColumn + offset[0];
-            int nextColumn = startingRow + offset[1];
+            int nextRow = startingRow + offset[0];
+            int nextColumn = startingColumn + offset[1];
             ChessPosition nextPosition = new ChessPosition(nextRow, nextColumn);
             while (board.canMove(position, nextPosition)) {
                 ChessMove move = new ChessMove(position, nextPosition, piece);
@@ -43,8 +43,8 @@ interface MoveStrategy {
         int startingRow = position.getRow();
         int startingColumn = position.getColumn();
         for (int[] offset : getSingleMoveOffsets()) {
-            int nextRow = startingColumn + offset[0];
-            int nextColumn = startingRow + offset[1];
+            int nextRow = startingRow + offset[0];
+            int nextColumn = startingColumn + offset[1];
             ChessPosition nextPosition = new ChessPosition(nextRow, nextColumn);
             if (board.canMove(position, nextPosition)) {
                 ChessMove move = new ChessMove(position, nextPosition, piece);

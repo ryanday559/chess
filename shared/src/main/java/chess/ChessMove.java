@@ -48,8 +48,17 @@ public class ChessMove {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
+    public boolean equals(Object o) {
+        // 1. Check for reference equality
+        if (this == o) return true;
+        // 2. Check for null and ensure the classes match
+        if (o == null || getClass() != o.getClass()) return false;
+        // 3. Cast and compare field values
+        ChessMove that = (ChessMove) o;
+        if (that.startPosition.equals(startPosition) && that.endPosition.equals(endPosition)) {
+            return true;
+        }
+        return false;
     }
 
     @Override
