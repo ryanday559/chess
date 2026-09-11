@@ -50,11 +50,10 @@ public class ChessBoard {
 
     public boolean canTake(ChessPosition startingPosition, ChessPosition finalPosition) {
         // Check the starting position piece then check the final position piece and compare teams
+        if (!finalPosition.isInBounds()) return false;
         ChessGame.TeamColor attackingColor = getPiece(startingPosition).getTeamColor();
         ChessGame.TeamColor defendingColor = getPiece(finalPosition).getTeamColor();
-        if (!attackingColor.equals(defendingColor)) {
-            return true;
-        }
+        if (!attackingColor.equals(defendingColor)) return true;
         return false;
     }
 
@@ -62,9 +61,7 @@ public class ChessBoard {
     public boolean canMove(ChessPosition startingPosition, ChessPosition finalPosition) {
         int finalRow = finalPosition.getRow();
         int finalColumn = finalPosition.getColumn();
-        if (finalPosition.isInBounds() && (getPiece(finalPosition) == null || canTake(startingPosition, finalPosition))) {
-            return true;
-        }
+        if (finalPosition.isInBounds() && getPiece(finalPosition) == null) return true;
         return false;
     }
 }

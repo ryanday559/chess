@@ -35,6 +35,10 @@ interface MoveStrategy {
                 nextColumn += offset[1];
                 nextPosition = new ChessPosition(nextRow, nextColumn);
             }
+            if (board.canTake(position, nextPosition)) {
+                ChessMove move = new ChessMove(position, nextPosition, piece);
+                validMoves.add(move);
+            }
         }
         return validMoves;
     }
@@ -47,6 +51,10 @@ interface MoveStrategy {
             int nextColumn = startingColumn + offset[1];
             ChessPosition nextPosition = new ChessPosition(nextRow, nextColumn);
             if (board.canMove(position, nextPosition)) {
+                ChessMove move = new ChessMove(position, nextPosition, piece);
+                validMoves.add(move);
+            }
+            else if (board.canTake(position, nextPosition)) {
                 ChessMove move = new ChessMove(position, nextPosition, piece);
                 validMoves.add(move);
             }
