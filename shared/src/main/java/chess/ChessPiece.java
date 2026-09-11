@@ -78,8 +78,9 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        var pieceMovementRules = movementRules.get(getPieceType());
-        return pieceMovementRules.getValidMoves(myPosition, board, getPieceType());
+        ChessPiece.PieceType pieceType = getPieceType();
+        var pieceMovementRules = movementRules.get(pieceType);
+        return pieceMovementRules.getValidMoves(myPosition, board, pieceType);
     }
 
 }

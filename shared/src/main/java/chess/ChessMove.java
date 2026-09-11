@@ -55,7 +55,7 @@ public class ChessMove {
         if (o == null || getClass() != o.getClass()) return false;
         // 3. Cast and compare field values
         ChessMove that = (ChessMove) o;
-        if (that.startPosition.equals(startPosition) && that.endPosition.equals(endPosition)) {
+        if (that.startPosition.equals(startPosition) && that.endPosition.equals(endPosition) && that.promotionPiece.equals(promotionPiece)) {
             return true;
         }
         return false;
@@ -63,6 +63,6 @@ public class ChessMove {
 
     @Override
     public String toString() {
-        return "Move: " + startPosition + "->" + endPosition;
+        return "Move: " + startPosition + "->" + endPosition + " Promotion Type: " + promotionPiece;
     }
 }

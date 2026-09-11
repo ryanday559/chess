@@ -1,7 +1,6 @@
 package chess;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 class PawnMoveStrategy implements MoveStrategy {
     // N, S
@@ -46,7 +45,12 @@ class PawnMoveStrategy implements MoveStrategy {
             ChessPosition nextPosition = new ChessPosition(nextRow, nextColumn);
             if (board.canMove(position, nextPosition)) {
                 ChessMove move = new ChessMove(position, nextPosition, piece);
-                validMoves.add(move);
+                if (checkPromotion(move, board)) {
+                    validMoves = addPromotionOptions(move, validMoves);
+                }
+                else {
+                    validMoves.add(move);
+                }
             }
         }
         return validMoves;
@@ -74,14 +78,23 @@ class PawnMoveStrategy implements MoveStrategy {
         int[][] diagonalOffsets = getDiagonalOffsets(pawnColor);
         ChessPosition left = new ChessPosition(startingRow + diagonalOffsets[0][0], startingColumn + diagonalOffsets[0][1]);
         ChessPosition right = new ChessPosition(startingRow + diagonalOffsets[1][0], startingColumn + diagonalOffsets[1][1]);
-        // Need to add in color check on take still
         if (board.canTake(position, left)) {
             ChessMove move = new ChessMove(position, left, piece);
-            validMoves.add(move);
+            if (checkPromotion(move, board)) {
+                validMoves = addPromotionOptions(move, validMoves);
+            }
+            else {
+                validMoves.add(move);
+            }
         }
         if (board.canTake(position, right)) {
             ChessMove move = new ChessMove(position, right, piece);
-            validMoves.add(move);
+            if (checkPromotion(move, board)) {
+                validMoves = addPromotionOptions(move, validMoves);
+            }
+            else {
+                validMoves.add(move);
+            }
         }
         return validMoves;
     }
@@ -110,5 +123,26 @@ class PawnMoveStrategy implements MoveStrategy {
             return new int[] {-2, 0};
         }
     }
+
+
+    private boolean checkPromotion(ChessMove move, ChessBoard board) {
+        int endRow = move.getEndPosition().getRow();
+        ChessGame.TeamColor pawnColor = board.getPiece(move.getStartPosition()).getTeamColor();
+        if ((pawnColor == ChessGame.TeamColor.WHITE && endRow == 8) || (pawnColor == ChessGame.TeamColor.BLACK && endRow == 1)) return true;
+        return false;
+    }
+
+
+    private Collection<ChessMove> addPromotionOptions(ChessMove move, Collection<ChessMove> validMoves) {
+        ChessPosition moveStart = move.getStartPosition();
+        ChessPosition moveEnd = move.getEndPosition();
+        for (ChessPiece.PieceType pieceType : ChessPiece.PieceType.values()) {
+            if (pieceType == ChessPiece.PieceType.KING || pieceType == ChessPiece.PieceType.PAWN) continue;
+            ChessMove newMove = new ChessMove(moveStart, moveEnd, pieceType);
+            validMoves.add(newMove);
+        }
+        return validMoves;
+    }
+
 
 }
