@@ -44,7 +44,7 @@ class PawnMoveStrategy implements MoveStrategy {
             int nextColumn = startingColumn + offset[1];
             ChessPosition nextPosition = new ChessPosition(nextRow, nextColumn);
             if (board.canMove(position, nextPosition)) {
-                ChessMove move = new ChessMove(position, nextPosition, piece);
+                ChessMove move = new ChessMove(position, nextPosition, null);
                 if (checkPromotion(move, board)) {
                     validMoves = addPromotionOptions(move, validMoves);
                 }
@@ -64,7 +64,7 @@ class PawnMoveStrategy implements MoveStrategy {
         int[] startingOffset = getStartingOffset(pawnColor);
         ChessPosition newPosition = new ChessPosition(startingRow + startingOffset[0], startingColumn);
         if (board.canMove(position, newPosition) && ((startingRow == 2 && pawnColor == ChessGame.TeamColor.WHITE) || (startingRow == 7 && pawnColor == ChessGame.TeamColor.BLACK))) {
-            ChessMove move = new ChessMove(position, newPosition, piece);
+            ChessMove move = new ChessMove(position, newPosition, null);
             validMoves.add(move);
         }
         return validMoves;
@@ -79,7 +79,7 @@ class PawnMoveStrategy implements MoveStrategy {
         ChessPosition left = new ChessPosition(startingRow + diagonalOffsets[0][0], startingColumn + diagonalOffsets[0][1]);
         ChessPosition right = new ChessPosition(startingRow + diagonalOffsets[1][0], startingColumn + diagonalOffsets[1][1]);
         if (board.canTake(position, left)) {
-            ChessMove move = new ChessMove(position, left, piece);
+            ChessMove move = new ChessMove(position, left, null);
             if (checkPromotion(move, board)) {
                 validMoves = addPromotionOptions(move, validMoves);
             }
@@ -88,7 +88,7 @@ class PawnMoveStrategy implements MoveStrategy {
             }
         }
         if (board.canTake(position, right)) {
-            ChessMove move = new ChessMove(position, right, piece);
+            ChessMove move = new ChessMove(position, right, null);
             if (checkPromotion(move, board)) {
                 validMoves = addPromotionOptions(move, validMoves);
             }
@@ -143,6 +143,5 @@ class PawnMoveStrategy implements MoveStrategy {
         }
         return validMoves;
     }
-
 
 }

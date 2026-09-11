@@ -1,5 +1,7 @@
 package chess;
 
+import java.util.Objects;
+
 /**
  * Represents moving a chess piece on a chessboard
  * <p>
@@ -55,7 +57,7 @@ public class ChessMove {
         if (o == null || getClass() != o.getClass()) return false;
         // 3. Cast and compare field values
         ChessMove that = (ChessMove) o;
-        if (that.startPosition.equals(startPosition) && that.endPosition.equals(endPosition) && that.promotionPiece.equals(promotionPiece)) {
+        if (that.startPosition.equals(startPosition) && that.endPosition.equals(endPosition) && Objects.equals(that.promotionPiece, promotionPiece)) {
             return true;
         }
         return false;
