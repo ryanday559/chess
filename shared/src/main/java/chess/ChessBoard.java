@@ -162,7 +162,7 @@ public class ChessBoard {
     @Override
     public String toString() {
         String boardString = "";
-        for (int i = 0; i < board.length; i++) {
+        for (int i = 7; i >= 0; i--) {
             boardString += "|";
             for (int j = 0; j < board[i].length; j++) {
                 ChessPosition piecePosition = new ChessPosition(i + 1, j + 1);
