@@ -69,8 +69,8 @@ public class ChessBoard {
                 ChessPiece.PieceType.ROOK,
                 ChessPiece.PieceType.KNIGHT,
                 ChessPiece.PieceType.BISHOP,
-                ChessPiece.PieceType.KING,
                 ChessPiece.PieceType.QUEEN,
+                ChessPiece.PieceType.KING,
                 ChessPiece.PieceType.BISHOP,
                 ChessPiece.PieceType.KNIGHT,
                 ChessPiece.PieceType.ROOK
@@ -106,7 +106,7 @@ public class ChessBoard {
             return false;
         }
         for (int i = 0; i < board1.board.length; i++) {
-            for (int j = 0; i < board2.board[i].length; j++) {
+            for (int j = 0; j < board2.board[i].length; j++) {
                 ChessPosition currentPosition = new ChessPosition(i + 1, j + 1);
                 if (!board1.getPiece(currentPosition).equals(board2.getPiece(currentPosition))) {
                     return false;
@@ -138,29 +138,36 @@ public class ChessBoard {
             ChessPiece.PieceType.BISHOP, new String[] {"B", "b"},
             ChessPiece.PieceType.KING, new String[] {"K", "k"},
             ChessPiece.PieceType.QUEEN, new String [] {"Q", "q"}
-        );
+    );
+
+
+    private String getPieceString(ChessPosition position) {
+        ChessPiece piece = getPiece(position);
+        if (piece == null) {
+            return " ";
+        }
+        ChessGame.TeamColor teamColor = piece.getTeamColor();
+        ChessPiece.PieceType pieceType = piece.getPieceType();
+        int teamIndex;
+        if (teamColor == ChessGame.TeamColor.WHITE) {
+            teamIndex = 0;
+        }
+        else {
+            teamIndex = 1;
+        }
+        return pieceStringMap.get(pieceType)[teamIndex];
     }
+
 
     @Override
     public String toString() {
         String boardString = "";
         for (int i = 0; i < board.length; i++) {
             boardString += "|";
-            for (int j = 0; i < board[i].length; j++) {
+            for (int j = 0; j < board[i].length; j++) {
                 ChessPosition piecePosition = new ChessPosition(i + 1, j + 1);
-                ChessPiece piece = getPiece(piecePosition);
-                if (piece == null) {
-                    boardString += " |";
-                    continue;
-                }
-                ChessGame.TeamColor teamColor = piece.getTeamColor();
-                if (teamColor == ChessGame.TeamColor.WHITE) {
-                    int teamIndex = 0;
-                }
-                else {
-                    int teamIndex = 1;
-                }
-                boardString += pieceStringMap.get(piece)[teamIndex], "|";
+                String pieceString = getPieceString(piecePosition);
+                boardString += pieceString + "|";
             }
             boardString += "\n";
         }
