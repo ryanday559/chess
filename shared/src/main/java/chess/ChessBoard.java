@@ -1,5 +1,8 @@
 package chess;
 
+import java.util.Map;
+import java.util.Objects;
+
 /**
  * A chessboard that can hold and rearrange chess pieces.
  * <p>
@@ -11,7 +14,7 @@ public class ChessBoard {
     private ChessPiece[][] board  = new ChessPiece[8][8];
 
     public ChessBoard() {
-        
+        resetBoard();
     }
 
 
@@ -45,6 +48,38 @@ public class ChessBoard {
      */
     public void resetBoard() {
         board = new ChessPiece[8][8];
+        addStandardPieceRow(1, ChessGame.TeamColor.WHITE);
+        addPawnRow(2, ChessGame.TeamColor.WHITE);
+        addPawnRow(7, ChessGame.TeamColor.BLACK);
+        addStandardPieceRow(8, ChessGame.TeamColor.BLACK);
+    }
+
+
+    private void addPawnRow(int row, ChessGame.TeamColor teamColor) {
+        for (int i = 0; i < board[row - 1].length; i++) {
+            ChessPiece pawn = new ChessPiece(teamColor, ChessPiece.PieceType.PAWN);
+            ChessPosition pawnPosition = new ChessPosition(row, i + 1);
+            addPiece(pawnPosition, pawn);
+        }
+    }
+
+
+    private void addStandardPieceRow(int row, ChessGame.TeamColor teamColor) {
+        ChessPiece.PieceType[] pieceOrder = {
+                ChessPiece.PieceType.ROOK,
+                ChessPiece.PieceType.KNIGHT,
+                ChessPiece.PieceType.BISHOP,
+                ChessPiece.PieceType.KING,
+                ChessPiece.PieceType.QUEEN,
+                ChessPiece.PieceType.BISHOP,
+                ChessPiece.PieceType.KNIGHT,
+                ChessPiece.PieceType.ROOK
+        };
+        for (int i = 0; i < pieceOrder.length; i++) {
+            ChessPiece newPiece = new ChessPiece(teamColor, pieceOrder[i]);
+            ChessPosition piecePosition = new ChessPosition(row, i + 1);
+            addPiece(piecePosition, newPiece);
+        }
     }
 
 
@@ -63,5 +98,72 @@ public class ChessBoard {
         int finalColumn = finalPosition.getColumn();
         if (finalPosition.isInBounds() && getPiece(finalPosition) == null) return true;
         return false;
+    }
+
+
+    private boolean checkEqualBoard(ChessBoard board1, ChessBoard board2) {
+        if (board1.board.length != board2.board.length || board1.board[0].length != board2.board[0].length) {
+            return false;
+        }
+        for (int i = 0; i < board1.board.length; i++) {
+            for (int j = 0; i < board2.board[i].length; j++) {
+                ChessPosition currentPosition = new ChessPosition(i + 1, j + 1);
+                if (!board1.getPiece(currentPosition).equals(board2.getPiece(currentPosition))) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        // 1. Check for reference equality
+        if (this == o) return true;
+        // 2. Check for null and ensure the classes match
+        if (o == null || getClass() != o.getClass()) return false;
+        // 3. Cast and compare field values
+        ChessBoard that = (ChessBoard) o;
+        if (checkEqualBoard(this, that)) {
+            return true;
+        }
+        return false;
+    }
+
+    private Map<ChessPiece.PieceType, String[]> pieceStringMap = Map.of(
+            ChessPiece.PieceType.PAWN, new String[] {"P", "p"},
+            ChessPiece.PieceType.ROOK, new String[] {"R", "r"},
+            ChessPiece.PieceType.KNIGHT, new String[] {"N", "n"},
+            ChessPiece.PieceType.BISHOP, new String[] {"B", "b"},
+            ChessPiece.PieceType.KING, new String[] {"K", "k"},
+            ChessPiece.PieceType.QUEEN, new String [] {"Q", "q"}
+        );
+    }
+
+    @Override
+    public String toString() {
+        String boardString = "";
+        for (int i = 0; i < board.length; i++) {
+            boardString += "|";
+            for (int j = 0; i < board[i].length; j++) {
+                ChessPosition piecePosition = new ChessPosition(i + 1, j + 1);
+                ChessPiece piece = getPiece(piecePosition);
+                if (piece == null) {
+                    boardString += " |";
+                    continue;
+                }
+                ChessGame.TeamColor teamColor = piece.getTeamColor();
+                if (teamColor == ChessGame.TeamColor.WHITE) {
+                    int teamIndex = 0;
+                }
+                else {
+                    int teamIndex = 1;
+                }
+                boardString += pieceStringMap.get(piece)[teamIndex], "|";
+            }
+            boardString += "\n";
+        }
+        return boardString;
     }
 }
