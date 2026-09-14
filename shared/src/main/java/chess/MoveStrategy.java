@@ -29,14 +29,14 @@ interface MoveStrategy {
             int nextColumn = startingColumn + offset[1];
             ChessPosition nextPosition = new ChessPosition(nextRow, nextColumn);
             while (board.canMove(position, nextPosition)) {
-                ChessMove move = new ChessMove(position, nextPosition, piece);
+                ChessMove move = new ChessMove(position, nextPosition, null);
                 validMoves.add(move);
                 nextRow += offset[0];
                 nextColumn += offset[1];
                 nextPosition = new ChessPosition(nextRow, nextColumn);
             }
             if (board.canTake(position, nextPosition)) {
-                ChessMove move = new ChessMove(position, nextPosition, piece);
+                ChessMove move = new ChessMove(position, nextPosition, null);
                 validMoves.add(move);
             }
         }
@@ -51,11 +51,11 @@ interface MoveStrategy {
             int nextColumn = startingColumn + offset[1];
             ChessPosition nextPosition = new ChessPosition(nextRow, nextColumn);
             if (board.canMove(position, nextPosition)) {
-                ChessMove move = new ChessMove(position, nextPosition, piece);
+                ChessMove move = new ChessMove(position, nextPosition, null);
                 validMoves.add(move);
             }
             else if (board.canTake(position, nextPosition)) {
-                ChessMove move = new ChessMove(position, nextPosition, piece);
+                ChessMove move = new ChessMove(position, nextPosition, null);
                 validMoves.add(move);
             }
         }
