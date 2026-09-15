@@ -102,18 +102,11 @@ public class ChessBoard {
 
 
     private boolean checkEqualBoard(ChessBoard board1, ChessBoard board2) {
-        if (board1.board.length != board2.board.length || board1.board[0].length != board2.board[0].length) {
-            return false;
+        // We could just check if the strings are equal
+        if (board1.toString().equals(board2.toString())) {
+            return true;
         }
-        for (int i = 0; i < board1.board.length; i++) {
-            for (int j = 0; j < board2.board[i].length; j++) {
-                ChessPosition currentPosition = new ChessPosition(i + 1, j + 1);
-                if (!board1.getPiece(currentPosition).equals(board2.getPiece(currentPosition))) {
-                    return false;
-                }
-            }
-        }
-        return true;
+        return false;
     }
 
 
@@ -125,10 +118,7 @@ public class ChessBoard {
         if (o == null || getClass() != o.getClass()) return false;
         // 3. Cast and compare field values
         ChessBoard that = (ChessBoard) o;
-        if (checkEqualBoard(this, that)) {
-            return true;
-        }
-        return false;
+        return checkEqualBoard(this, that);
     }
 
     private Map<ChessPiece.PieceType, String[]> pieceStringMap = Map.of(
