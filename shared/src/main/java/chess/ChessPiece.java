@@ -23,9 +23,11 @@ public class ChessPiece {
         return super.hashCode();
     }
 
+
+
     @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
+    public boolean equals(Object o) {
+        return super.equals(o);
     }
 
     /**

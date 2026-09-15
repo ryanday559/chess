@@ -14,7 +14,7 @@ public class ChessBoard {
     private ChessPiece[][] board  = new ChessPiece[8][8];
 
     public ChessBoard() {
-        resetBoard();
+
     }
 
 
@@ -102,7 +102,6 @@ public class ChessBoard {
 
 
     private boolean checkEqualBoard(ChessBoard board1, ChessBoard board2) {
-        // We could just check if the strings are equal
         if (board1.toString().equals(board2.toString())) {
             return true;
         }
@@ -118,7 +117,10 @@ public class ChessBoard {
         if (o == null || getClass() != o.getClass()) return false;
         // 3. Cast and compare field values
         ChessBoard that = (ChessBoard) o;
-        return checkEqualBoard(this, that);
+        if (checkEqualBoard(this, that)) {
+            return true;
+        }
+        return false;
     }
 
     private Map<ChessPiece.PieceType, String[]> pieceStringMap = Map.of(
