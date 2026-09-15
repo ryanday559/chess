@@ -110,6 +110,12 @@ public class ChessBoard {
 
 
     @Override
+    public int hashCode() {
+        return 31 * Objects.hash(board);
+    }
+
+
+    @Override
     public boolean equals(Object o) {
         // 1. Check for reference equality
         if (this == o) return true;

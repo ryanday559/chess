@@ -2,6 +2,7 @@ package chess;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Represents a single chess piece
@@ -18,9 +19,10 @@ public class ChessPiece {
         pieceTypeInstance = type;
     }
 
+
     @Override
     public int hashCode() {
-        return super.hashCode();
+        return 31 * Objects.hash(color, pieceTypeInstance);
     }
 
 

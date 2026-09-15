@@ -44,10 +44,12 @@ public class ChessMove {
         return promotionPiece;
     }
 
+
     @Override
     public int hashCode() {
-        return super.hashCode();
+        return 31 * Objects.hash(startPosition, endPosition, promotionPiece);
     }
+
 
     @Override
     public boolean equals(Object o) {
