@@ -1,7 +1,6 @@
 package chess;
 
 class KnightMoveStrategy implements MoveStrategy {
-    // We need to check up two over one and up one over two in all NeNwSeSw directions.
     @Override
     public int[][] getSingleMoveOffsets() {
         int[][] singleMoveOffsets = {

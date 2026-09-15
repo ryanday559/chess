@@ -19,6 +19,7 @@ public class ChessPosition {
         this.col = col;
     }
 
+
     /**
      * @return which row this position is in
      * 1 codes for the bottom row
@@ -26,6 +27,7 @@ public class ChessPosition {
     public int getRow() {
         return row;
     }
+
 
     /**
      * @return which column this position is in
@@ -35,6 +37,7 @@ public class ChessPosition {
         return col;
     }
 
+
     public boolean isInBounds() {
         if (row >= 1 && row <= 8 && col >= 1 && col <= 8) {
             return true;
@@ -42,10 +45,12 @@ public class ChessPosition {
         return false;
     }
 
+
     @Override
     public int hashCode() {
         return 31 * Objects.hash(row, col);
     }
+
 
     @Override
     public String toString() {
@@ -55,15 +60,13 @@ public class ChessPosition {
 
     @Override
     public boolean equals(Object o) {
-        // 1. Check for reference equality
         if (this == o) return true;
-        // 2. Check for null and ensure the classes match
         if (o == null || getClass() != o.getClass()) return false;
-        // 3. Cast and compare field values
         ChessPosition that = (ChessPosition) o;
         if (that.row == row && that.col == col) {
             return true;
         }
         return false;
     }
+
 }

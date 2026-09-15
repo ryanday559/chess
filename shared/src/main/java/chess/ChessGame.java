@@ -14,12 +14,14 @@ public class ChessGame {
 
     }
 
+
     /**
      * @return Which team's turn it is
      */
     public TeamColor getTeamTurn() {
         return currentTeam;
     }
+
 
     /**
      * Sets which teams turn it is
@@ -30,6 +32,7 @@ public class ChessGame {
         currentTeam = team;
     }
 
+
     /**
      * Enum identifying the 2 possible teams in a chess game
      */
@@ -38,7 +41,9 @@ public class ChessGame {
         BLACK
     }
 
+
     private TeamColor currentTeam = TeamColor.WHITE;
+
 
     /**
      * Gets all valid moves for a piece at the given location
@@ -51,6 +56,7 @@ public class ChessGame {
         throw new RuntimeException("Not implemented");
     }
 
+
     /**
      * Makes a move in the chess game
      *
@@ -60,6 +66,7 @@ public class ChessGame {
     public void makeMove(ChessMove move) throws InvalidMoveException {
         throw new RuntimeException("Not implemented");
     }
+
 
     /**
      * Determines if the given team is in check
@@ -71,6 +78,7 @@ public class ChessGame {
         throw new RuntimeException("Not implemented");
     }
 
+
     /**
      * Determines if the given team is in checkmate
      *
@@ -80,6 +88,7 @@ public class ChessGame {
     public boolean isInCheckmate(TeamColor teamColor) {
         throw new RuntimeException("Not implemented");
     }
+
 
     /**
      * Determines if the given team is in stalemate, which here is defined as having
@@ -92,6 +101,7 @@ public class ChessGame {
         throw new RuntimeException("Not implemented");
     }
 
+
     /**
      * Sets this game's chessboard to a given board
      *
@@ -101,6 +111,7 @@ public class ChessGame {
         throw new RuntimeException("Not implemented");
     }
 
+
     /**
      * Gets the current chessboard
      *
@@ -109,4 +120,5 @@ public class ChessGame {
     public ChessBoard getBoard() {
         throw new RuntimeException("Not implemented");
     }
+
 }

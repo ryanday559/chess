@@ -3,7 +3,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 class PawnMoveStrategy implements MoveStrategy {
-    // N, S
 
     public int[][] getWhiteMoveOffsets() {
         int[][] loopMoveOffsets = {{1,0}};

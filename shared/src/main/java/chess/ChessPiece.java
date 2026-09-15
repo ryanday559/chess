@@ -36,11 +36,8 @@ public class ChessPiece {
 
     @Override
     public boolean equals(Object o) {
-        // 1. Check for reference equality
         if (this == o) return true;
-        // 2. Check for null and ensure the classes match
         if (o == null || getClass() != o.getClass()) return false;
-        // 3. Cast and compare field values
         ChessPiece that = (ChessPiece) o;
         return checkEqualPiece(this, that);
     }
@@ -58,12 +55,14 @@ public class ChessPiece {
         PAWN
     }
 
+
     /**
      * @return Which team this chess piece belongs to
      */
     public ChessGame.TeamColor getTeamColor() {
         return color;
     }
+
 
     /**
      * @return which type of chess piece this piece is
@@ -72,11 +71,13 @@ public class ChessPiece {
         return pieceTypeInstance;
     }
 
+
     public enum PieceMoveType {
         EMPTY,
         INVALID,
         TAKE
     }
+
 
     private Map<PieceType, MoveStrategy> movementRules = Map.of(
         PieceType.KING, new KingMoveStrategy(),
@@ -86,6 +87,7 @@ public class ChessPiece {
         PieceType.ROOK, new RookMoveStrategy(),
         PieceType.PAWN, new PawnMoveStrategy()
     );
+
 
     /**
      * Calculates all the positions a chess piece can move to

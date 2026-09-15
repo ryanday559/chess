@@ -128,16 +128,10 @@ public class ChessBoard {
 
     @Override
     public boolean equals(Object o) {
-        // 1. Check for reference equality
         if (this == o) return true;
-        // 2. Check for null and ensure the classes match
         if (o == null || getClass() != o.getClass()) return false;
-        // 3. Cast and compare field values
         ChessBoard that = (ChessBoard) o;
-        if (checkEqualBoard(this, that)) {
-            return true;
-        }
-        return false;
+        return checkEqualBoard(this, that);
     }
 
     private Map<ChessPiece.PieceType, String[]> pieceStringMap = Map.of(
@@ -182,4 +176,5 @@ public class ChessBoard {
         }
         return boardString;
     }
+
 }

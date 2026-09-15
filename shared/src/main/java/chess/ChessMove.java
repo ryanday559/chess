@@ -9,6 +9,7 @@ import java.util.Objects;
  * signature of the existing methods.
  */
 public class ChessMove {
+
     private ChessPosition startPosition;
     private ChessPosition endPosition;
     private ChessPiece.PieceType promotionPiece;
@@ -19,12 +20,14 @@ public class ChessMove {
         this.promotionPiece = promotionPiece;
     }
 
+
     /**
      * @return ChessPosition of starting location
      */
     public ChessPosition getStartPosition() {
         return startPosition;
     }
+
 
     /**
      * @return ChessPosition of ending location
@@ -33,6 +36,7 @@ public class ChessMove {
     public ChessPosition getEndPosition() {
         return endPosition;
     }
+
 
     /**
      * Gets the type of piece to promote a pawn to if pawn promotion is part of this
@@ -53,11 +57,8 @@ public class ChessMove {
 
     @Override
     public boolean equals(Object o) {
-        // 1. Check for reference equality
         if (this == o) return true;
-        // 2. Check for null and ensure the classes match
         if (o == null || getClass() != o.getClass()) return false;
-        // 3. Cast and compare field values
         ChessMove that = (ChessMove) o;
         if (that.startPosition.equals(startPosition) && that.endPosition.equals(endPosition) && Objects.equals(that.promotionPiece, promotionPiece)) {
             return true;
@@ -65,8 +66,10 @@ public class ChessMove {
         return false;
     }
 
+
     @Override
     public String toString() {
         return "Move: " + startPosition + "->" + endPosition + " Promotion Type: " + promotionPiece;
     }
+
 }

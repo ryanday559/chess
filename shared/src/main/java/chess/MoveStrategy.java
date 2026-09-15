@@ -1,18 +1,20 @@
 package chess;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 interface MoveStrategy {
+
     default int[][] getLoopMoveOffsets() {
         int[][] loopMoveOffsets = {};
         return loopMoveOffsets;
     }
 
+
     default int[][] getSingleMoveOffsets() {
         int[][] singleMoveOffsets = {};
         return singleMoveOffsets;
     }
+
 
     default Collection<ChessMove> getValidMoves(ChessPosition position, ChessBoard board, ChessPiece.PieceType piece) {
         Collection<ChessMove> validMoves = new ArrayList<>();
@@ -20,6 +22,7 @@ interface MoveStrategy {
         validMoves = addSingleMoves(position, board, validMoves, piece);
         return validMoves;
     }
+
 
     default Collection<ChessMove> addLoopMoves(ChessPosition position, ChessBoard board, Collection<ChessMove> validMoves, ChessPiece.PieceType piece) {
         int startingRow = position.getRow();
@@ -42,6 +45,7 @@ interface MoveStrategy {
         }
         return validMoves;
     }
+
 
     default Collection<ChessMove> addSingleMoves(ChessPosition position, ChessBoard board, Collection<ChessMove> validMoves, ChessPiece.PieceType piece) {
         int startingRow = position.getRow();
