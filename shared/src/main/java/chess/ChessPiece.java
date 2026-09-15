@@ -26,11 +26,25 @@ public class ChessPiece {
     }
 
 
+    private boolean checkEqualPiece(ChessPiece piece1, ChessPiece piece2) {
+        if (piece1.color == piece2.color && piece1.pieceTypeInstance == piece2.pieceTypeInstance) {
+            return true;
+        }
+        return false;
+    }
+
 
     @Override
     public boolean equals(Object o) {
-        return super.equals(o);
+        // 1. Check for reference equality
+        if (this == o) return true;
+        // 2. Check for null and ensure the classes match
+        if (o == null || getClass() != o.getClass()) return false;
+        // 3. Cast and compare field values
+        ChessPiece that = (ChessPiece) o;
+        return checkEqualPiece(this, that);
     }
+
 
     /**
      * The various different chess piece options

@@ -111,7 +111,18 @@ public class ChessBoard {
 
     @Override
     public int hashCode() {
-        return 31 * Objects.hash(board);
+        int totalHash = 0;
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board.length; j++) {
+                ChessPosition boardPosition = new ChessPosition(i + 1, j + 1);
+                ChessPiece currentPiece = getPiece(boardPosition);
+                if (currentPiece == null) {
+                    continue;
+                }
+                totalHash += currentPiece.hashCode();
+            }
+        }
+        return 31 * Objects.hash(totalHash);
     }
 
 
