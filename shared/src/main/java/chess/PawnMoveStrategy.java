@@ -27,7 +27,11 @@ class PawnMoveStrategy implements MoveStrategy {
 
 
     @Override
-    public Collection<ChessMove> addSingleMoves(ChessPosition position, ChessBoard board, Collection<ChessMove> validMoves, ChessPiece.PieceType piece) {
+    public Collection<ChessMove> addSingleMoves(
+            ChessPosition position,
+            ChessBoard board,
+            Collection<ChessMove> validMoves,
+            ChessPiece.PieceType piece) {
         int[][] moveOffsets;
         ChessGame.TeamColor pawnColor = getPawnColor(position, board);
         if (pawnColor == ChessGame.TeamColor.WHITE) {
@@ -56,17 +60,24 @@ class PawnMoveStrategy implements MoveStrategy {
     }
 
 
-    private Collection<ChessMove> checkFirstMove(ChessPosition position, ChessBoard board, Collection<ChessMove> validMoves, ChessPiece.PieceType piece) {
+    private Collection<ChessMove> checkFirstMove(
+            ChessPosition position,
+            ChessBoard board,
+            Collection<ChessMove> validMoves,
+            ChessPiece.PieceType piece) {
         int startingRow = position.getRow();
         int startingColumn = position.getColumn();
         ChessGame.TeamColor pawnColor = getPawnColor(position, board);
         int[][] startingOffset = getStartingOffsets(pawnColor);
-        ChessPosition newPosition = new ChessPosition(startingRow + startingOffset[1][0], startingColumn + startingOffset[1][1]);
-        ChessPosition blockedPosition = new ChessPosition(startingRow + startingOffset[0][0], startingColumn + startingOffset[0][1]);
+        ChessPosition newPosition = new ChessPosition(startingRow + startingOffset[1][0],
+                startingColumn + startingOffset[1][1]);
+        ChessPosition blockedPosition = new ChessPosition(startingRow + startingOffset[0][0],
+                startingColumn + startingOffset[0][1]);
         if (!board.canMove(position, blockedPosition)) {
             return validMoves;
         }
-        if (board.canMove(position, newPosition) && ((startingRow == 2 && pawnColor == ChessGame.TeamColor.WHITE) || (startingRow == 7 && pawnColor == ChessGame.TeamColor.BLACK))) {
+        if (board.canMove(position, newPosition) && ((startingRow == 2 && pawnColor == ChessGame.TeamColor.WHITE)
+                || (startingRow == 7 && pawnColor == ChessGame.TeamColor.BLACK))) {
             ChessMove move = new ChessMove(position, newPosition, null);
             validMoves.add(move);
         }
@@ -74,13 +85,19 @@ class PawnMoveStrategy implements MoveStrategy {
     }
 
 
-    private Collection<ChessMove> checkDiagonalMove(ChessPosition position, ChessBoard board, Collection<ChessMove> validMoves, ChessPiece.PieceType piece) {
+    private Collection<ChessMove> checkDiagonalMove(
+            ChessPosition position,
+            ChessBoard board,
+            Collection<ChessMove> validMoves,
+            ChessPiece.PieceType piece) {
         int startingRow = position.getRow();
         int startingColumn = position.getColumn();
         ChessGame.TeamColor pawnColor = getPawnColor(position, board);
         int[][] diagonalOffsets = getDiagonalOffsets(pawnColor);
-        ChessPosition left = new ChessPosition(startingRow + diagonalOffsets[0][0], startingColumn + diagonalOffsets[0][1]);
-        ChessPosition right = new ChessPosition(startingRow + diagonalOffsets[1][0], startingColumn + diagonalOffsets[1][1]);
+        ChessPosition left = new ChessPosition(startingRow + diagonalOffsets[0][0],
+                startingColumn + diagonalOffsets[0][1]);
+        ChessPosition right = new ChessPosition(startingRow + diagonalOffsets[1][0],
+                startingColumn + diagonalOffsets[1][1]);
         if (board.canTake(position, left)) {
             ChessMove move = new ChessMove(position, left, null);
             if (checkPromotion(move, board)) {
@@ -131,7 +148,10 @@ class PawnMoveStrategy implements MoveStrategy {
     private boolean checkPromotion(ChessMove move, ChessBoard board) {
         int endRow = move.getEndPosition().getRow();
         ChessGame.TeamColor pawnColor = board.getPiece(move.getStartPosition()).getTeamColor();
-        if ((pawnColor == ChessGame.TeamColor.WHITE && endRow == 8) || (pawnColor == ChessGame.TeamColor.BLACK && endRow == 1)) return true;
+        if ((pawnColor == ChessGame.TeamColor.WHITE && endRow == 8)
+                || (pawnColor == ChessGame.TeamColor.BLACK && endRow == 1)) {
+            return true;
+        }
         return false;
     }
 
@@ -140,7 +160,9 @@ class PawnMoveStrategy implements MoveStrategy {
         ChessPosition moveStart = move.getStartPosition();
         ChessPosition moveEnd = move.getEndPosition();
         for (ChessPiece.PieceType pieceType : ChessPiece.PieceType.values()) {
-            if (pieceType == ChessPiece.PieceType.KING || pieceType == ChessPiece.PieceType.PAWN) continue;
+            if (pieceType == ChessPiece.PieceType.KING || pieceType == ChessPiece.PieceType.PAWN) {
+                continue;
+            }
             ChessMove newMove = new ChessMove(moveStart, moveEnd, pieceType);
             validMoves.add(newMove);
         }

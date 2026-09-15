@@ -24,7 +24,11 @@ interface MoveStrategy {
     }
 
 
-    default Collection<ChessMove> addLoopMoves(ChessPosition position, ChessBoard board, Collection<ChessMove> validMoves, ChessPiece.PieceType piece) {
+    default Collection<ChessMove> addLoopMoves(
+            ChessPosition position,
+            ChessBoard board,
+            Collection<ChessMove> validMoves,
+            ChessPiece.PieceType piece) {
         int startingRow = position.getRow();
         int startingColumn = position.getColumn();
         for (int[] offset : getLoopMoveOffsets()){
@@ -47,7 +51,11 @@ interface MoveStrategy {
     }
 
 
-    default Collection<ChessMove> addSingleMoves(ChessPosition position, ChessBoard board, Collection<ChessMove> validMoves, ChessPiece.PieceType piece) {
+    default Collection<ChessMove> addSingleMoves(
+            ChessPosition position,
+            ChessBoard board,
+            Collection<ChessMove> validMoves,
+            ChessPiece.PieceType piece) {
         int startingRow = position.getRow();
         int startingColumn = position.getColumn();
         for (int[] offset : getSingleMoveOffsets()) {
