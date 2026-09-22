@@ -78,7 +78,7 @@ public class ChessGame {
         ChessPosition startPosition = move.getStartPosition();
         Collection<ChessMove> possibleMoves = validMoves(startPosition);
         if (!possibleMoves.contains(move)) {
-            throw InvalidMoveException("Move " + move + "is invalid!");
+            throw new InvalidMoveException("Move " + move + "is invalid!");
         }
     }
 
@@ -128,7 +128,17 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-
+        ChessBoard currentBoard = getBoard();
+        Collection<ChessMove> allPossibleMoves = currentBoard.getAllTeamMovePossibilities(teamColor);
+        for (ChessMove move : allPossibleMoves) {
+            board = new ChessBoard(currentBoard);
+            board.movePiece(move);
+            if (!isInCheck(teamColor)) {
+                return false;
+            }
+        }
+        board = currentBoard;
+        return true;
     }
 
     /**
