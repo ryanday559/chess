@@ -111,7 +111,14 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-
+        TeamColor opposingTeam = getOpposingTeam(teamColor);
+        Collection<ChessMove> otherTeamMoves = board.getAllTeamMovePossibilities(opposingTeam);
+        Collection<ChessPosition> otherTeamEndPositions = getMoveCollectionEndPositions(otherTeamMoves);
+        ChessPosition kingPosition = board.getKingPosition(teamColor);
+        if (otherTeamEndPositions.contains(kingPosition)) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -121,14 +128,7 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        TeamColor opposingTeam = getOpposingTeam(teamColor);
-        Collection<ChessMove> otherTeamMoves = board.getAllTeamMovePossibilities(opposingTeam);
-        Collection<ChessPosition> otherTeamEndPositions = getMoveCollectionEndPositions(otherTeamMoves);
-        ChessPosition kingPosition = board.getKingPosition(teamColor);
-        if (otherTeamEndPositions.contains(kingPosition)) {
-            return true;
-        }
-        return false;
+
     }
 
     /**
