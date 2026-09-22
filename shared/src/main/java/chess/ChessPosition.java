@@ -9,16 +9,14 @@ import java.util.Objects;
  * signature of the existing methods.
  */
 public class ChessPosition {
-
-    private final int row;
-    private final int col;
+    private int row;
+    private int col;
 
 
     public ChessPosition(int row, int col) {
         this.row = row;
         this.col = col;
     }
-
 
     /**
      * @return which row this position is in
@@ -27,7 +25,6 @@ public class ChessPosition {
     public int getRow() {
         return row;
     }
-
 
     /**
      * @return which column this position is in
@@ -38,23 +35,11 @@ public class ChessPosition {
     }
 
 
-    public boolean isInBounds() {
-        if (row >= 1 && row <= 8 && col >= 1 && col <= 8) {
+    private boolean checkEqualPosition(ChessPosition otherPosition) {
+        if (getRow() == otherPosition.getRow() && getColumn() == otherPosition.getColumn()) {
             return true;
         }
         return false;
-    }
-
-
-    @Override
-    public int hashCode() {
-        return 31 * Objects.hash(row, col);
-    }
-
-
-    @Override
-    public String toString() {
-        return "(" + String.valueOf(row) + "," + String.valueOf(col) + ")";
     }
 
 
@@ -63,14 +48,22 @@ public class ChessPosition {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (o == null || o.getClass() != getClass()) {
             return false;
         }
         ChessPosition that = (ChessPosition) o;
-        if (that.row == row && that.col == col) {
-            return true;
-        }
-        return false;
+        return checkEqualPosition(that);
     }
 
+
+    @Override
+    public int hashCode() {
+        return 31 * Objects.hash(getRow(), getColumn());
+    }
+
+
+    @Override
+    public String toString() {
+        return "(" + Objects.toString(getRow()) + "," + Objects.toString(getColumn()) + ")";
+    }
 }

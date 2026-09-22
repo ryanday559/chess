@@ -11,41 +11,14 @@ import java.util.Objects;
  * signature of the existing methods.
  */
 public class ChessPiece {
-    private ChessGame.TeamColor color;
-    private ChessPiece.PieceType pieceTypeInstance;
+    private ChessGame.TeamColor pieceColor;
+    private PieceType type;
 
-    public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
-        color = pieceColor;
-        pieceTypeInstance = type;
+
+    public ChessPiece(ChessGame.TeamColor pieceColor, PieceType type) {
+    this.pieceColor = pieceColor;
+    this.type = type;
     }
-
-
-    @Override
-    public int hashCode() {
-        return 31 * Objects.hash(color, pieceTypeInstance);
-    }
-
-
-    private boolean checkEqualPiece(ChessPiece piece1, ChessPiece piece2) {
-        if (piece1.color == piece2.color && piece1.pieceTypeInstance == piece2.pieceTypeInstance) {
-            return true;
-        }
-        return false;
-    }
-
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        ChessPiece that = (ChessPiece) o;
-        return checkEqualPiece(this, that);
-    }
-
 
     /**
      * The various different chess piece options
@@ -59,37 +32,28 @@ public class ChessPiece {
         PAWN
     }
 
-
     /**
      * @return Which team this chess piece belongs to
      */
     public ChessGame.TeamColor getTeamColor() {
-        return color;
+        return pieceColor;
     }
-
 
     /**
      * @return which type of chess piece this piece is
      */
     public PieceType getPieceType() {
-        return pieceTypeInstance;
+        return type;
     }
 
 
-    public enum PieceMoveType {
-        EMPTY,
-        INVALID,
-        TAKE
-    }
-
-
-    private Map<PieceType, MoveStrategy> movementRules = Map.of(
-        PieceType.KING, new KingMoveStrategy(),
-        PieceType.QUEEN, new QueenMoveStrategy(),
-        PieceType.BISHOP, new BishopMoveStrategy(),
-        PieceType.KNIGHT, new KnightMoveStrategy(),
-        PieceType.ROOK, new RookMoveStrategy(),
-        PieceType.PAWN, new PawnMoveStrategy()
+    private Map<PieceType, PieceMovement> movementRuleMap = Map.of(
+            PieceType.BISHOP, new BishopMovement(),
+            PieceType.ROOK, new RookMovement(),
+            PieceType.KNIGHT, new KnightMovement(),
+            PieceType.KING, new KingMovement(),
+            PieceType.QUEEN, new QueenMovement(),
+            PieceType.PAWN, new PawnMovement()
     );
 
 
@@ -101,9 +65,54 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        ChessPiece.PieceType pieceType = getPieceType();
-        var pieceMovementRules = movementRules.get(pieceType);
-        return pieceMovementRules.getValidMoves(myPosition, board, pieceType);
+        PieceMovement movementRules = movementRuleMap.get(board.getPiece(myPosition).getPieceType());
+        return movementRules.getMoveOptions(board, myPosition);
     }
 
+
+    private Map<PieceType, String> pieceStringMap = Map.of(
+            PieceType.QUEEN, "Q",
+            PieceType.KING, "K",
+            PieceType.PAWN, "P",
+            PieceType.BISHOP, "B",
+            PieceType.ROOK, "R",
+            PieceType.KNIGHT, "N"
+    );
+
+
+    private boolean checkEqualPiece(ChessPiece otherPiece) {
+        if (getPieceType() == otherPiece.getPieceType() && getTeamColor() == otherPiece.getTeamColor()) {
+            return true;
+        }
+        return false;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || o.getClass() != getClass()) {
+            return false;
+        }
+        ChessPiece that = (ChessPiece) o;
+        return checkEqualPiece(that);
+    }
+
+
+    @Override
+    public int hashCode() {
+    return 31 * Objects.hash(pieceColor, type);
+    }
+
+
+    @Override
+    public String toString() {
+        String pieceString = pieceStringMap.get(getPieceType());
+        if (getTeamColor() == ChessGame.TeamColor.BLACK) {
+            return pieceString.toLowerCase();
+        }
+        return pieceString;
+    }
 }

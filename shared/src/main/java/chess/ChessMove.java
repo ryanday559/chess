@@ -9,17 +9,17 @@ import java.util.Objects;
  * signature of the existing methods.
  */
 public class ChessMove {
-
     private ChessPosition startPosition;
     private ChessPosition endPosition;
     private ChessPiece.PieceType promotionPiece;
 
-    public ChessMove(ChessPosition startPosition, ChessPosition endPosition, ChessPiece.PieceType promotionPiece) {
+
+    public ChessMove(ChessPosition startPosition, ChessPosition endPosition,
+                     ChessPiece.PieceType promotionPiece) {
         this.startPosition = startPosition;
         this.endPosition = endPosition;
         this.promotionPiece = promotionPiece;
     }
-
 
     /**
      * @return ChessPosition of starting location
@@ -28,15 +28,12 @@ public class ChessMove {
         return startPosition;
     }
 
-
     /**
      * @return ChessPosition of ending location
      */
-    // Remember that chess positions start w/ 1 while arrays start at index 0
     public ChessPosition getEndPosition() {
         return endPosition;
     }
-
 
     /**
      * Gets the type of piece to promote a pawn to if pawn promotion is part of this
@@ -49,9 +46,14 @@ public class ChessMove {
     }
 
 
-    @Override
-    public int hashCode() {
-        return 31 * Objects.hash(startPosition, endPosition, promotionPiece);
+    private boolean checkEqualMove(ChessMove otherMove) {
+        if (getStartPosition().equals(otherMove.getStartPosition()) &&
+            getEndPosition().equals(otherMove.getEndPosition()) &&
+            getPromotionPiece() == (otherMove.getPromotionPiece())
+        ) {
+            return true;
+        }
+        return false;
     }
 
 
@@ -60,20 +62,22 @@ public class ChessMove {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (o == null || o.getClass() != getClass()) {
             return false;
         }
         ChessMove that = (ChessMove) o;
-        if (that.startPosition.equals(startPosition) && that.endPosition.equals(endPosition) && Objects.equals(that.promotionPiece, promotionPiece)) {
-            return true;
-        }
-        return false;
+        return checkEqualMove(that);
+    }
+
+
+    @Override
+    public int hashCode() {
+        return 31 * Objects.hash(getStartPosition(), getEndPosition(), getPromotionPiece());
     }
 
 
     @Override
     public String toString() {
-        return "Move: " + startPosition + "->" + endPosition + " Promotion Type: " + promotionPiece;
+        return "Move[" + getStartPosition().toString() + "->" + getEndPosition().toString() + "]";
     }
-
 }
