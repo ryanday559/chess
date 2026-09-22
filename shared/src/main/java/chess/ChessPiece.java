@@ -15,7 +15,7 @@ public class ChessPiece {
     private PieceType type;
 
 
-    public ChessPiece(ChessGame.TeamColor pieceColor, PieceType type) {
+    public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
     this.pieceColor = pieceColor;
     this.type = type;
     }

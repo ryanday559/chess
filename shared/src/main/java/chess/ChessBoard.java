@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -52,7 +53,7 @@ public class ChessBoard {
 
 
     private void setSpecialRow(int row, ChessGame.TeamColor color) {
-        ChessPiece.PieceType[] rowPieceTypes = {
+        chess.ChessPiece.PieceType[] rowPieceTypes = {
                 ChessPiece.PieceType.ROOK,
                 ChessPiece.PieceType.KNIGHT,
                 ChessPiece.PieceType.BISHOP,
