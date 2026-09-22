@@ -1,5 +1,7 @@
 package chess;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -15,6 +17,10 @@ public class ChessBoard {
 
     public ChessBoard() {
         
+    }
+
+    public ChessBoard(ChessBoard other) {
+        this.board = other.board;
     }
 
     /**
@@ -40,6 +46,47 @@ public class ChessBoard {
         int row = position.getRow();
         int col = position.getColumn();
         return board[row - 1][col - 1];
+    }
+
+
+    public Collection<ChessMove> getAllTeamMovePossibilities(ChessGame.TeamColor team) {
+        Collection<ChessMove> allMoves = new ArrayList<ChessMove>();
+        for (int i = 1; i <= board.length; i++) {
+            for (int j = 1; j <= board[i].length; j++) {
+                ChessPosition currentPosition = new ChessPosition(i, j);
+                ChessPiece piece = getPiece(currentPosition);
+                if (piece != null && piece.getTeamColor() == team) {
+                    allMoves.addAll(piece.pieceMoves(this, currentPosition));
+                }
+            }
+        }
+        return allMoves;
+    }
+
+
+    public ChessPosition getKingPosition(ChessGame.TeamColor team) {
+        for (int i = 1; i <= board.length; i++) {
+            for (int j = 1; j <= board[i].length; j++) {
+                ChessPosition currentPosition = new ChessPosition(i, j);
+                ChessPiece piece = getPiece(currentPosition);
+                if (
+                    piece != null &&
+                    piece.getPieceType() == ChessPiece.PieceType.KING &&
+                    piece.getTeamColor() == team
+                ) {
+                    return currentPosition;
+                }
+            }
+        }
+    }
+
+
+    public void movePiece(ChessMove move) {
+        ChessPosition startPosition = move.getStartPosition();
+        ChessPosition endPosition = move.getEndPosition();
+        ChessPiece pieceToMove = getPiece(startPosition);
+        addPiece(endPosition, pieceToMove);
+        addPiece(startPosition, null);
     }
 
 

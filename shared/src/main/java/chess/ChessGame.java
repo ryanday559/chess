@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -50,7 +51,21 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        throw new RuntimeException("Not implemented");
+        ChessBoard originalBoard = getBoard();
+        ChessPiece movingPiece = board.getPiece(startPosition);
+        TeamColor pieceColor = movingPiece.getTeamColor();
+        Collection<ChessMove> possibleMoves = movingPiece.pieceMoves(getBoard(), startPosition);
+        Collection<ChessMove> validMoveList = new ArrayList<ChessMove>();
+        for (ChessMove move : possibleMoves) {
+            ChessBoard boardCopy = getBoard();
+            boardCopy.movePiece(move);
+            setBoard(boardCopy);
+            if (!isInCheck(pieceColor) && !isInCheckmate(pieceColor)) {
+                validMoveList.add(move);
+            }
+        }
+        setBoard(originalBoard);
+        return validMoveList;
     }
 
     /**
@@ -60,8 +75,19 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        throw new RuntimeException("Not implemented");
+        ChessPosition startPosition = move.getStartPosition();
+        Collection<ChessMove> possibleMoves = validMoves(startPosition);
+        if (!possibleMoves.contains(move)) {
+            throw InvalidMoveException("Move " + move + "is invalid!");
+        }
     }
+
+
+    private Collection<ChessPosition> getMoveCollectionEndPositions(Collection<ChessMove> moves) {
+
+        return
+    }
+
 
     /**
      * Determines if the given team is in check
@@ -70,7 +96,8 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        Collection<ChessMove> allTeamMovePositions = board.getAllTeamMovePossibilities(teamColor);
+        ChessPosition kingPosition = board.getKingPosition(teamColor);
     }
 
     /**
@@ -109,6 +136,6 @@ public class ChessGame {
      * @return the chessboard
      */
     public ChessBoard getBoard() {
-        return this.board;
+        return new ChessBoard(board);
     }
 }
