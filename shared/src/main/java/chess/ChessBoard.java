@@ -52,7 +52,7 @@ public class ChessBoard {
     public Collection<ChessMove> getAllTeamMovePossibilities(ChessGame.TeamColor team) {
         Collection<ChessMove> allMoves = new ArrayList<ChessMove>();
         for (int i = 1; i <= board.length; i++) {
-            for (int j = 1; j <= board[i].length; j++) {
+            for (int j = 1; j <= board[i - 1].length; j++) {
                 ChessPosition currentPosition = new ChessPosition(i, j);
                 ChessPiece piece = getPiece(currentPosition);
                 if (piece != null && piece.getTeamColor() == team) {
@@ -78,6 +78,7 @@ public class ChessBoard {
                 }
             }
         }
+        return null;
     }
 
 

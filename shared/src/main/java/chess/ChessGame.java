@@ -60,7 +60,7 @@ public class ChessGame {
             ChessBoard boardCopy = getBoard();
             boardCopy.movePiece(move);
             setBoard(boardCopy);
-            if (!isInCheck(pieceColor) && !isInCheckmate(pieceColor)) {
+            if (!isInCheck(pieceColor)) {
                 validMoveList.add(move);
             }
         }
@@ -134,10 +134,11 @@ public class ChessGame {
             board = new ChessBoard(currentBoard);
             board.movePiece(move);
             if (!isInCheck(teamColor)) {
+                setBoard(currentBoard);
                 return false;
             }
         }
-        board = currentBoard;
+        setBoard(currentBoard);
         return true;
     }
 
