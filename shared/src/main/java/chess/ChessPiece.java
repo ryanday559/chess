@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
@@ -70,7 +71,12 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        PieceMovement movementRules = movementRuleMap.get(board.getPiece(myPosition).getPieceType());
+        ChessPiece piece = board.getPiece(myPosition);
+        if (piece == null) {
+            return new ArrayList<ChessMove>();
+        }
+        ChessPiece.PieceType type = piece.getPieceType();
+        PieceMovement movementRules = movementRuleMap.get(type);
         return movementRules.getMoveOptions(board, myPosition);
     }
 

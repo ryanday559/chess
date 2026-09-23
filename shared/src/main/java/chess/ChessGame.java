@@ -57,7 +57,7 @@ public class ChessGame {
         Collection<ChessMove> possibleMoves = movingPiece.pieceMoves(getBoard(), startPosition);
         Collection<ChessMove> validMoveList = new ArrayList<ChessMove>();
         for (ChessMove move : possibleMoves) {
-            ChessBoard boardCopy = getBoard();
+            ChessBoard boardCopy = new ChessBoard(originalBoard);
             boardCopy.movePiece(move);
             setBoard(boardCopy);
             if (!isInCheck(pieceColor)) {

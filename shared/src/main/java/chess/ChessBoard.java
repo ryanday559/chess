@@ -20,8 +20,26 @@ public class ChessBoard {
     }
 
     public ChessBoard(ChessBoard other) {
-        this.board = other.board;
+        this.board = boardDeepCopy();
     }
+
+
+    private ChessPiece[][] boardDeepCopy() {
+        ChessPiece[][] newBoard = new ChessPiece[8][8];
+        for (int i = 0; i < newBoard.length; i++) {
+            for (int j = 0; j < newBoard[i].length; j++) {
+                ChessPiece piece = board[i][j];
+                if (piece == null) {
+                    newBoard[i][j] = null;
+                }
+                else {
+                    newBoard[i][j] = new ChessPiece(piece);
+                }
+            }
+        }
+        return newBoard;
+    }
+
 
     /**
      * Adds a chess piece to the chessboard
@@ -45,7 +63,11 @@ public class ChessBoard {
     public ChessPiece getPiece(ChessPosition position) {
         int row = position.getRow();
         int col = position.getColumn();
-        return new ChessPiece(board[row - 1][col - 1]);
+        ChessPiece piece = board[row - 1][col - 1];
+        if (piece == null) {
+            return null;
+        }
+        return new ChessPiece(piece);
     }
 
 
