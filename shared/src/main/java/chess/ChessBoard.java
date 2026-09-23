@@ -45,7 +45,7 @@ public class ChessBoard {
     public ChessPiece getPiece(ChessPosition position) {
         int row = position.getRow();
         int col = position.getColumn();
-        return board[row - 1][col - 1];
+        return new ChessPiece(board[row - 1][col - 1]);
     }
 
 
