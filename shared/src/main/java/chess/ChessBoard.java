@@ -20,20 +20,20 @@ public class ChessBoard {
     }
 
     public ChessBoard(ChessBoard other) {
-        this.board = boardDeepCopy();
+        this.board = boardDeepCopy(other);
     }
 
 
-    private ChessPiece[][] boardDeepCopy() {
+    private ChessPiece[][] boardDeepCopy(ChessBoard other) {
         ChessPiece[][] newBoard = new ChessPiece[8][8];
         for (int i = 0; i < newBoard.length; i++) {
             for (int j = 0; j < newBoard[i].length; j++) {
-                ChessPiece piece = board[i][j];
+                ChessPiece piece = other.board[i][j];
                 if (piece == null) {
                     newBoard[i][j] = null;
                 }
                 else {
-                    newBoard[i][j] = new ChessPiece(piece);
+                    newBoard[i][j] = piece;
                 }
             }
         }
@@ -63,11 +63,7 @@ public class ChessBoard {
     public ChessPiece getPiece(ChessPosition position) {
         int row = position.getRow();
         int col = position.getColumn();
-        ChessPiece piece = board[row - 1][col - 1];
-        if (piece == null) {
-            return null;
-        }
-        return new ChessPiece(piece);
+        return board[row - 1][col - 1];
     }
 
 
