@@ -35,6 +35,13 @@ public class ChessGame {
         currentTurn = team;
     }
 
+
+    private void changeCurrentTurn() {
+        TeamColor opposingTeam = getOpposingTeam(getTeamTurn());
+        setTeamTurn(opposingTeam);
+    }
+
+
     /**
      * Enum identifying the 2 possible teams in a chess game
      */
@@ -68,6 +75,26 @@ public class ChessGame {
         return validMoveList;
     }
 
+
+    private boolean isMoveTurn(ChessMove move) {
+        ChessPiece piece = board.getPiece(move.getStartPosition());
+        TeamColor pieceTeam = piece.getTeamColor();
+        if (pieceTeam == getTeamTurn()) {
+            return true;
+        }
+        return false;
+    }
+
+
+    private boolean moveContainsPiece(ChessMove move) {
+        ChessPiece piece = board.getPiece(move.getStartPosition());
+        if (piece == null) {
+            return false;
+        }
+        return true;
+    }
+
+
     /**
      * Makes a move in the chess game
      *
@@ -76,10 +103,15 @@ public class ChessGame {
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
         ChessPosition startPosition = move.getStartPosition();
-        Collection<ChessMove> possibleMoves = validMoves(startPosition);
-        if (!possibleMoves.contains(move)) {
+        if (!moveContainsPiece(move)) {
             throw new InvalidMoveException("Move " + move + "is invalid!");
         }
+        Collection<ChessMove> possibleMoves = validMoves(startPosition);
+        if (!possibleMoves.contains(move) || !isMoveTurn(move)) {
+            throw new InvalidMoveException("Move " + move + "is invalid!");
+        }
+        board.movePiece(move);
+        changeCurrentTurn();
     }
 
 
