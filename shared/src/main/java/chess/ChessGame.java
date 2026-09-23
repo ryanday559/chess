@@ -95,6 +95,17 @@ public class ChessGame {
     }
 
 
+    private void doPromotion(ChessMove move) {
+        ChessPiece.PieceType promotionType = move.getPromotionPiece();
+        if (promotionType == null) {
+            return;
+        }
+        ChessPosition promotionPosition = move.getEndPosition();
+        TeamColor promotionColor = board.getPiece(promotionPosition).getTeamColor();
+        board.addPiece(promotionPosition, new ChessPiece(promotionColor, promotionType));
+    }
+
+
     /**
      * Makes a move in the chess game
      *
@@ -112,6 +123,7 @@ public class ChessGame {
         }
         board.movePiece(move);
         changeCurrentTurn();
+        doPromotion(move);
     }
 
 
