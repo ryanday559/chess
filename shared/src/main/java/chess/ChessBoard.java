@@ -84,7 +84,7 @@ public class ChessBoard {
 
     public ChessPosition getKingPosition(ChessGame.TeamColor team) {
         for (int i = 1; i <= board.length; i++) {
-            for (int j = 1; j <= board[i].length; j++) {
+            for (int j = 1; j <= board[i - 1].length; j++) {
                 ChessPosition currentPosition = new ChessPosition(i, j);
                 ChessPiece piece = getPiece(currentPosition);
                 if (
