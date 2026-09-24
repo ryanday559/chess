@@ -65,6 +65,7 @@ public class ChessGame {
         ChessPiece potentialKingPiece = board.getPiece(potentialKingPosition);
         if (
             isRightRook &&
+            potentialKingPiece != null &&
             potentialKingPiece.getPieceType() == ChessPiece.PieceType.KING &&
             !potentialKingPiece.checkHasMoved() &&
             board.checkEmptyColumnsBetweenPiecesInRow(potentialKingPosition, rookPosition)
@@ -72,6 +73,7 @@ public class ChessGame {
             kingCastlePosition.add(potentialKingPosition);
         }
         else if (
+            potentialKingPiece != null &&
             potentialKingPiece.getPieceType() == ChessPiece.PieceType.KING &&
             !potentialKingPiece.checkHasMoved() &&
             board.checkEmptyColumnsBetweenPiecesInRow(rookPosition, potentialKingPosition)
@@ -90,6 +92,7 @@ public class ChessGame {
         ChessPiece potentialRookLeft = board.getPiece(potentialRookLocationLeft);
         ChessPiece potentialRookRight = board.getPiece(potentialRookLocationRight);
         if (
+            potentialRookLeft != null &&
             potentialRookLeft.getPieceType() == ChessPiece.PieceType.ROOK &&
             !potentialRookLeft.checkHasMoved() &&
             board.checkEmptyColumnsBetweenPiecesInRow(potentialRookLocationLeft, kingPosition)
@@ -97,6 +100,7 @@ public class ChessGame {
             partnersPositions.add(potentialRookLocationLeft);
         }
         if (
+            potentialRookRight != null &&
             potentialRookRight.getPieceType() == ChessPiece.PieceType.ROOK &&
             !potentialRookRight.checkHasMoved() &&
             board.checkEmptyColumnsBetweenPiecesInRow(kingPosition, potentialRookLocationRight)
@@ -107,7 +111,7 @@ public class ChessGame {
     }
 
 
-    private Collection<ChessMove> addKingCastleMoves(ChessPosition kingPosition, Collection<ChessPosition> rookPositions) {
+    private Collection<ChessMove> getKingCastleMoves(ChessPosition kingPosition, Collection<ChessPosition> rookPositions) {
         Collection<ChessMove> kingCastleMoves = new ArrayList<ChessMove>();
         int kingRow = kingPosition.getRow();
         int kingColumn = kingPosition.getColumn();
@@ -126,7 +130,7 @@ public class ChessGame {
     }
 
 
-    private Collection<ChessMove> addRookCastleMove(ChessPosition rookPosition, Collection<ChessPosition> kingPosition) {
+    private Collection<ChessMove> getRookCastleMove(ChessPosition rookPosition, Collection<ChessPosition> kingPosition) {
         Collection<ChessMove> rookCastleMove = new ArrayList<ChessMove>();
         if (kingPosition.isEmpty()) {
             return rookCastleMove;
@@ -144,16 +148,16 @@ public class ChessGame {
     }
 
 
-    private Collection<ChessMove> addPotentialCastleMoves(ChessPosition startPosition) {
+    private Collection<ChessMove> getPotentialCastleMoves(ChessPosition startPosition) {
         ChessPiece pieceToMove = board.getPiece(startPosition);
         ChessPiece.PieceType pieceType = pieceToMove.getPieceType();
         if (pieceType == ChessPiece.PieceType.KING && !pieceToMove.checkHasMoved()) {
             Collection<ChessPosition> castlingPartnersPositions = getKingCastlingPartnersPositions(startPosition);
-            return addKingCastleMoves(startPosition, castlingPartnersPositions);
+            return getKingCastleMoves(startPosition, castlingPartnersPositions);
         }
         else if (pieceType == ChessPiece.PieceType.ROOK && !pieceToMove.checkHasMoved()) {
-            Collection<ChessPosition> castlingPartnersPositions = getRookCastlingPartnerPosition(startPosition);\
-            return addRookCastleMove(startPosition, castlingPartnersPositions);
+            Collection<ChessPosition> castlingPartnersPositions = getRookCastlingPartnerPosition(startPosition);
+            return getRookCastleMove(startPosition, castlingPartnersPositions);
         }
         return new ArrayList<ChessMove>();
     }
@@ -181,7 +185,7 @@ public class ChessGame {
             }
         }
         setBoard(originalBoard);
-        validMoveList = addPotentialCastleMoves(startPosition);
+        validMoveList.addAll(getPotentialCastleMoves(startPosition));
         return validMoveList;
     }
 

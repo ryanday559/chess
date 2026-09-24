@@ -12,6 +12,7 @@ public class ChessMove {
     private ChessPosition startPosition;
     private ChessPosition endPosition;
     private ChessPiece.PieceType promotionPiece;
+    private boolean isCastleMove = false;
 
 
     public ChessMove(ChessPosition startPosition, ChessPosition endPosition,
@@ -20,6 +21,19 @@ public class ChessMove {
         this.endPosition = endPosition;
         this.promotionPiece = promotionPiece;
     }
+
+
+    public ChessMove(ChessPosition startPosition,
+                     ChessPosition endPosition,
+                     ChessPiece.PieceType promotionPiece,
+                     boolean isCastleMove
+    ) {
+        this.startPosition = startPosition;
+        this.endPosition = endPosition;
+        this.promotionPiece = promotionPiece;
+        this.isCastleMove = isCastleMove;
+    }
+
 
     /**
      * @return ChessPosition of starting location
@@ -43,6 +57,11 @@ public class ChessMove {
      */
     public ChessPiece.PieceType getPromotionPiece() {
         return promotionPiece;
+    }
+
+
+    public boolean getIsCastleMove() {
+        return isCastleMove;
     }
 
 
