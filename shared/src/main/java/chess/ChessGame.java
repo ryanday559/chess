@@ -3,6 +3,7 @@ package chess;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Objects;
 
 /**
  * A class that can manage a chess game, making moves on a board
@@ -254,5 +255,11 @@ public class ChessGame {
         }
         ChessGame that = (ChessGame) obj;
         return checkEqualGame(that);
+    }
+
+
+    @Override
+    public int hashCode() {
+        return 31 * Objects.hash(getBoard(), getTeamTurn());
     }
 }
