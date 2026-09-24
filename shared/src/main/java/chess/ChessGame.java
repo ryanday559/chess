@@ -180,14 +180,18 @@ public class ChessGame {
             int movingPieceRow = startPosition.getRow();
             int movingPieceColumn = startPosition.getColumn();
             TeamColor movingPieceTeam = movingPiece.getTeamColor();
+            int teamOffset = 1;
+            if (movingPieceTeam == TeamColor.BLACK) {
+                teamOffset = -1;
+            }
             ChessPosition leftNeighborPosition = new ChessPosition(movingPieceRow, movingPieceColumn - 1);
             ChessPosition rightNeighborPosition = new ChessPosition(movingPieceRow, movingPieceColumn + 1);
             if (checkEnPassantNeighbor(leftNeighborPosition, movingPieceTeam)) {
-                ChessPosition enPassantCapturePosition = new ChessPosition(movingPieceRow + 1, movingPieceColumn - 1);
+                ChessPosition enPassantCapturePosition = new ChessPosition(movingPieceRow + teamOffset, movingPieceColumn - 1);
                 enPassantMoves.add(new ChessMove(startPosition, enPassantCapturePosition, null));
             }
             if (checkEnPassantNeighbor(rightNeighborPosition, movingPieceTeam)) {
-                ChessPosition enPassantCapturePosition = new ChessPosition(movingPieceRow + 1, movingPieceColumn + 1);
+                ChessPosition enPassantCapturePosition = new ChessPosition(movingPieceRow + teamOffset, movingPieceColumn + 1);
                 enPassantMoves.add(new ChessMove(startPosition, enPassantCapturePosition, null));
             }
         }
