@@ -117,6 +117,7 @@ public class ChessGame {
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
         ChessPosition startPosition = move.getStartPosition();
+        ChessPosition endPosition = move.getEndPosition();
         if (!moveContainsPiece(move)) {
             throw new InvalidMoveException("Move " + move + "is invalid!");
         }
@@ -125,6 +126,7 @@ public class ChessGame {
             throw new InvalidMoveException("Move " + move + "is invalid!");
         }
         board.movePiece(move);
+        board.getPiece(endPosition).setHasMoved(true);
         changeCurrentTurn();
         doPromotion(move);
     }
