@@ -187,7 +187,9 @@ public class ChessBoard {
         ChessPiece pieceToMove = getPiece(startPosition);
         addPiece(endPosition, pieceToMove);
         addPiece(startPosition, null);
-        ifCastleMoveDoPartnerMove(move);
+        if (pieceToMove != null) {
+            ifCastleMoveDoPartnerMove(move);
+        }
     }
 
 
