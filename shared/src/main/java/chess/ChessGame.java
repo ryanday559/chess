@@ -54,6 +54,38 @@ public class ChessGame {
     }
 
 
+    private Collection<ChessMove> removeMovesCastleThroughCheck(Collection<ChessMove> CastleMoves) {
+        Collection<ChessMove> verifiedMoves = new ArrayList<ChessMove>();
+        ChessBoard originalBoard = getBoard();
+        for (ChessMove move : CastleMoves) {
+            ChessBoard boardCopy = new ChessBoard(originalBoard);
+            int kingEndColumn = move.getEndPosition().getColumn();
+            TeamColor castleTeam = boardCopy.getPiece(move.getStartPosition()).getTeamColor();
+            if (kingEndColumn == 7) {
+                ChessPosition kingStartPosition = move.getStartPosition();
+                int row = kingStartPosition.getRow();
+                ChessPosition possibleKingCheckPosition = new ChessPosition(row, 6);
+                ChessMove kingCheckMove = new ChessMove(kingStartPosition, possibleKingCheckPosition, null);
+                boardCopy.movePiece(kingCheckMove);
+                setBoard(boardCopy);
+            }
+            else if (kingEndColumn == 3) {
+                ChessPosition kingStartPosition = move.getStartPosition();
+                int row = kingStartPosition.getRow();
+                ChessPosition possibleKingCheckPosition = new ChessPosition(row, 4);
+                ChessMove kingCheckMove = new ChessMove(kingStartPosition, possibleKingCheckPosition, null);
+                boardCopy.movePiece(kingCheckMove);
+                setBoard(boardCopy);
+            }
+            if (!isInCheck(castleTeam)) {
+                verifiedMoves.add(move);
+            }
+        }
+        setBoard(originalBoard);
+        return verifiedMoves;
+    }
+
+
     private Collection<ChessPosition> getKingCastlingPartnersPositions(ChessPosition kingPosition) {
         Collection<ChessPosition> partnersPositions = new ArrayList<ChessPosition>();
         int kingRow = kingPosition.getRow();
@@ -96,7 +128,7 @@ public class ChessGame {
             }
             kingCastleMoves.add(new ChessMove(kingPosition, kingEndPosition, null, true));
         }
-        return kingCastleMoves;
+        return removeMovesCastleThroughCheck(kingCastleMoves);
     }
 
 

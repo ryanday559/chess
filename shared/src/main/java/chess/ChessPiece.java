@@ -15,6 +15,7 @@ public class ChessPiece {
     private ChessGame.TeamColor pieceColor;
     private PieceType type;
     private boolean hasMoved = false;
+    private boolean enPassant = false;
 
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
