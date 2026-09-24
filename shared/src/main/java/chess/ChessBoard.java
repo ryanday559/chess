@@ -200,10 +200,25 @@ public class ChessBoard {
     }
 
 
+    private void ifEnPassantDoEnPassantCapture(ChessMove move, ChessPiece movingPiece) {
+        if (movingPiece != null && movingPiece.getPieceType() == ChessPiece.PieceType.PAWN) {
+            int startColumn = move.getStartPosition().getColumn();
+            int startRow = move.getStartPosition().getRow();
+            ChessPosition endPosition = move.getEndPosition();
+            int endColumn = endPosition.getColumn();
+            if (startColumn != endColumn && getPiece(endPosition) == null) {
+                ChessPosition capturedPosition = new ChessPosition(startRow, endColumn);
+                addPiece(capturedPosition, null);
+            }
+        }
+    }
+
+
     public void movePiece(ChessMove move) {
         ChessPosition startPosition = move.getStartPosition();
         ChessPosition endPosition = move.getEndPosition();
         ChessPiece pieceToMove = getPiece(startPosition);
+        ifEnPassantDoEnPassantCapture(move, pieceToMove);
         addPiece(endPosition, pieceToMove);
         addPiece(startPosition, null);
         if (pieceToMove != null) {
