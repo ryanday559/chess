@@ -68,7 +68,8 @@ public class ChessMove {
     private boolean checkEqualMove(ChessMove otherMove) {
         if (getStartPosition().equals(otherMove.getStartPosition()) &&
             getEndPosition().equals(otherMove.getEndPosition()) &&
-            getPromotionPiece() == (otherMove.getPromotionPiece())
+            getPromotionPiece() == otherMove.getPromotionPiece() &&
+            getIsCastleMove() == otherMove.getIsCastleMove()
         ) {
             return true;
         }
@@ -91,7 +92,12 @@ public class ChessMove {
 
     @Override
     public int hashCode() {
-        return 31 * Objects.hash(getStartPosition(), getEndPosition(), getPromotionPiece());
+        return 31 * Objects.hash(
+                getStartPosition(),
+                getEndPosition(),
+                getPromotionPiece(),
+                getIsCastleMove()
+        );
     }
 
 

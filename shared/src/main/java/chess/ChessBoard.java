@@ -129,12 +129,58 @@ public class ChessBoard {
     }
 
 
+    private void moveKingCastle(int row, ChessPosition rookEndPosition) {
+        int rookEndColumn = rookEndPosition.getColumn();
+        ChessPosition kingStart = new ChessPosition(row, 5);
+        ChessPosition kingEnd;
+        if (rookEndColumn == 6) {
+            kingEnd = new ChessPosition(row, 7);
+        }
+        else {
+            kingEnd = new ChessPosition(row, 3);
+        }
+        movePiece(new ChessMove(kingStart, kingEnd, null));
+    }
+
+
+    private void moveRookCastle(int row, ChessPosition kingEndPosition) {
+        int kingEndColumn = kingEndPosition.getColumn();
+        ChessPosition rookStart;
+        ChessPosition rookEnd;
+        if (kingEndColumn == 7) {
+            rookStart = new ChessPosition(row, 8);
+            rookEnd = new ChessPosition(row, 6);
+        }
+        else {
+            rookStart = new ChessPosition(row, 1);
+            rookEnd = new ChessPosition(row, 4);
+        }
+        movePiece(new ChessMove(rookStart, rookEnd, null));
+    }
+
+
+    private void ifCastleMoveDoPartnerMove(ChessMove move) {
+        if (move.getIsCastleMove()) {
+            ChessPosition moveEndPosition = move.getEndPosition();
+            ChessPiece.PieceType movePieceType = getPiece(moveEndPosition).getPieceType();
+            int castleRow = moveEndPosition.getRow();
+            if (movePieceType == ChessPiece.PieceType.ROOK) {
+                moveKingCastle(castleRow, moveEndPosition);
+            }
+            else {
+                moveRookCastle(castleRow, moveEndPosition);
+            }
+        }
+    }
+
+
     public void movePiece(ChessMove move) {
         ChessPosition startPosition = move.getStartPosition();
         ChessPosition endPosition = move.getEndPosition();
         ChessPiece pieceToMove = getPiece(startPosition);
         addPiece(endPosition, pieceToMove);
         addPiece(startPosition, null);
+        ifCastleMoveDoPartnerMove(move);
     }
 
 

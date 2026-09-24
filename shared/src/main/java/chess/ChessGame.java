@@ -124,7 +124,7 @@ public class ChessGame {
             else {
                 kingEndPosition = new ChessPosition(kingRow, 7);
             }
-            kingCastleMoves.add(new ChessMove(kingPosition, kingEndPosition, null));
+            kingCastleMoves.add(new ChessMove(kingPosition, kingEndPosition, null, true));
         }
         return kingCastleMoves;
     }
@@ -143,7 +143,7 @@ public class ChessGame {
         else {
             rookEndPosition = new ChessPosition(rookRow, 4);
         }
-        rookCastleMove.add(new ChessMove(rookPosition, rookEndPosition, null));
+        rookCastleMove.add(new ChessMove(rookPosition, rookEndPosition, null, true));
         return rookCastleMove;
     }
 
