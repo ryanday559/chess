@@ -175,7 +175,6 @@ public class ChessGame {
         ChessPiece movingPiece = board.getPiece(startPosition);
         TeamColor pieceColor = movingPiece.getTeamColor();
         Collection<ChessMove> possibleMoves = movingPiece.pieceMoves(getBoard(), startPosition);
-        System.out.println(possibleMoves);
         Collection<ChessMove> validMoveList = new ArrayList<ChessMove>();
         for (ChessMove move : possibleMoves) {
             ChessBoard boardCopy = new ChessBoard(originalBoard);
@@ -186,7 +185,8 @@ public class ChessGame {
             }
         }
         setBoard(originalBoard);
-        validMoveList.addAll(getPotentialCastleMoves(startPosition));
+        Collection<ChessMove> potentialCastleMoves = getPotentialCastleMoves(startPosition);
+        validMoveList.addAll(potentialCastleMoves);
         return validMoveList;
     }
 

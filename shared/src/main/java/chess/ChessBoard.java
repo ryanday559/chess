@@ -120,7 +120,7 @@ public class ChessBoard {
         int startColumn = positionLeft.getColumn();
         int endColumn = positionRight.getColumn();
         for (int i = startColumn + 1; i < endColumn; i++) {
-            ChessPosition currentPosition = new ChessPosition(i, row);
+            ChessPosition currentPosition = new ChessPosition(row, i);
             if (getPiece(currentPosition) != null) {
                 return false;
             }
@@ -160,7 +160,14 @@ public class ChessBoard {
 
 
     private void ifCastleMoveDoPartnerMove(ChessMove move) {
-        if (move.getIsCastleMove()) {
+        ChessPiece.PieceType pieceType = getPiece(move.getEndPosition()).getPieceType();
+        int columnDifferential = Math.abs(move.getEndPosition().getColumn() - move.getStartPosition().getColumn());
+        /* Had to add in the above sections and the column differential check because BYU's supplied tests pass in moves
+            without a castle marker.
+        * */
+        if (move.getIsCastleMove() ||
+            (pieceType == ChessPiece.PieceType.KING && columnDifferential > 1)
+        ) {
             ChessPosition moveEndPosition = move.getEndPosition();
             ChessPiece.PieceType movePieceType = getPiece(moveEndPosition).getPieceType();
             int castleRow = moveEndPosition.getRow();
