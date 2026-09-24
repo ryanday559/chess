@@ -53,6 +53,72 @@ public class ChessGame {
         BLACK
     }
 
+
+    private Collection<ChessPosition> getRookCastlingPartnerPosition(ChessPosition rookPosition) {
+        Collection<ChessPosition> kingCastlePosition = new ArrayList<ChessPosition>();
+        int rookRow = rookPosition.getRow();
+        boolean isRightRook = false;
+        if (rookPosition.getColumn() == 8) {
+            isRightRook = true;
+        }
+        ChessPosition potentialKingPosition = new ChessPosition(rookRow, 5);
+        ChessPiece potentialKingPiece = board.getPiece(potentialKingPosition);
+        if (
+            isRightRook &&
+            potentialKingPiece.getPieceType() == ChessPiece.PieceType.KING &&
+            !potentialKingPiece.checkHasMoved() &&
+            board.checkEmptyColumnsBetweenPiecesInRow(potentialKingPosition, rookPosition)
+        ) {
+            kingCastlePosition.add(potentialKingPosition);
+        }
+        else if (
+            potentialKingPiece.getPieceType() == ChessPiece.PieceType.KING &&
+            !potentialKingPiece.checkHasMoved() &&
+            board.checkEmptyColumnsBetweenPiecesInRow(rookPosition, potentialKingPosition)
+        ) {
+            kingCastlePosition.add(potentialKingPosition);
+        }
+        return kingCastlePosition;
+    }
+
+
+    private Collection<ChessPosition> getKingCastlingPartnersPositions(ChessPosition kingPosition) {
+        Collection<ChessPosition> partnersPositions = new ArrayList<ChessPosition>();
+        int kingRow = kingPosition.getRow();
+        ChessPosition potentialRookLocationLeft = new ChessPosition(kingRow, 1);
+        ChessPosition potentialRookLocationRight = new ChessPosition(kingRow, 8);
+        ChessPiece potentialRookLeft = board.getPiece(potentialRookLocationLeft);
+        ChessPiece potentialRookRight = board.getPiece(potentialRookLocationRight);
+        if (
+            potentialRookLeft.getPieceType() == ChessPiece.PieceType.ROOK &&
+            !potentialRookLeft.checkHasMoved() &&
+            board.checkEmptyColumnsBetweenPiecesInRow(potentialRookLocationLeft, kingPosition)
+        ) {
+            partnersPositions.add(potentialRookLocationLeft);
+        }
+        if (
+            potentialRookRight.getPieceType() == ChessPiece.PieceType.ROOK &&
+            !potentialRookRight.checkHasMoved() &&
+            board.checkEmptyColumnsBetweenPiecesInRow(kingPosition, potentialRookLocationRight)
+        ) {
+            partnersPositions.add(potentialRookLocationRight);
+        }
+        return partnersPositions;
+    }
+
+
+    private Collection<ChessMove> addPotentialCastleMoves(ChessPosition startPosition) {
+        ChessPiece pieceToMove = board.getPiece(startPosition);
+        ChessPiece.PieceType pieceType = pieceToMove.getPieceType();
+        if (pieceType == ChessPiece.PieceType.KING && !pieceToMove.checkHasMoved()) {
+            Collection<ChessPosition> castlingPartnersPositions = getKingCastlingPartnersPositions(startPosition);
+        }
+        else if (pieceType == ChessPiece.PieceType.ROOK && !pieceToMove.checkHasMoved()) {
+            Collection<ChessPosition> castlingPartnersPositions = getRookCastlingPartnerPosition(startPosition);
+        }
+    }
+
+
     /**
      * Gets all valid moves for a piece at the given location
      *
@@ -75,6 +141,7 @@ public class ChessGame {
             }
         }
         setBoard(originalBoard);
+        validMoveList = addPotentialCastleMoves(startPosition);
         return validMoveList;
     }
 

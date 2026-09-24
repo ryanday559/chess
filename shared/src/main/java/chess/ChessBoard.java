@@ -112,6 +112,23 @@ public class ChessBoard {
     }
 
 
+    public boolean checkEmptyColumnsBetweenPiecesInRow(ChessPosition positionLeft, ChessPosition positionRight) {
+        if (positionLeft.getRow() != positionRight.getRow()) {
+            throw new IllegalArgumentException("Chess positions not on same row!");
+        }
+        int row = positionLeft.getRow();
+        int startColumn = positionLeft.getColumn();
+        int endColumn = positionRight.getColumn();
+        for (int i = startColumn + 1; i < endColumn; i++) {
+            ChessPosition currentPosition = new ChessPosition(i, row);
+            if (getPiece(currentPosition) != null) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
     public void movePiece(ChessMove move) {
         ChessPosition startPosition = move.getStartPosition();
         ChessPosition endPosition = move.getEndPosition();
