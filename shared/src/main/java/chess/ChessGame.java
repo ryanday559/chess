@@ -2,6 +2,7 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 
 /**
  * A class that can manage a chess game, making moves on a board
@@ -186,6 +187,18 @@ public class ChessGame {
         return true;
     }
 
+
+    private Collection<ChessMove> getAllTeamValidMoves(TeamColor team) {
+        Collection<ChessPosition> teamPiecePositions = board.getTeamPiecePositions(team);
+        Collection<ChessMove> allTeamValidMoves = new ArrayList<ChessMove>();
+        for (ChessPosition position : teamPiecePositions) {
+            Collection<ChessMove> pieceValidMoves = validMoves(position);
+            allTeamValidMoves.addAll(pieceValidMoves);
+        }
+        return allTeamValidMoves;
+    }
+
+
     /**
      * Determines if the given team is in stalemate, which here is defined as having
      * no valid moves while not in check.
@@ -194,7 +207,11 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        Collection<ChessMove> teamValidMoves = getAllTeamValidMoves(teamColor);
+        if (!isInCheck(teamColor) && teamValidMoves.isEmpty()) {
+            return true;
+        }
+        return false;
     }
 
     /**

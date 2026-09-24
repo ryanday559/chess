@@ -1,9 +1,6 @@
 package chess;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * A chessboard that can hold and rearrange chess pieces.
@@ -64,6 +61,21 @@ public class ChessBoard {
         int row = position.getRow();
         int col = position.getColumn();
         return board[row - 1][col - 1];
+    }
+
+
+    public Collection<ChessPosition> getTeamPiecePositions(ChessGame.TeamColor team) {
+        Collection<ChessPosition> teamPiecePositions = new ArrayList<ChessPosition>();
+        for (int i = 1; i <= board.length; i++) {
+            for (int j = 1; j <= board[i - 1].length; j++) {
+                ChessPosition currentPosition = new ChessPosition(i, j);
+                ChessPiece piece = getPiece(currentPosition);
+                if (piece != null && piece.getTeamColor().equals(team)) {
+                    teamPiecePositions.add(currentPosition);
+                }
+            }
+        }
+        return teamPiecePositions;
     }
 
 
