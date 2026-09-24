@@ -54,36 +54,6 @@ public class ChessGame {
     }
 
 
-    private Collection<ChessPosition> getRookCastlingPartnerPosition(ChessPosition rookPosition) {
-        Collection<ChessPosition> kingCastlePosition = new ArrayList<ChessPosition>();
-        int rookRow = rookPosition.getRow();
-        boolean isRightRook = false;
-        if (rookPosition.getColumn() == 8) {
-            isRightRook = true;
-        }
-        ChessPosition potentialKingPosition = new ChessPosition(rookRow, 5);
-        ChessPiece potentialKingPiece = board.getPiece(potentialKingPosition);
-        if (
-            isRightRook &&
-            potentialKingPiece != null &&
-            potentialKingPiece.getPieceType() == ChessPiece.PieceType.KING &&
-            !potentialKingPiece.checkHasMoved() &&
-            board.checkEmptyColumnsBetweenPiecesInRow(potentialKingPosition, rookPosition)
-        ) {
-            kingCastlePosition.add(potentialKingPosition);
-        }
-        else if (
-            potentialKingPiece != null &&
-            potentialKingPiece.getPieceType() == ChessPiece.PieceType.KING &&
-            !potentialKingPiece.checkHasMoved() &&
-            board.checkEmptyColumnsBetweenPiecesInRow(rookPosition, potentialKingPosition)
-        ) {
-            kingCastlePosition.add(potentialKingPosition);
-        }
-        return kingCastlePosition;
-    }
-
-
     private Collection<ChessPosition> getKingCastlingPartnersPositions(ChessPosition kingPosition) {
         Collection<ChessPosition> partnersPositions = new ArrayList<ChessPosition>();
         int kingRow = kingPosition.getRow();
@@ -130,34 +100,12 @@ public class ChessGame {
     }
 
 
-    private Collection<ChessMove> getRookCastleMove(ChessPosition rookPosition, Collection<ChessPosition> kingPosition) {
-        Collection<ChessMove> rookCastleMove = new ArrayList<ChessMove>();
-        if (kingPosition.isEmpty()) {
-            return rookCastleMove;
-        }
-        int rookRow = rookPosition.getRow();
-        ChessPosition rookEndPosition;
-        if (rookRow == 8) {
-            rookEndPosition = new ChessPosition(rookRow, 6);
-        }
-        else {
-            rookEndPosition = new ChessPosition(rookRow, 4);
-        }
-        rookCastleMove.add(new ChessMove(rookPosition, rookEndPosition, null, true));
-        return rookCastleMove;
-    }
-
-
     private Collection<ChessMove> getPotentialCastleMoves(ChessPosition startPosition) {
         ChessPiece pieceToMove = board.getPiece(startPosition);
         ChessPiece.PieceType pieceType = pieceToMove.getPieceType();
         if (pieceType == ChessPiece.PieceType.KING && !pieceToMove.checkHasMoved()) {
             Collection<ChessPosition> castlingPartnersPositions = getKingCastlingPartnersPositions(startPosition);
             return getKingCastleMoves(startPosition, castlingPartnersPositions);
-        }
-        else if (pieceType == ChessPiece.PieceType.ROOK && !pieceToMove.checkHasMoved()) {
-            Collection<ChessPosition> castlingPartnersPositions = getRookCastlingPartnerPosition(startPosition);
-            return getRookCastleMove(startPosition, castlingPartnersPositions);
         }
         return new ArrayList<ChessMove>();
     }
