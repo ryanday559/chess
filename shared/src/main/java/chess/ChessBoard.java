@@ -38,6 +38,21 @@ public class ChessBoard {
     }
 
 
+    public boolean positionIsInBounds(ChessPosition position) {
+        int row = position.getRow();
+        int column = position.getColumn();
+        if (
+            row < board.length &&
+            row > 0 &&
+            column < board[row - 1].length &&
+            column > 0
+        ) {
+            return true;
+        }
+        return false;
+    }
+
+
     /**
      * Adds a chess piece to the chessboard
      *

@@ -143,6 +143,73 @@ public class ChessGame {
     }
 
 
+    private boolean pawnDoubleStartCheck(ChessMove move) {
+        int startRow = move.getStartPosition().getRow();
+        int endRow = move.getEndPosition().getRow();
+        int rowDifferential = Math.abs(startRow - endRow);
+        if (rowDifferential > 1) {
+            return true;
+        }
+        return false;
+    }
+
+
+    private boolean checkEnPassantNeighbor(ChessPosition neighborPosition, TeamColor movingTeam) {
+        if (board.positionIsInBounds(neighborPosition)) {
+            ChessPiece neighborPiece = board.getPiece(neighborPosition);
+            if (
+                neighborPiece != null &&
+                neighborPiece.getPieceType() == ChessPiece.PieceType.PAWN &&
+                movingTeam != neighborPiece.getTeamColor() &&
+                neighborPiece.getEnPassantVulnerable()
+            ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    private Collection<ChessMove> getEnPassantMoves(ChessPosition startPosition) {
+        Collection<ChessMove> enPassantMoves = new ArrayList<ChessMove>();
+        ChessPiece movingPiece = board.getPiece(startPosition);
+        if (
+            movingPiece != null &&
+            movingPiece.getPieceType() == ChessPiece.PieceType.PAWN
+        ) {
+            int movingPieceRow = startPosition.getRow();
+            int movingPieceColumn = startPosition.getColumn();
+            TeamColor movingPieceTeam = movingPiece.getTeamColor();
+            ChessPosition leftNeighborPosition = new ChessPosition(movingPieceRow, movingPieceColumn - 1);
+            ChessPosition rightNeighborPosition = new ChessPosition(movingPieceRow, movingPieceColumn + 1);
+            if (checkEnPassantNeighbor(leftNeighborPosition, movingPieceTeam)) {
+                ChessPosition enPassantCapturePosition = new ChessPosition(movingPieceRow + 1, movingPieceColumn - 1);
+                enPassantMoves.add(new ChessMove(startPosition, enPassantCapturePosition, null));
+            }
+            if (checkEnPassantNeighbor(rightNeighborPosition, movingPieceTeam)) {
+                ChessPosition enPassantCapturePosition = new ChessPosition(movingPieceRow + 1, movingPieceColumn + 1);
+                enPassantMoves.add(new ChessMove(startPosition, enPassantCapturePosition, null));
+            }
+        }
+        return enPassantMoves;
+    }
+
+
+    private void setEnPassantCheck(ChessMove move) {
+        ChessPiece piece = board.getPiece(move.getEndPosition());
+        if (piece != null && piece.getEnPassantVulnerable()) {
+            piece.setEnPassantVulnerable(false);
+        }
+        else if (
+            piece != null &&
+            piece.getPieceType() == ChessPiece.PieceType.PAWN &&
+            pawnDoubleStartCheck(move)
+        ) {
+            piece.setEnPassantVulnerable(true);
+        }
+    }
+
+
     /**
      * Gets all valid moves for a piece at the given location
      *
@@ -159,6 +226,7 @@ public class ChessGame {
             Collection<ChessMove> potentialCastleMoves = getPotentialCastleMoves(startPosition);
             possibleMoves.addAll(potentialCastleMoves);
         }
+        possibleMoves.addAll(getEnPassantMoves(startPosition));
         Collection<ChessMove> validMoveList = new ArrayList<ChessMove>();
         for (ChessMove move : possibleMoves) {
             ChessBoard boardCopy = new ChessBoard(originalBoard);
@@ -221,6 +289,7 @@ public class ChessGame {
         }
         board.movePiece(move);
         board.getPiece(endPosition).setHasMoved(true);
+        setEnPassantCheck(move);
         changeCurrentTurn();
         doPromotion(move);
     }
