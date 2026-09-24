@@ -234,4 +234,25 @@ public class ChessGame {
     public ChessBoard getBoard() {
         return new ChessBoard(board);
     }
+
+
+    private boolean checkEqualGame(ChessGame otherGame) {
+        if (getBoard().equals(otherGame.getBoard()) && getTeamTurn().equals(otherGame.getTeamTurn())) {
+            return true;
+        }
+        return false;
+    }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        else if (obj != null && obj.getClass() != getClass()) {
+            return false;
+        }
+        ChessGame that = (ChessGame) obj;
+        return checkEqualGame(that);
+    }
 }
