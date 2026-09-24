@@ -15,7 +15,7 @@ public class ChessPiece {
     private ChessGame.TeamColor pieceColor;
     private PieceType type;
     private boolean hasMoved = false;
-    private boolean enPassant = false;
+    private boolean enPassantVulnerable = false;
 
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
@@ -58,6 +58,16 @@ public class ChessPiece {
 
     public void setHasMoved(boolean moved) {
         hasMoved = moved;
+    }
+
+
+    public void setEnPassantVulnerable(boolean vulnerable) {
+        enPassantVulnerable = vulnerable;
+    }
+
+
+    public boolean getEnPassantVulnerable() {
+        return enPassantVulnerable;
     }
 
 
