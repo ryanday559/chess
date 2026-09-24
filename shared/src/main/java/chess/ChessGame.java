@@ -107,15 +107,41 @@ public class ChessGame {
     }
 
 
+    private Collection<ChessMove> addKingCastleMoves(ChessPosition kingPosition, Collection<ChessPosition> rookPositions) {
+        Collection<ChessMove> kingCastleMoves = new ArrayList<ChessMove>();
+        int kingRow = kingPosition.getRow();
+        int kingColumn = kingPosition.getColumn();
+        for (ChessPosition rookPosition : rookPositions) {
+            int rookColumn = rookPosition.getColumn();
+            ChessPosition kingEndPosition;
+            if (rookColumn < kingColumn) {
+                kingEndPosition = new ChessPosition(kingRow, 3);
+            }
+            else {
+                kingEndPosition = new ChessPosition(kingRow, 7);
+            }
+            kingCastleMoves.add(new ChessMove(kingPosition, kingEndPosition, null));
+        }
+        return kingCastleMoves;
+    }
+
+
+    private Collection<ChessMove> addRookCastleMove(ChessPosition rookPosition, Collection<ChessPosition> kingPosition) {
+
+    }
+
+
     private Collection<ChessMove> addPotentialCastleMoves(ChessPosition startPosition) {
         ChessPiece pieceToMove = board.getPiece(startPosition);
         ChessPiece.PieceType pieceType = pieceToMove.getPieceType();
         if (pieceType == ChessPiece.PieceType.KING && !pieceToMove.checkHasMoved()) {
             Collection<ChessPosition> castlingPartnersPositions = getKingCastlingPartnersPositions(startPosition);
+            return addKingCastleMoves(startPosition, castlingPartnersPositions);
         }
         else if (pieceType == ChessPiece.PieceType.ROOK && !pieceToMove.checkHasMoved()) {
             Collection<ChessPosition> castlingPartnersPositions = getRookCastlingPartnerPosition(startPosition);
         }
+        return new ArrayList<ChessMove>();
     }
 
 
