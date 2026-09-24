@@ -2,7 +2,6 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Objects;
 
 /**
@@ -15,6 +14,7 @@ public class ChessGame {
 
     private TeamColor currentTurn = TeamColor.WHITE;
     private ChessBoard board;
+    private ChessPosition enPassantVulnerablePosition;
 
 
     public ChessGame() {
@@ -199,6 +199,15 @@ public class ChessGame {
     }
 
 
+    private void resetPreviousEnPassantPosition()  {
+        if (enPassantVulnerablePosition != null) {
+            ChessPiece previousVulnerablePiece = board.getPiece(enPassantVulnerablePosition);
+            previousVulnerablePiece.setEnPassantVulnerable(false);
+            enPassantVulnerablePosition = null;
+        }
+    }
+
+
     private void setEnPassantCheck(ChessMove move) {
         ChessPiece piece = board.getPiece(move.getEndPosition());
         if (piece != null && piece.getEnPassantVulnerable()) {
@@ -210,6 +219,7 @@ public class ChessGame {
             pawnDoubleStartCheck(move)
         ) {
             piece.setEnPassantVulnerable(true);
+            enPassantVulnerablePosition = move.getEndPosition();
         }
     }
 
@@ -230,7 +240,8 @@ public class ChessGame {
             Collection<ChessMove> potentialCastleMoves = getPotentialCastleMoves(startPosition);
             possibleMoves.addAll(potentialCastleMoves);
         }
-        possibleMoves.addAll(getEnPassantMoves(startPosition));
+        Collection<ChessMove> enPassantMoves = getEnPassantMoves(startPosition);
+        possibleMoves.addAll(enPassantMoves);
         Collection<ChessMove> validMoveList = new ArrayList<ChessMove>();
         for (ChessMove move : possibleMoves) {
             ChessBoard boardCopy = new ChessBoard(originalBoard);
@@ -241,6 +252,9 @@ public class ChessGame {
             }
         }
         setBoard(originalBoard);
+        if (enPassantMoves.isEmpty()) {
+            resetPreviousEnPassantPosition();
+        }
         return validMoveList;
     }
 
