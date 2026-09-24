@@ -175,6 +175,7 @@ public class ChessGame {
         ChessPiece movingPiece = board.getPiece(startPosition);
         TeamColor pieceColor = movingPiece.getTeamColor();
         Collection<ChessMove> possibleMoves = movingPiece.pieceMoves(getBoard(), startPosition);
+        System.out.println(possibleMoves);
         Collection<ChessMove> validMoveList = new ArrayList<ChessMove>();
         for (ChessMove move : possibleMoves) {
             ChessBoard boardCopy = new ChessBoard(originalBoard);
