@@ -127,7 +127,20 @@ public class ChessGame {
 
 
     private Collection<ChessMove> addRookCastleMove(ChessPosition rookPosition, Collection<ChessPosition> kingPosition) {
-
+        Collection<ChessMove> rookCastleMove = new ArrayList<ChessMove>();
+        if (kingPosition.isEmpty()) {
+            return rookCastleMove;
+        }
+        int rookRow = rookPosition.getRow();
+        ChessPosition rookEndPosition;
+        if (rookRow == 8) {
+            rookEndPosition = new ChessPosition(rookRow, 6);
+        }
+        else {
+            rookEndPosition = new ChessPosition(rookRow, 4);
+        }
+        rookCastleMove.add(new ChessMove(rookPosition, rookEndPosition, null));
+        return rookCastleMove;
     }
 
 
@@ -139,7 +152,8 @@ public class ChessGame {
             return addKingCastleMoves(startPosition, castlingPartnersPositions);
         }
         else if (pieceType == ChessPiece.PieceType.ROOK && !pieceToMove.checkHasMoved()) {
-            Collection<ChessPosition> castlingPartnersPositions = getRookCastlingPartnerPosition(startPosition);
+            Collection<ChessPosition> castlingPartnersPositions = getRookCastlingPartnerPosition(startPosition);\
+            return addRookCastleMove(startPosition, castlingPartnersPositions);
         }
         return new ArrayList<ChessMove>();
     }
