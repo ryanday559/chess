@@ -17,7 +17,8 @@ public class ChessGame {
 
 
     public ChessGame() {
-
+        board = new ChessBoard();
+        board.resetBoard();
     }
 
     /**
@@ -214,6 +215,7 @@ public class ChessGame {
         return false;
     }
 
+
     /**
      * Sets this game's chessboard to a given board
      *
@@ -222,6 +224,7 @@ public class ChessGame {
     public void setBoard(ChessBoard board) {
         this.board = board;
     }
+
 
     /**
      * Gets the current chessboard
