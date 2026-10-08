@@ -13,6 +13,7 @@ public class Server {
     public Server() {
         javalin = Javalin.create(config -> config.staticFiles.add("web"));
 
+        javalin.delete("/db", ctx->ctx.result("{}"));
         javalin.post("/user", Server::register);
         // Register your endpoints and exception handlers here.
 
