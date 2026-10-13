@@ -3,6 +3,7 @@ package service;
 import dataaccess.DataAccessException;
 import dataaccess.TokenInUseException;
 import dataaccess.memory.MemoryAuthentificationDataAccess;
+import model.AuthData;
 
 import java.util.UUID;
 
@@ -32,5 +33,9 @@ public class AuthentificationService {
 
     public void removeAuth(String authToken) {
         authDAO.deleteAuth(authToken);
+    }
+
+    public AuthData getAuthData(String authToken) {
+        return authDAO.getAuth(authToken);
     }
 }

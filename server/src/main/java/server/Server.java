@@ -6,7 +6,9 @@ import dataaccess.TokenInUseException;
 import dataaccess.UsernameInUseException;
 import io.javalin.*;
 import io.javalin.http.Context;
+import model.AuthData;
 import model.GameData;
+import model.GameJoinData;
 import model.UserData;
 import result.LoginResult;
 import service.AuthentificationService;
@@ -87,6 +89,10 @@ public class Server {
     }
 
     private void joinGame(Context ctx) {
+        GameJoinData gameJoinData = getBodyObject(ctx, GameJoinData.class);
+        String authToken = ctx.header("authorization");
+        AuthData authData = authService.getAuthData(authToken);
+        gameService.joinGame(gameJoinData, authData);
         ctx.result("{}");
     }
 
