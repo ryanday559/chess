@@ -46,7 +46,8 @@ public class Server {
 
     private void login(Context ctx) {
         UserData userData = getBodyObject(ctx, UserData.class);
-        var result = Map.of("username", userData.username(), "password", userData.password());
+        LoginResult loginResult = userService.login(userData);
+        var result = Map.of("username", loginResult.username(), "authToken", loginResult.authToken());
         ctx.result(new Gson().toJson(result));
     }
 
