@@ -42,7 +42,7 @@ public class MemoryGameDataAccess implements GameDataAccess {
     }
 
     public void clear() {
-
+        gameMap = new HashMap<Integer, GameData>();
     }
 
     private int createGameID() {
