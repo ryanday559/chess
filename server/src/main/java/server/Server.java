@@ -3,6 +3,7 @@ package server;
 import com.google.gson.Gson;
 import io.javalin.*;
 import io.javalin.http.Context;
+import model.GameData;
 import model.UserData;
 import service.UserService;
 
@@ -17,10 +18,17 @@ public class Server {
     public Server() {
         javalin = Javalin.create(config -> config.staticFiles.add("web"));
 
-        javalin.delete("/db", ctx->ctx.result("{}"));
+        javalin.delete("/db", Server::clear);
         javalin.post("/user", Server::register);
         javalin.post("/session", Server::login);
         javalin.delete("/session", Server::logout);
+        javalin.get("/game", Server::listGames);
+        javalin.post("/game", Server::createGame);
+        javalin.put("/game", Server::joinGame);
+    }
+
+    private static void clear(Context ctx) {
+        ctx.result("{}");
     }
 
     private static void register(Context ctx) {
@@ -37,8 +45,26 @@ public class Server {
     }
 
     private static void logout(Context ctx) {
+        // Need to add in an authtoken check
         ctx.result("{}");
     }
+
+    private static void listGames(Context ctx) {
+        // list games logic here (no body)
+        var result = Map.of("games", "");
+        ctx.result(new Gson().toJson(result));
+    }
+
+    private static void createGame(Context ctx) {
+        GameData gameData = getBodyObject(ctx, GameData.class);
+        var result = Map.of("gameName", gameData.gameName());
+        ctx.result(new Gson().toJson(result));
+    }
+
+    private static void joinGame(Context ctx) {
+        ctx.result("{}");
+    }
+
 
     public int run(int desiredPort) {
         javalin.start(desiredPort);
