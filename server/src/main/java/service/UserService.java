@@ -20,4 +20,6 @@ public class UserService {
         String authToken = generateAuthToken();
         return new LoginResult(requestData.username(), authToken);
     }
+
+
 }
