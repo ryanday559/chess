@@ -6,4 +6,5 @@ public interface AuthentificationDataAccess {
     public AuthData createAuth(int authToken);
     public AuthData getAuth(int authToken);
     public void deleteAuth(int authToken);
+    public void clear();
 }
