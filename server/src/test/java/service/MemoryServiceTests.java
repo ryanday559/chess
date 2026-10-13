@@ -46,4 +46,15 @@ public class MemoryServiceTests {
                 () -> authDAO.createAuth(authToken, "Sherry")
         );
     }
+
+    @Test
+    public void deleteAuthDataTest() throws TokenInUseException {
+        authDAO.clear();
+        String authToken = "Authenticated";
+
+        authDAO.createAuth(authToken, "Bob");
+        authDAO.deleteAuth(authToken);
+
+        assertNull(authDAO.getAuth(authToken));
+    }
 }
