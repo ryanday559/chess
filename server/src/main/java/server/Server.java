@@ -1,6 +1,9 @@
 package server;
 
 import com.google.gson.Gson;
+import dataaccess.DataAccessException;
+import dataaccess.TokenInUseException;
+import dataaccess.UsernameInUseException;
 import io.javalin.*;
 import io.javalin.http.Context;
 import model.GameData;
@@ -9,6 +12,9 @@ import result.LoginResult;
 import service.AuthentificationService;
 import service.GameService;
 import service.UserService;
+
+import javax.xml.crypto.Data;
+import java.util.Collection;
 import java.util.Map;
 
 public class Server {
@@ -37,28 +43,39 @@ public class Server {
         ctx.result("{}");
     }
 
-    private void register(Context ctx) {
+    private void register(Context ctx) throws UsernameInUseException, TokenInUseException {
         UserData userData = getBodyObject(ctx, UserData.class);
         LoginResult loginResult = userService.register(userData);
+        authService.updateAuth(loginResult.authToken(), loginResult.username());
         var result = Map.of("username", loginResult.username(), "authToken", loginResult.authToken());
         ctx.result(new Gson().toJson(result));
     }
 
-    private void login(Context ctx) {
+    private void login(Context ctx) throws DataAccessException, TokenInUseException {
         UserData userData = getBodyObject(ctx, UserData.class);
         LoginResult loginResult = userService.login(userData);
+        authService.updateAuth(loginResult.authToken(), loginResult.username());
         var result = Map.of("username", loginResult.username(), "authToken", loginResult.authToken());
         ctx.result(new Gson().toJson(result));
     }
 
     private void logout(Context ctx) {
-        // Need to add in an authtoken check
+        String authToken = ctx.header("authorization");
+        authService.removeAuth(authToken);
         ctx.result("{}");
     }
 
     private void listGames(Context ctx) {
-        // list games logic here (no body)
-        var result = Map.of("games", "");
+        String authToken = ctx.header("authorization");
+        try {
+            authService.authenticate(authToken);
+        }
+        catch (DataAccessException e) {
+            ctx.result(new Gson().toJson(e.getMessage()));
+            return;
+        }
+        Collection<GameData> games = gameService.listGames();
+        var result = Map.of("games", authToken);
         ctx.result(new Gson().toJson(result));
     }
 
