@@ -23,10 +23,10 @@ public class MemoryAuthentificationDataAccess implements AuthentificationDataAcc
     }
 
     public void deleteAuth(int authToken) {
-
+        authentificationMap.remove(authToken);
     }
 
     public void clear() {
-
+        authentificationMap = new HashMap<Integer, AuthData>();
     }
 }
