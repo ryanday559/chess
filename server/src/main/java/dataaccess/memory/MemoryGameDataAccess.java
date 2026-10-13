@@ -4,17 +4,26 @@ import chess.ChessGame;
 import dataaccess.GameDataAccess;
 import model.GameData;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Collection;
+import java.util.Random;
+
 public class MemoryGameDataAccess implements GameDataAccess {
+    private Map<Integer, GameData> gameMap = new HashMap<Integer, GameData>();
 
     public MemoryGameDataAccess(){
     }
 
-    public GameData[] getGames() {
-
+    public Collection<GameData> getGames() {
+        return gameMap.values();
     }
 
     public int createGame(String gameName) {
-
+        int gameID = createGameID();
+        ChessGame game = new ChessGame();
+        gameMap.put(gameID, new GameData(gameID, null, null, gameName, game));
+        return gameID;
     }
 
     public GameData getGame(int gameID) {
@@ -27,5 +36,14 @@ public class MemoryGameDataAccess implements GameDataAccess {
 
     public void clear() {
 
+    }
+
+    private int createGameID() {
+        Random rng = new Random();
+        int gameID;
+        do {
+            gameID = rng.nextInt();
+        } while (!gameMap.containsKey(gameID));
+        return gameID;
     }
 }
