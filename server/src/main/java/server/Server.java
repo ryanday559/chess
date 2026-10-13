@@ -1,21 +1,15 @@
 package server;
 
 import com.google.gson.Gson;
-import handler.AuthentificationHandler;
-import handler.GameHandler;
-import handler.UserHandler;
 import io.javalin.*;
 import io.javalin.http.Context;
 import model.GameData;
 import model.UserData;
-import org.eclipse.jetty.server.Authentication;
+import result.LoginResult;
 import service.AuthentificationService;
 import service.GameService;
 import service.UserService;
-
 import java.util.Map;
-
-import static service.AuthentificationService.generateAuthToken;
 
 public class Server {
 
@@ -44,9 +38,9 @@ public class Server {
     }
 
     private void register(Context ctx) {
-        String authToken = generateAuthToken();
         UserData userData = getBodyObject(ctx, UserData.class);
-        var result = Map.of("username", userData.username(), "authToken", authToken);
+        LoginResult loginResult = userService.register(userData);
+        var result = Map.of("username", loginResult.username(), "authToken", loginResult.authToken());
         ctx.result(new Gson().toJson(result));
     }
 
