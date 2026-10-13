@@ -19,7 +19,7 @@ public class MemoryAuthentificationDataAccess implements AuthentificationDataAcc
     }
 
     public AuthData getAuth(int authToken) {
-
+        return authentificationMap.get(authToken);
     }
 
     public void deleteAuth(int authToken) {
