@@ -1,13 +1,11 @@
 package service;
 
-import dataaccess.DataAccessException;
 import dataaccess.TokenInUseException;
 import dataaccess.memory.MemoryAuthentificationDataAccess;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class MemoryServiceTests {
+public class MemoryAuthentificationServiceTests {
     private MemoryAuthentificationDataAccess authDAO = new MemoryAuthentificationDataAccess();
 
     @Test

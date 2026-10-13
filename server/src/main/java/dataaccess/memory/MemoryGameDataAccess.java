@@ -50,7 +50,7 @@ public class MemoryGameDataAccess implements GameDataAccess {
         int gameID;
         do {
             gameID = rng.nextInt();
-        } while (!gameMap.containsKey(gameID));
+        } while (gameMap.containsKey(gameID));
         return gameID;
     }
 }
