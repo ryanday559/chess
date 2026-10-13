@@ -75,13 +75,14 @@ public class Server {
             return;
         }
         Collection<GameData> games = gameService.listGames();
-        var result = Map.of("games", authToken);
+        var result = Map.of("games", games.toString());
         ctx.result(new Gson().toJson(result));
     }
 
     private void createGame(Context ctx) {
         GameData gameData = getBodyObject(ctx, GameData.class);
-        var result = Map.of("gameName", gameData.gameName());
+        int gameID = gameService.createGame(gameData);
+        var result = Map.of("gameID", gameID);
         ctx.result(new Gson().toJson(result));
     }
 

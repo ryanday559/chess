@@ -17,4 +17,8 @@ public class GameService {
     public Collection<GameData> listGames() {
         return null;
     }
+
+    public int createGame(GameData gameData) {
+        return gameDAO.createGame(gameData.gameName());
+    }
 }
