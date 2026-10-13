@@ -46,11 +46,74 @@ public class MemoryGameServiceTests {
         int gameID1 = gameDAO.createGame(gameName1);
         int gameID2 = gameDAO.createGame(gameName2);
         GameData game1 = gameDAO.getGame(gameID1);
-        GameData game2 = gameDAO.getGame(gameID1);
+        GameData game2 = gameDAO.getGame(gameID2);
 
         Collection<GameData> allGames = gameDAO.getGames();
 
         assertTrue(allGames.contains(game1));
         assertTrue(allGames.contains(game2));
+    }
+
+    @Test
+    public void updateBlackPlayer() {
+        gameDAO.clear();
+
+        String gameName = "TestGame";
+        String playerName = "Bob";
+        int gameID = gameDAO.createGame(gameName);
+        gameDAO.updatePlayerColor(ChessGame.TeamColor.BLACK, playerName, gameID);
+
+        assertEquals(playerName, gameDAO.getGame(gameID).blackUsername());
+    }
+
+    @Test
+    public void updateBlackPlayerDoesNotAffectWhitePlayer() {
+        gameDAO.clear();
+
+        String gameName = "TestGame";
+        String playerName = "Bob";
+        int gameID = gameDAO.createGame(gameName);
+        gameDAO.updatePlayerColor(ChessGame.TeamColor.BLACK, playerName, gameID);
+
+        assertNull(gameDAO.getGame(gameID).whiteUsername());
+    }
+
+    @Test
+    public void updateWhitePlayer() {
+        gameDAO.clear();
+
+        String gameName = "TestGame";
+        String playerName = "Bob";
+        int gameID = gameDAO.createGame(gameName);
+        gameDAO.updatePlayerColor(ChessGame.TeamColor.WHITE, playerName, gameID);
+
+        assertEquals(playerName, gameDAO.getGame(gameID).whiteUsername());
+    }
+
+    @Test
+    public void updateWhitePlayerDoesNotAffectBlackPlayer() {
+        gameDAO.clear();
+
+        String gameName = "TestGame";
+        String playerName = "Bob";
+        int gameID = gameDAO.createGame(gameName);
+        gameDAO.updatePlayerColor(ChessGame.TeamColor.WHITE, playerName, gameID);
+
+        assertNull(gameDAO.getGame(gameID).blackUsername());
+    }
+
+    @Test
+    public void updateBothPlayers() {
+        gameDAO.clear();
+
+        String gameName = "TestGame";
+        String playerNameBlack = "Bob";
+        String playerNameWhite = "Sherry";
+        int gameID = gameDAO.createGame(gameName);
+        gameDAO.updatePlayerColor(ChessGame.TeamColor.WHITE, playerNameWhite, gameID);
+        gameDAO.updatePlayerColor(ChessGame.TeamColor.BLACK, playerNameBlack, gameID);
+
+        assertEquals(playerNameWhite, gameDAO.getGame(gameID).whiteUsername());
+        assertEquals(playerNameBlack, gameDAO.getGame(gameID).blackUsername());
     }
 }

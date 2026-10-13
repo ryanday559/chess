@@ -36,7 +36,7 @@ public class MemoryGameDataAccess implements GameDataAccess {
             gameData = gameData.updateBlackUsername(username);
         }
         else {
-            gameData = gameData.updateBlackUsername(username);
+            gameData = gameData.updateWhiteUsername(username);
         }
         gameMap.put(gameID, gameData);
     }
