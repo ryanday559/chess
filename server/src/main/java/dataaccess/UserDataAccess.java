@@ -4,6 +4,6 @@ import model.UserData;
 
 public interface UserDataAccess {
     public UserData getUser(String username);
-    public void createUser(UserData userData);
+    public void createUser(String username, String password, String email);
     public void clear();
 }
