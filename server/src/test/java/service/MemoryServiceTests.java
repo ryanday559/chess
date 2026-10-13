@@ -34,4 +34,16 @@ public class MemoryServiceTests {
         assertNull(authDAO.getAuth(authToken1));
         assertNull(authDAO.getAuth(authToken2));
     }
+
+    @Test
+    public void cannotCreateMultipleAuthentificationsWithSameToken() throws TokenInUseException {
+        authDAO.clear();
+        String authToken = "Authenticated";
+
+        authDAO.createAuth(authToken, "Bob");
+        assertThrows(
+                TokenInUseException.class,
+                () -> authDAO.createAuth(authToken, "Sherry")
+        );
+    }
 }
