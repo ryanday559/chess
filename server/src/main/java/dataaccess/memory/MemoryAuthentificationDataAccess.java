@@ -1,6 +1,8 @@
 package dataaccess.memory;
 
 import dataaccess.AuthentificationDataAccess;
+import dataaccess.DataAccessException;
+import dataaccess.TokenInUseException;
 import model.AuthData;
 
 import java.util.HashMap;
@@ -12,7 +14,10 @@ public class MemoryAuthentificationDataAccess implements AuthentificationDataAcc
     public MemoryAuthentificationDataAccess() {
     }
 
-    public AuthData createAuth(String authToken, String username) {
+    public AuthData createAuth(String authToken, String username) throws TokenInUseException {
+        if (authentificationMap.containsKey(authToken)) {
+            throw new TokenInUseException("Authentification token already in use!");
+        }
         AuthData authData = new AuthData(authToken, username);
         authentificationMap.put(authToken, authData);
         return authData;
