@@ -31,7 +31,8 @@ public class Server {
         javalin = Javalin.create(config -> config.staticFiles.add("web"))
                 .exception(Exception.class, this::exceptionHandler)
                 .exception(DataAccessException.class, this::badRequestExceptionHandler)
-                .exception(UnauthorizedException.class, this::unauthorizedExceptionHandler);
+                .exception(UnauthorizedException.class, this::unauthorizedExceptionHandler)
+                .exception(UsernameInUseException.class, this::usernameInUseExceptionHandler);
 
         javalin.delete("/db", this::clear);
         javalin.post("/user", this::register);
@@ -52,14 +53,7 @@ public class Server {
     private void register(Context ctx) throws UsernameInUseException, TokenInUseException, DataAccessException {
         UserData userData = getBodyObject(ctx, UserData.class);
         LoginResult loginResult;
-        try {
-            loginResult = userService.register(userData);
-        }
-        catch (DataAccessException e) {
-            ctx.status(500);
-            ctx.result(new Gson().toJson(e));
-            return;
-        }
+        loginResult = userService.register(userData);
         authService.updateAuth(loginResult.authToken(), loginResult.username());
         var result = Map.of("username", loginResult.username(), "authToken", loginResult.authToken());
         ctx.result(new Gson().toJson(result));
@@ -142,6 +136,12 @@ public class Server {
     private void unauthorizedExceptionHandler(Exception e, Context context) {
         var body = new Gson().toJson(Map.of("message", String.format("Error: %s", e.getMessage()), "success", false));
         context.status(401);
+        context.json(body);
+    }
+
+    private void usernameInUseExceptionHandler(Exception e, Context context) {
+        var body = new Gson().toJson(Map.of("message", String.format("Error: %s", e.getMessage()), "success", false));
+        context.status(403);
         context.json(body);
     }
 }
