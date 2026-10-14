@@ -1,6 +1,7 @@
 package service;
 
 import dataaccess.DataAccessException;
+import dataaccess.UnauthorizedException;
 import dataaccess.UsernameInUseException;
 import dataaccess.memory.MemoryUserDataAccess;
 import model.UserData;
@@ -26,14 +27,14 @@ public class UserService {
         return new LoginResult(userData.username(), authToken);
     }
 
-    public LoginResult login(UserData localUserData) throws DataAccessException {
+    public LoginResult login(UserData localUserData) throws DataAccessException, UnauthorizedException {
         String authToken = generateAuthToken();
         UserData serverUserData = userDAO.getUser(localUserData.username());
         if (localUserData.username() == null || localUserData.password() == null) {
             throw new DataAccessException("Missing username field!");
         }
-        if (!localUserData.password().equals(serverUserData.password())) {
-            throw new DataAccessException(String.format("Password %s is incorrect!", localUserData.password()));
+        if (serverUserData == null || !localUserData.password().equals(serverUserData.password())) {
+            throw new UnauthorizedException(String.format("Password %s is incorrect!", localUserData.password()));
         }
         return new LoginResult(localUserData.username(), authToken);
     }

@@ -3,6 +3,7 @@ package server;
 import com.google.gson.Gson;
 import dataaccess.DataAccessException;
 import dataaccess.TokenInUseException;
+import dataaccess.UnauthorizedException;
 import dataaccess.UsernameInUseException;
 import io.javalin.*;
 import io.javalin.http.Context;
@@ -29,7 +30,8 @@ public class Server {
     public Server() {
         javalin = Javalin.create(config -> config.staticFiles.add("web"))
                 .exception(Exception.class, this::exceptionHandler)
-                .exception(DataAccessException.class, this::badRequestExceptionHandler);
+                .exception(DataAccessException.class, this::badRequestExceptionHandler)
+                .exception(UnauthorizedException.class, this::unauthorizedExceptionHandler);
 
         javalin.delete("/db", this::clear);
         javalin.post("/user", this::register);
@@ -63,7 +65,7 @@ public class Server {
         ctx.result(new Gson().toJson(result));
     }
 
-    private void login(Context ctx) throws DataAccessException, TokenInUseException {
+    private void login(Context ctx) throws DataAccessException, TokenInUseException, UnauthorizedException {
         UserData userData = getBodyObject(ctx, UserData.class);
         LoginResult loginResult = userService.login(userData);
         authService.updateAuth(loginResult.authToken(), loginResult.username());
@@ -134,6 +136,12 @@ public class Server {
     private void badRequestExceptionHandler(Exception e, Context context) {
         var body = new Gson().toJson(Map.of("message", String.format("Error: %s", e.getMessage()), "success", false));
         context.status(400);
+        context.json(body);
+    }
+
+    private void unauthorizedExceptionHandler(Exception e, Context context) {
+        var body = new Gson().toJson(Map.of("message", String.format("Error: %s", e.getMessage()), "success", false));
+        context.status(401);
         context.json(body);
     }
 }
