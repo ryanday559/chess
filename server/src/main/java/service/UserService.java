@@ -2,7 +2,7 @@ package service;
 
 import dataaccess.DataAccessException;
 import dataaccess.UnauthorizedException;
-import dataaccess.UsernameInUseException;
+import dataaccess.InUseException;
 import dataaccess.memory.MemoryUserDataAccess;
 import model.UserData;
 import result.LoginResult;
@@ -18,7 +18,7 @@ public class UserService {
         userDAO.clear();
     }
 
-    public LoginResult register(UserData userData) throws UsernameInUseException, DataAccessException {
+    public LoginResult register(UserData userData) throws InUseException, DataAccessException {
         String authToken = generateAuthToken();
         if (userData.username() == null || userData.password() == null || userData.email() == null) {
             throw new DataAccessException("Missing registration input fields");

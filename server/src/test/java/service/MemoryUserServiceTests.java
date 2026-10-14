@@ -1,6 +1,6 @@
 package service;
 
-import dataaccess.UsernameInUseException;
+import dataaccess.InUseException;
 import dataaccess.memory.MemoryUserDataAccess;
 import model.UserData;
 import org.junit.jupiter.api.Test;
@@ -10,7 +10,7 @@ public class MemoryUserServiceTests {
     private MemoryUserDataAccess userDAO = new MemoryUserDataAccess();
 
     @Test
-    public void clearUserData() throws UsernameInUseException {
+    public void clearUserData() throws InUseException {
         userDAO.clear();
         String username = "Bob";
         String password = "secret";
@@ -23,7 +23,7 @@ public class MemoryUserServiceTests {
     }
 
     @Test
-    public void createGetUser() throws UsernameInUseException {
+    public void createGetUser() throws InUseException {
         userDAO.clear();
         String username = "Bob";
         String password = "secret";
@@ -38,7 +38,7 @@ public class MemoryUserServiceTests {
     }
 
     @Test
-    public void cannotCreateDuplicateUsernames() throws UsernameInUseException {
+    public void cannotCreateDuplicateUsernames() throws InUseException {
         userDAO.clear();
         String username = "Bob";
         String password1 = "secret1";
@@ -48,13 +48,13 @@ public class MemoryUserServiceTests {
 
         userDAO.createUser(username, password1, email1);
         assertThrows(
-                UsernameInUseException.class,
+                InUseException.class,
                 () -> userDAO.createUser(username, password2, email2)
         );
     }
 
     @Test
-    public void canCreateDuplicatePasswords() throws UsernameInUseException {
+    public void canCreateDuplicatePasswords() throws InUseException {
         userDAO.clear();
         String username1 = "Bob";
         String password = "secret";
@@ -69,7 +69,7 @@ public class MemoryUserServiceTests {
     }
 
     @Test
-    public void canCreateDuplicateEmails() throws UsernameInUseException {
+    public void canCreateDuplicateEmails() throws InUseException {
         userDAO.clear();
         String username1 = "Bob";
         String password1 = "secret1";

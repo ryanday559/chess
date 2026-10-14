@@ -2,6 +2,8 @@ package service;
 
 import chess.ChessGame;
 import dataaccess.DataAccessException;
+import dataaccess.InUseException;
+import dataaccess.UnauthorizedException;
 import dataaccess.memory.MemoryGameDataAccess;
 import model.GameData;
 import org.junit.jupiter.api.Test;
@@ -56,7 +58,7 @@ public class MemoryGameServiceTests {
     }
 
     @Test
-    public void updateBlackPlayer() throws DataAccessException {
+    public void updateBlackPlayer() throws DataAccessException, UnauthorizedException, InUseException {
         gameDAO.clear();
 
         String gameName = "TestGame";
@@ -68,7 +70,7 @@ public class MemoryGameServiceTests {
     }
 
     @Test
-    public void updateBlackPlayerDoesNotAffectWhitePlayer() throws DataAccessException {
+    public void updateBlackPlayerDoesNotAffectWhitePlayer() throws DataAccessException, UnauthorizedException, InUseException {
         gameDAO.clear();
 
         String gameName = "TestGame";
@@ -80,7 +82,7 @@ public class MemoryGameServiceTests {
     }
 
     @Test
-    public void updateWhitePlayer() throws DataAccessException {
+    public void updateWhitePlayer() throws DataAccessException, UnauthorizedException, InUseException {
         gameDAO.clear();
 
         String gameName = "TestGame";
@@ -92,7 +94,7 @@ public class MemoryGameServiceTests {
     }
 
     @Test
-    public void updateWhitePlayerDoesNotAffectBlackPlayer() throws DataAccessException {
+    public void updateWhitePlayerDoesNotAffectBlackPlayer() throws DataAccessException, UnauthorizedException, InUseException {
         gameDAO.clear();
 
         String gameName = "TestGame";
@@ -104,7 +106,7 @@ public class MemoryGameServiceTests {
     }
 
     @Test
-    public void updateBothPlayers() throws DataAccessException {
+    public void updateBothPlayers() throws DataAccessException, UnauthorizedException, InUseException {
         gameDAO.clear();
 
         String gameName = "TestGame";

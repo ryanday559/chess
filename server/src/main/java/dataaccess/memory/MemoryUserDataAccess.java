@@ -1,8 +1,7 @@
 package dataaccess.memory;
 
-import dataaccess.GameDataAccess;
 import dataaccess.UserDataAccess;
-import dataaccess.UsernameInUseException;
+import dataaccess.InUseException;
 import model.UserData;
 
 import java.util.HashMap;
@@ -18,9 +17,9 @@ public class MemoryUserDataAccess implements UserDataAccess {
         return userMap.get(username);
     }
 
-    public void createUser(String username, String password, String email) throws UsernameInUseException {
+    public void createUser(String username, String password, String email) throws InUseException {
         if (userMap.containsKey(username)) {
-            throw new UsernameInUseException("Username Already In Use!");
+            throw new InUseException("Username Already In Use!");
         }
         userMap.put(username, new UserData(username, password, email));
     }

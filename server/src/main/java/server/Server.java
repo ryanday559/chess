@@ -13,7 +13,6 @@ import service.AuthentificationService;
 import service.GameService;
 import service.UserService;
 
-import javax.xml.crypto.Data;
 import java.util.Collection;
 import java.util.Map;
 
@@ -29,7 +28,7 @@ public class Server {
                 .exception(Exception.class, this::exceptionHandler)
                 .exception(DataAccessException.class, this::badRequestExceptionHandler)
                 .exception(UnauthorizedException.class, this::unauthorizedExceptionHandler)
-                .exception(UsernameInUseException.class, this::usernameInUseExceptionHandler);
+                .exception(InUseException.class, this::inUseExceptionHandler);
 
         javalin.delete("/db", this::clear);
         javalin.post("/user", this::register);
@@ -47,7 +46,7 @@ public class Server {
         ctx.result("{}");
     }
 
-    private void register(Context ctx) throws UsernameInUseException, TokenInUseException, DataAccessException {
+    private void register(Context ctx) throws InUseException, TokenInUseException, DataAccessException {
         UserData userData = getBodyObject(ctx, UserData.class);
         LoginResult loginResult;
         loginResult = userService.register(userData);
@@ -87,9 +86,10 @@ public class Server {
         ctx.result(new Gson().toJson(result));
     }
 
-    private void joinGame(Context ctx) {
+    private void joinGame(Context ctx) throws UnauthorizedException, DataAccessException, InUseException {
         GameJoinData gameJoinData = getBodyObject(ctx, GameJoinData.class);
         String authToken = ctx.header("authorization");
+        authService.authenticate(authToken);
         AuthData authData = authService.getAuthData(authToken);
         gameService.joinGame(gameJoinData, authData);
         ctx.result("{}");
@@ -131,7 +131,7 @@ public class Server {
         context.json(body);
     }
 
-    private void usernameInUseExceptionHandler(Exception e, Context context) {
+    private void inUseExceptionHandler(Exception e, Context context) {
         var body = new Gson().toJson(Map.of("message", String.format("Error: %s", e.getMessage()), "success", false));
         context.status(403);
         context.json(body);

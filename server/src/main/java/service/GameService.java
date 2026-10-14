@@ -1,6 +1,7 @@
 package service;
 
 import dataaccess.DataAccessException;
+import dataaccess.InUseException;
 import dataaccess.UnauthorizedException;
 import dataaccess.memory.MemoryGameDataAccess;
 import model.AuthData;
@@ -26,7 +27,7 @@ public class GameService {
         return gameDAO.createGame(gameData.gameName());
     }
 
-    public void joinGame(GameJoinData gameJoinData, AuthData authData) {
+    public void joinGame(GameJoinData gameJoinData, AuthData authData) throws DataAccessException, InUseException {
         gameDAO.updatePlayerColor(gameJoinData.playerColor(), authData.username(), gameJoinData.gameID());
     }
 }

@@ -3,6 +3,8 @@ package dataaccess.memory;
 import chess.ChessGame;
 import dataaccess.DataAccessException;
 import dataaccess.GameDataAccess;
+import dataaccess.InUseException;
+import dataaccess.UnauthorizedException;
 import model.GameData;
 
 import java.util.HashMap;
@@ -34,13 +36,19 @@ public class MemoryGameDataAccess implements GameDataAccess {
         return gameMap.get(gameID);
     }
 
-    public void updatePlayerColor(ChessGame.TeamColor playerColor, String username, int gameID) {
+    public void updatePlayerColor(ChessGame.TeamColor playerColor, String username, int gameID) throws DataAccessException, InUseException {
         GameData gameData = getGame(gameID);
-        if (playerColor == ChessGame.TeamColor.BLACK) {
+        if (playerColor == null) {
+            throw new DataAccessException("Invalid playerColor!");
+        }
+        else if (playerColor == ChessGame.TeamColor.BLACK && gameData.blackUsername() == null) {
             gameData = gameData.updateBlackUsername(username);
         }
-        else {
+        else if (playerColor == ChessGame.TeamColor.WHITE && gameData.whiteUsername() == null) {
             gameData = gameData.updateWhiteUsername(username);
+        }
+        else {
+            throw new InUseException(String.format("Team %s already assigned!", playerColor));
         }
         gameMap.put(gameID, gameData);
     }
