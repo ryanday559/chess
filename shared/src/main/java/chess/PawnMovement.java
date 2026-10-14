@@ -22,7 +22,11 @@ public class PawnMovement implements PieceMovement{
     }
 
 
-    private Collection<ChessMove> addMoveWithPromotionCheck(ChessPosition startPosition, ChessPosition endPosition, Collection<ChessMove> moveOptions) {
+    private Collection<ChessMove> addMoveWithPromotionCheck(
+            ChessPosition startPosition,
+            ChessPosition endPosition,
+            Collection<ChessMove> moveOptions
+    ) {
         if (
             (color == ChessGame.TeamColor.WHITE && endPosition.getRow() != 8) ||
             (color == ChessGame.TeamColor.BLACK && endPosition.getRow() != 1)

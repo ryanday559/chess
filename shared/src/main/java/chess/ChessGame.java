@@ -54,10 +54,10 @@ public class ChessGame {
     }
 
 
-    private Collection<ChessMove> removeMovesCastleThroughCheck(Collection<ChessMove> CastleMoves) {
+    private Collection<ChessMove> removeMovesCastleThroughCheck(Collection<ChessMove> castleMoves) {
         Collection<ChessMove> verifiedMoves = new ArrayList<ChessMove>();
         ChessBoard originalBoard = getBoard();
-        for (ChessMove move : CastleMoves) {
+        for (ChessMove move : castleMoves) {
             ChessBoard boardCopy = new ChessBoard(originalBoard);
             int kingEndColumn = move.getEndPosition().getColumn();
             TeamColor castleTeam = boardCopy.getPiece(move.getStartPosition()).getTeamColor();
