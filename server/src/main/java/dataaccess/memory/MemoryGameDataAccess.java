@@ -4,9 +4,7 @@ import chess.ChessGame;
 import dataaccess.DataAccessException;
 import dataaccess.GameDataAccess;
 import dataaccess.InUseException;
-import dataaccess.UnauthorizedException;
 import model.GameData;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Collection;
@@ -38,6 +36,9 @@ public class MemoryGameDataAccess implements GameDataAccess {
 
     public void updatePlayerColor(ChessGame.TeamColor playerColor, String username, int gameID) throws DataAccessException, InUseException {
         GameData gameData = getGame(gameID);
+        if (!gameMap.containsKey(gameID)) {
+            throw new DataAccessException(String.format("Game ID %d does not have a matching game!", gameID));
+        }
         if (playerColor == null) {
             throw new DataAccessException("Invalid playerColor!");
         }

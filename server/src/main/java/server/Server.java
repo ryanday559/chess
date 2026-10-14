@@ -114,26 +114,27 @@ public class Server {
     }
 
     private void exceptionHandler(Exception e, Context context) {
-        var body = new Gson().toJson(Map.of("message", String.format("Error: %s", e.getMessage()), "success", false));
         context.status(500);
-        context.json(body);
+        writeJsonErrorBody(e, context);
     }
 
     private void badRequestExceptionHandler(Exception e, Context context) {
-        var body = new Gson().toJson(Map.of("message", String.format("Error: %s", e.getMessage()), "success", false));
         context.status(400);
-        context.json(body);
+        writeJsonErrorBody(e, context);
     }
 
     private void unauthorizedExceptionHandler(Exception e, Context context) {
-        var body = new Gson().toJson(Map.of("message", String.format("Error: %s", e.getMessage()), "success", false));
         context.status(401);
-        context.json(body);
+        writeJsonErrorBody(e, context);
     }
 
     private void inUseExceptionHandler(Exception e, Context context) {
-        var body = new Gson().toJson(Map.of("message", String.format("Error: %s", e.getMessage()), "success", false));
         context.status(403);
+        writeJsonErrorBody(e, context);
+    }
+
+    private void writeJsonErrorBody(Exception e, Context context) {
+        var body = new Gson().toJson(Map.of("message", String.format("Error: %s", e.getMessage()), "success", false));
         context.json(body);
     }
 }
