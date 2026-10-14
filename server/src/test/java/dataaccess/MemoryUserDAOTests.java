@@ -1,4 +1,4 @@
-package service;
+package dataaccess;
 
 import dataaccess.InUseException;
 import dataaccess.memory.MemoryUserDataAccess;
@@ -6,7 +6,7 @@ import model.UserData;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class MemoryUserServiceTests {
+public class MemoryUserDAOTests {
     private MemoryUserDataAccess userDAO = new MemoryUserDataAccess();
 
     @Test

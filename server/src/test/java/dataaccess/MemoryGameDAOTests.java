@@ -1,4 +1,4 @@
-package service;
+package dataaccess;
 
 import chess.ChessGame;
 import dataaccess.DataAccessException;
@@ -12,7 +12,7 @@ import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class MemoryGameServiceTests {
+public class MemoryGameDAOTests {
     private MemoryGameDataAccess gameDAO = new MemoryGameDataAccess();
 
     @Test
