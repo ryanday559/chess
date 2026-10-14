@@ -2,7 +2,6 @@ package service;
 
 import dataaccess.DataAccessException;
 import dataaccess.InUseException;
-import dataaccess.UnauthorizedException;
 import dataaccess.memory.MemoryGameDataAccess;
 import model.AuthData;
 import model.GameData;

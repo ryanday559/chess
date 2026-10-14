@@ -7,12 +7,10 @@ import model.AuthData;
 import model.GameData;
 import model.GameJoinData;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
-
+import static org.junit.jupiter.api.Assertions.*;
 import java.util.Collection;
 
-import static org.junit.jupiter.api.Assertions.*;
+
 
 
 
