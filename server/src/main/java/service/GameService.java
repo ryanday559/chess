@@ -27,6 +27,6 @@ public class GameService {
     }
 
     public void joinGame(GameJoinData gameJoinData, AuthData authData) {
-        gameDAO.updatePlayerColor(gameJoinData.color(), authData.username(), gameJoinData.gameID());
+        gameDAO.updatePlayerColor(gameJoinData.playerColor(), authData.username(), gameJoinData.gameID());
     }
 }

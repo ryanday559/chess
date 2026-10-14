@@ -74,7 +74,7 @@ public class Server {
         String authToken = ctx.header("authorization");
         authService.authenticate(authToken);
         Collection<GameData> games = gameService.listGames();
-        var result = Map.of("games", games.toString());
+        var result = Map.of("games", games);
         ctx.result(new Gson().toJson(result));
     }
 
