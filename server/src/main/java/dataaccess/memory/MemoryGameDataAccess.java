@@ -1,6 +1,7 @@
 package dataaccess.memory;
 
 import chess.ChessGame;
+import dataaccess.DataAccessException;
 import dataaccess.GameDataAccess;
 import model.GameData;
 
@@ -19,7 +20,10 @@ public class MemoryGameDataAccess implements GameDataAccess {
         return gameMap.values();
     }
 
-    public int createGame(String gameName) {
+    public int createGame(String gameName) throws DataAccessException{
+        if (gameName == null) {
+            throw new DataAccessException("Game Name Cannot be null!");
+        }
         int gameID = createGameID();
         ChessGame game = new ChessGame();
         gameMap.put(gameID, new GameData(gameID, null, null, gameName, game));
@@ -49,7 +53,7 @@ public class MemoryGameDataAccess implements GameDataAccess {
         Random rng = new Random();
         int gameID;
         do {
-            gameID = rng.nextInt();
+            gameID = rng.nextInt(1, Integer.MAX_VALUE);
         } while (gameMap.containsKey(gameID));
         return gameID;
     }

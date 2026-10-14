@@ -70,7 +70,7 @@ public class Server {
         ctx.result("{}");
     }
 
-    private void listGames(Context ctx) throws DataAccessException {
+    private void listGames(Context ctx) throws UnauthorizedException {
         String authToken = ctx.header("authorization");
         authService.authenticate(authToken);
         Collection<GameData> games = gameService.listGames();
@@ -78,7 +78,9 @@ public class Server {
         ctx.result(new Gson().toJson(result));
     }
 
-    private void createGame(Context ctx) {
+    private void createGame(Context ctx) throws UnauthorizedException, DataAccessException {
+        String authToken = ctx.header("authorization");
+        authService.authenticate(authToken);
         GameData gameData = getBodyObject(ctx, GameData.class);
         int gameID = gameService.createGame(gameData);
         var result = Map.of("gameID", gameID);

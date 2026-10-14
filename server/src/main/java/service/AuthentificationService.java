@@ -26,9 +26,9 @@ public class AuthentificationService {
         authDAO.createAuth(authToken, username);
     }
 
-    public void authenticate(String authToken) throws DataAccessException {
+    public void authenticate(String authToken) throws UnauthorizedException {
         if(authDAO.getAuth(authToken) == null) {
-            throw new DataAccessException(String.format("Invalid Authentification %s", authToken));
+            throw new UnauthorizedException(String.format("Invalid Authentification %s", authToken));
         }
     }
 

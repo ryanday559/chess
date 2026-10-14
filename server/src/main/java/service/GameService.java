@@ -1,5 +1,7 @@
 package service;
 
+import dataaccess.DataAccessException;
+import dataaccess.UnauthorizedException;
 import dataaccess.memory.MemoryGameDataAccess;
 import model.AuthData;
 import model.GameData;
@@ -20,7 +22,7 @@ public class GameService {
         return gameDAO.getGames();
     }
 
-    public int createGame(GameData gameData) {
+    public int createGame(GameData gameData) throws DataAccessException {
         return gameDAO.createGame(gameData.gameName());
     }
 

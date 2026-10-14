@@ -1,6 +1,7 @@
 package service;
 
 import chess.ChessGame;
+import dataaccess.DataAccessException;
 import dataaccess.memory.MemoryGameDataAccess;
 import model.GameData;
 import org.junit.jupiter.api.Test;
@@ -13,7 +14,7 @@ public class MemoryGameServiceTests {
     private MemoryGameDataAccess gameDAO = new MemoryGameDataAccess();
 
     @Test
-    public void clearTest() {
+    public void clearTest() throws DataAccessException {
         gameDAO.clear();
 
         String gameName = "TestGame";
@@ -25,7 +26,7 @@ public class MemoryGameServiceTests {
     }
 
     @Test
-    public void createGetGameTest() {
+    public void createGetGameTest() throws DataAccessException {
         gameDAO.clear();
 
         String gameName = "TestGame";
@@ -38,7 +39,7 @@ public class MemoryGameServiceTests {
     }
 
     @Test
-    public void getGamesReturnsAllGames() {
+    public void getGamesReturnsAllGames() throws DataAccessException {
         gameDAO.clear();
 
         String gameName1 = "TestGame1";
@@ -55,7 +56,7 @@ public class MemoryGameServiceTests {
     }
 
     @Test
-    public void updateBlackPlayer() {
+    public void updateBlackPlayer() throws DataAccessException {
         gameDAO.clear();
 
         String gameName = "TestGame";
@@ -67,7 +68,7 @@ public class MemoryGameServiceTests {
     }
 
     @Test
-    public void updateBlackPlayerDoesNotAffectWhitePlayer() {
+    public void updateBlackPlayerDoesNotAffectWhitePlayer() throws DataAccessException {
         gameDAO.clear();
 
         String gameName = "TestGame";
@@ -79,7 +80,7 @@ public class MemoryGameServiceTests {
     }
 
     @Test
-    public void updateWhitePlayer() {
+    public void updateWhitePlayer() throws DataAccessException {
         gameDAO.clear();
 
         String gameName = "TestGame";
@@ -91,7 +92,7 @@ public class MemoryGameServiceTests {
     }
 
     @Test
-    public void updateWhitePlayerDoesNotAffectBlackPlayer() {
+    public void updateWhitePlayerDoesNotAffectBlackPlayer() throws DataAccessException {
         gameDAO.clear();
 
         String gameName = "TestGame";
@@ -103,7 +104,7 @@ public class MemoryGameServiceTests {
     }
 
     @Test
-    public void updateBothPlayers() {
+    public void updateBothPlayers() throws DataAccessException {
         gameDAO.clear();
 
         String gameName = "TestGame";
