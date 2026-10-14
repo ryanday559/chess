@@ -4,6 +4,7 @@ public class QueenMovement implements PieceMovement{
     @Override
     public int[][] getLoopOffsets() {
         int[][] offsets = {
+                //Queen Offsets Only
                 {1,1},
                 {1,-1},
                 {-1,1},
