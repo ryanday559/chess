@@ -1,8 +1,8 @@
 package dataaccess.memory;
 
 import dataaccess.AuthentificationDataAccess;
-import dataaccess.DataAccessException;
 import dataaccess.TokenInUseException;
+import dataaccess.UnauthorizedException;
 import model.AuthData;
 
 import java.util.HashMap;
@@ -27,7 +27,10 @@ public class MemoryAuthentificationDataAccess implements AuthentificationDataAcc
         return authentificationMap.get(authToken);
     }
 
-    public void deleteAuth(String authToken) {
+    public void deleteAuth(String authToken) throws UnauthorizedException {
+        if (!authentificationMap.containsKey(authToken)) {
+            throw new UnauthorizedException(String.format("Authentication %s token not in use", authToken));
+        }
         authentificationMap.remove(authToken);
     }
 

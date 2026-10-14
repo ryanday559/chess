@@ -2,6 +2,7 @@ package service;
 
 import dataaccess.DataAccessException;
 import dataaccess.TokenInUseException;
+import dataaccess.UnauthorizedException;
 import dataaccess.memory.MemoryAuthentificationDataAccess;
 import model.AuthData;
 
@@ -31,7 +32,7 @@ public class AuthentificationService {
         }
     }
 
-    public void removeAuth(String authToken) {
+    public void removeAuth(String authToken) throws UnauthorizedException {
         authDAO.deleteAuth(authToken);
     }
 

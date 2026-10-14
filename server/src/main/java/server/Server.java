@@ -1,10 +1,7 @@
 package server;
 
 import com.google.gson.Gson;
-import dataaccess.DataAccessException;
-import dataaccess.TokenInUseException;
-import dataaccess.UnauthorizedException;
-import dataaccess.UsernameInUseException;
+import dataaccess.*;
 import io.javalin.*;
 import io.javalin.http.Context;
 import model.AuthData;
@@ -67,22 +64,15 @@ public class Server {
         ctx.result(new Gson().toJson(result));
     }
 
-    private void logout(Context ctx) {
+    private void logout(Context ctx) throws UnauthorizedException {
         String authToken = ctx.header("authorization");
         authService.removeAuth(authToken);
         ctx.result("{}");
     }
 
-    private void listGames(Context ctx) {
+    private void listGames(Context ctx) throws DataAccessException {
         String authToken = ctx.header("authorization");
-        try {
-            authService.authenticate(authToken);
-        }
-        catch (DataAccessException e) {
-            ctx.status(500);
-            ctx.result(new Gson().toJson(e.getMessage()));
-            return;
-        }
+        authService.authenticate(authToken);
         Collection<GameData> games = gameService.listGames();
         var result = Map.of("games", games.toString());
         ctx.result(new Gson().toJson(result));

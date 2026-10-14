@@ -1,6 +1,7 @@
 package service;
 
 import dataaccess.TokenInUseException;
+import dataaccess.UnauthorizedException;
 import dataaccess.memory.MemoryAuthentificationDataAccess;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -46,7 +47,7 @@ public class MemoryAuthentificationServiceTests {
     }
 
     @Test
-    public void deleteAuthDataTest() throws TokenInUseException {
+    public void deleteAuthDataTest() throws TokenInUseException, UnauthorizedException {
         authDAO.clear();
         String authToken = "Authenticated";
 
