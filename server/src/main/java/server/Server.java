@@ -27,7 +27,9 @@ public class Server {
     private UserService userService = new UserService();
 
     public Server() {
-        javalin = Javalin.create(config -> config.staticFiles.add("web"));
+        javalin = Javalin.create(config -> config.staticFiles.add("web"))
+                .exception(Exception.class, this::exceptionHandler)
+                .exception(DataAccessException.class, this::badRequestExceptionHandler);
 
         javalin.delete("/db", this::clear);
         javalin.post("/user", this::register);
@@ -45,9 +47,17 @@ public class Server {
         ctx.result("{}");
     }
 
-    private void register(Context ctx) throws UsernameInUseException, TokenInUseException {
+    private void register(Context ctx) throws UsernameInUseException, TokenInUseException, DataAccessException {
         UserData userData = getBodyObject(ctx, UserData.class);
-        LoginResult loginResult = userService.register(userData);
+        LoginResult loginResult;
+        try {
+            loginResult = userService.register(userData);
+        }
+        catch (DataAccessException e) {
+            ctx.status(500);
+            ctx.result(new Gson().toJson(e));
+            return;
+        }
         authService.updateAuth(loginResult.authToken(), loginResult.username());
         var result = Map.of("username", loginResult.username(), "authToken", loginResult.authToken());
         ctx.result(new Gson().toJson(result));
@@ -73,6 +83,7 @@ public class Server {
             authService.authenticate(authToken);
         }
         catch (DataAccessException e) {
+            ctx.status(500);
             ctx.result(new Gson().toJson(e.getMessage()));
             return;
         }
@@ -112,5 +123,17 @@ public class Server {
 
     public void stop() {
         javalin.stop();
+    }
+
+    private void exceptionHandler(Exception e, Context context) {
+        var body = new Gson().toJson(Map.of("message", String.format("Error: %s", e.getMessage()), "success", false));
+        context.status(500);
+        context.json(body);
+    }
+
+    private void badRequestExceptionHandler(Exception e, Context context) {
+        var body = new Gson().toJson(Map.of("message", String.format("Error: %s", e.getMessage()), "success", false));
+        context.status(400);
+        context.json(body);
     }
 }
