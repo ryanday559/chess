@@ -1,6 +1,7 @@
 package dataaccess.mysql;
 
 import chess.ChessGame;
+import com.google.gson.Gson;
 import dataaccess.DataAccessException;
 import dataaccess.DatabaseManager;
 import dataaccess.GameDataAccess;
@@ -23,16 +24,16 @@ public class MySqlGameDataAccess implements GameDataAccess {
 
     @Override
     public Collection<GameData> getGames() throws DataAccessException {
-        var games = getFromDatabase("SELECT id, whitePlayer, blackPlayer, gameName, gameData FROM games");
+        var games = getFromDatabase("SELECT id, whitePlayer, blackPlayer, gameName, chessGame FROM games");
         ArrayList<GameData> gamesData = new ArrayList<>();
         for (var game : games) {
-            // Need to deserialize gameData still
+            ChessGame chessGame = new Gson().fromJson((String) game.get(5), ChessGame.class);
             GameData gameData = new GameData(
                     (Integer) game.get(0),
                     (String) game.get(1),
                     (String) game.get(2),
                     (String) game.get(3),
-                    game.get(5));
+                    chessGame);
             gamesData.add(gameData);
         }
         return gamesData;
@@ -70,7 +71,7 @@ public class MySqlGameDataAccess implements GameDataAccess {
                 `gameName` varchar(256) NOT NULL,
                 `blackPlayer` varchar(256),
                 `whitePlayer` varchar(256),
-                `gameData` text,
+                `chessGame` text,
                 PRIMARY KEY (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
             """
