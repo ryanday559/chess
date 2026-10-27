@@ -1,15 +1,19 @@
 package dataaccess;
 
 import dataaccess.memory.MemoryUserDataAccess;
+import dataaccess.mysql.MySqlUserDataAccess;
 import model.UserData;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class MySqlUserDAOTests {
-    private MemoryUserDataAccess userDAO = new MemoryUserDataAccess();
+    private MySqlUserDataAccess userDAO = new MySqlUserDataAccess();
+
+    public MySqlUserDAOTests() throws DataAccessException {
+    }
 
     @Test
-    public void clearUserData() throws InUseException {
+    public void clearUserData() throws InUseException, DataAccessException {
         userDAO.clear();
         String username = "Bob";
         String password = "secret";
@@ -22,7 +26,7 @@ public class MySqlUserDAOTests {
     }
 
     @Test
-    public void createGetUser() throws InUseException {
+    public void createGetUser() throws InUseException, DataAccessException {
         userDAO.clear();
         String username = "Bob";
         String password = "secret";
@@ -37,7 +41,7 @@ public class MySqlUserDAOTests {
     }
 
     @Test
-    public void cannotCreateDuplicateUsernames() throws InUseException {
+    public void cannotCreateDuplicateUsernames() throws InUseException, DataAccessException {
         userDAO.clear();
         String username = "Bob";
         String password1 = "secret1";
@@ -53,7 +57,7 @@ public class MySqlUserDAOTests {
     }
 
     @Test
-    public void canCreateDuplicatePasswords() throws InUseException {
+    public void canCreateDuplicatePasswords() throws InUseException, DataAccessException {
         userDAO.clear();
         String username1 = "Bob";
         String password = "secret";
@@ -68,7 +72,7 @@ public class MySqlUserDAOTests {
     }
 
     @Test
-    public void canCreateDuplicateEmails() throws InUseException {
+    public void canCreateDuplicateEmails() throws InUseException, DataAccessException {
         userDAO.clear();
         String username1 = "Bob";
         String password1 = "secret1";

@@ -15,7 +15,7 @@ public class MySqlAuthentificationDataAccess implements AuthentificationDataAcce
 
     @Override
     public AuthData createAuth(String authToken, String username) throws TokenInUseException, DataAccessException {
-        DatabaseManager.addToDatabase("INSERT INTO authentifications (authToken, username) VALUES(?)", authToken, username);
+        DatabaseManager.addToDatabase("INSERT INTO authentifications (authToken, username) VALUES(?, ?)", authToken, username);
         return new AuthData(authToken, username);
     }
 
@@ -23,7 +23,7 @@ public class MySqlAuthentificationDataAccess implements AuthentificationDataAcce
     public AuthData getAuth(String authToken) throws DataAccessException {
         var databaseValues = getFromDatabase("SELECT authToken, username FROM authentifications WHERE authToken=?", authToken);
         var authValues = databaseValues.getFirst();
-        new AuthData((String) authValues.get(0), (String) authValues.get(1));
+        return new AuthData((String) authValues.get(0), (String) authValues.get(1));
     }
 
     @Override

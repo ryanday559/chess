@@ -1,14 +1,18 @@
 package dataaccess;
 
 import dataaccess.memory.MemoryAuthentificationDataAccess;
+import dataaccess.mysql.MySqlAuthentificationDataAccess;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class MySqlAuthentificationDAOTests {
-    private MemoryAuthentificationDataAccess authDAO = new MemoryAuthentificationDataAccess();
+    private MySqlAuthentificationDataAccess authDAO = new MySqlAuthentificationDataAccess();
+
+    public MySqlAuthentificationDAOTests() throws DataAccessException {
+    }
 
     @Test
-    public void createGetAuthTest() throws TokenInUseException {
+    public void createGetAuthTest() throws TokenInUseException, DataAccessException {
         authDAO.clear();
         String authToken = "Authenticated";
 
@@ -18,7 +22,7 @@ public class MySqlAuthentificationDAOTests {
     }
 
     @Test
-    public void clearAuthDataTest() throws TokenInUseException {
+    public void clearAuthDataTest() throws TokenInUseException, DataAccessException {
         authDAO.clear();
         String authToken1 = "Authenticated1";
         String authToken2 = "Authenticated2";
@@ -33,7 +37,7 @@ public class MySqlAuthentificationDAOTests {
     }
 
     @Test
-    public void cannotCreateMultipleAuthentificationsWithSameToken() throws TokenInUseException {
+    public void cannotCreateMultipleAuthentificationsWithSameToken() throws TokenInUseException, DataAccessException {
         authDAO.clear();
         String authToken = "Authenticated";
 
@@ -45,7 +49,7 @@ public class MySqlAuthentificationDAOTests {
     }
 
     @Test
-    public void deleteAuthDataTest() throws TokenInUseException, UnauthorizedException {
+    public void deleteAuthDataTest() throws TokenInUseException, UnauthorizedException, DataAccessException {
         authDAO.clear();
         String authToken = "Authenticated";
 

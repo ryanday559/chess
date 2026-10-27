@@ -120,7 +120,7 @@ public class DatabaseManager {
                 return id;
             }
         } catch (SQLException ex) {
-            throw new DataAccessException("Cannot Connect to Database!");
+            throw new DataAccessException("Error While Connecting to the Database!", ex);
         }
     }
 
