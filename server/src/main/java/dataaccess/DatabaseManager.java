@@ -1,6 +1,7 @@
 package dataaccess;
 
 import java.sql.*;
+import java.util.Objects;
 import java.util.Properties;
 
 public class DatabaseManager {
@@ -65,12 +66,17 @@ public class DatabaseManager {
         }
     }
 
-    public static int addToDatabase(String databaseCall, String... stringArgs) throws DataAccessException {
+    public static int addToDatabase(String databaseCall, Object... args) throws DataAccessException {
         try (var conn = getConnection()) {
             try (var preparedStatement = conn.prepareStatement(databaseCall, Statement.RETURN_GENERATED_KEYS)) {
                 int i = 1;
-                for (String stringArg : stringArgs) {
-                    preparedStatement.setString(i, stringArg);
+                for (Object arg : args) {
+                    if (arg instanceof String a){
+                        preparedStatement.setString(i, a);
+                    }
+                    else if (arg instanceof Integer a) {
+                        preparedStatement.setInt(i, a);
+                    }
                     i++;
                 }
                 preparedStatement.executeUpdate();
