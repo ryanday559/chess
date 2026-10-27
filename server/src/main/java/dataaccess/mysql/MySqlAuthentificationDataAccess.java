@@ -7,9 +7,14 @@ import dataaccess.DatabaseManager;
 import java.sql.SQLException;
 
 public class MySqlAuthentificationDataAccess implements AuthentificationDataAccess {
-    public MySqlAuthentificationDataAccess() {
+    public MySqlAuthentificationDataAccess() throws DataAccessException {
         configureDatabase();
     }
+
+    private final String[] createStatements = {
+            """
+            """
+    };
 
     private void configureDatabase() throws DataAccessException {
         DatabaseManager.createDatabase();
