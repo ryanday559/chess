@@ -7,7 +7,9 @@ import dataaccess.GameDataAccess;
 import dataaccess.InUseException;
 import model.GameData;
 
+import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Collection;
 import java.util.List;
 
@@ -23,7 +25,7 @@ public class MySqlGameDataAccess implements GameDataAccess {
 
     @Override
     public int createGame(String gameName) throws DataAccessException {
-        return 0;
+        return DatabaseManager.addToDatabase("INSERT INTO games (gameName) VALUES(?)", gameName);
     }
 
     @Override

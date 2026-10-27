@@ -65,6 +65,27 @@ public class DatabaseManager {
         }
     }
 
+    public static int addToDatabase(String databaseCall, String... stringArgs) throws DataAccessException {
+        try (var conn = getConnection()) {
+            try (var preparedStatement = conn.prepareStatement(databaseCall, Statement.RETURN_GENERATED_KEYS)) {
+                int i = 1;
+                for (String stringArg : stringArgs) {
+                    preparedStatement.setString(i, stringArg);
+                    i++;
+                }
+                preparedStatement.executeUpdate();
+                var resultSet = preparedStatement.getGeneratedKeys();
+                int id = 0;
+                if (resultSet.next()) {
+                    id = resultSet.getInt(1);
+                }
+                return id;
+            }
+        } catch (SQLException ex) {
+            throw new DataAccessException("Cannot Connect to Database!");
+        }
+    }
+
     private static void loadProperties(Properties props) {
         databaseName = props.getProperty("db.name");
         dbUsername = props.getProperty("db.user");
