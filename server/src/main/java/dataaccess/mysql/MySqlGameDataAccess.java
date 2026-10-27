@@ -37,7 +37,12 @@ public class MySqlGameDataAccess implements GameDataAccess {
 
     @Override
     public void updatePlayerColor(ChessGame.TeamColor playerColor, String username, int gameID) throws DataAccessException, InUseException {
-
+        if (playerColor == ChessGame.TeamColor.BLACK) {
+            DatabaseManager.addToDatabase("UPDATE games SET blackPlayer=? WHERE id=?", username, gameID);
+        }
+        else {
+            DatabaseManager.addToDatabase("UPDATE games SET whitePlayer=? WHERE id=?", username, gameID);
+        }
     }
 
     @Override
