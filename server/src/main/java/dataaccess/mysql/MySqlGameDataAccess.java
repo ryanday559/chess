@@ -10,10 +10,11 @@ import model.GameData;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import static dataaccess.DatabaseManager.configureDatabase;
+import static dataaccess.DatabaseManager.*;
 
 public class MySqlGameDataAccess implements GameDataAccess {
     public MySqlGameDataAccess() throws DataAccessException {
@@ -21,13 +22,25 @@ public class MySqlGameDataAccess implements GameDataAccess {
     }
 
     @Override
-    public Collection<GameData> getGames() {
-        return List.of();
+    public Collection<GameData> getGames() throws DataAccessException {
+        var games = getFromDatabase("SELECT id, whitePlayer, blackPlayer, gameName, gameData FROM games");
+        ArrayList<GameData> gamesData = new ArrayList<>();
+        for (var game : games) {
+            // Need to deserialize gameData still
+            GameData gameData = new GameData(
+                    (Integer) game.get(0),
+                    (String) game.get(1),
+                    (String) game.get(2),
+                    (String) game.get(3),
+                    game.get(5));
+            gamesData.add(gameData);
+        }
+        return gamesData;
     }
 
     @Override
     public int createGame(String gameName) throws DataAccessException {
-        return DatabaseManager.addToDatabase("INSERT INTO games (gameName) VALUES(?)", gameName);
+        return addToDatabase("INSERT INTO games (gameName) VALUES(?)", gameName);
     }
 
     @Override
@@ -38,10 +51,10 @@ public class MySqlGameDataAccess implements GameDataAccess {
     @Override
     public void updatePlayerColor(ChessGame.TeamColor playerColor, String username, int gameID) throws DataAccessException, InUseException {
         if (playerColor == ChessGame.TeamColor.BLACK) {
-            DatabaseManager.addToDatabase("UPDATE games SET blackPlayer=? WHERE id=?", username, gameID);
+            addToDatabase("UPDATE games SET blackPlayer=? WHERE id=?", username, gameID);
         }
         else {
-            DatabaseManager.addToDatabase("UPDATE games SET whitePlayer=? WHERE id=?", username, gameID);
+            addToDatabase("UPDATE games SET whitePlayer=? WHERE id=?", username, gameID);
         }
     }
 
@@ -57,6 +70,7 @@ public class MySqlGameDataAccess implements GameDataAccess {
                 `gameName` varchar(256) NOT NULL,
                 `blackPlayer` varchar(256),
                 `whitePlayer` varchar(256),
+                `gameData` text,
                 PRIMARY KEY (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
             """

@@ -1,6 +1,7 @@
 package dataaccess;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Properties;
 
@@ -63,6 +64,37 @@ public class DatabaseManager {
             loadProperties(props);
         } catch (Exception ex) {
             throw new RuntimeException("unable to process db.properties", ex);
+        }
+    }
+
+    public static ArrayList<ArrayList<Object>> getFromDatabase(String databaseCall, Object... args) throws DataAccessException {
+        try (var conn = getConnection()) {
+            try (var preparedStatement = conn.prepareStatement(databaseCall)) {
+                int i = 1;
+                for (Object arg : args) {
+                    if (arg instanceof String a){
+                        preparedStatement.setString(i, a);
+                    }
+                    else if (arg instanceof Integer a) {
+                        preparedStatement.setInt(i, a);
+                    }
+                    i++;
+                }
+                try (var result = preparedStatement.executeQuery()) {
+                    ArrayList<ArrayList<Object>> results = new ArrayList<>();
+                    int columnCount = result.getMetaData().getColumnCount();
+                    while (result.next()) {
+                        ArrayList<Object> rowValues = new ArrayList<>();
+                        for (i = 0; i < columnCount; i++) {
+                            rowValues.add(result.getObject(i + 1));
+                        }
+                        results.add(rowValues);
+                    }
+                    return results;
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DataAccessException("Cannot Connect to Database!");
         }
     }
 

@@ -8,7 +8,7 @@ import model.UserData;
 
 import java.sql.SQLException;
 
-import static dataaccess.DatabaseManager.configureDatabase;
+import static dataaccess.DatabaseManager.*;
 
 public class MySqlUserDataAccess implements UserDataAccess {
     public MySqlUserDataAccess() throws DataAccessException {
@@ -16,13 +16,15 @@ public class MySqlUserDataAccess implements UserDataAccess {
     }
 
     @Override
-    public UserData getUser(String username) {
-        return null;
+    public UserData getUser(String username) throws DataAccessException {
+        var databaseValues = getFromDatabase("SELECT username, password, email FROM users WHERE username=?", username);
+        var result = databaseValues.getFirst();
+        return new UserData((String) result.get(0), (String) result.get(1), (String) result.get(2));
     }
 
     @Override
     public void createUser(String username, String password, String email) throws InUseException, DataAccessException {
-        DatabaseManager.addToDatabase("INSERT INTO users (username, password, email) VALUES(?)", username, password, email);
+        addToDatabase("INSERT INTO users (username, password, email) VALUES(?)", username, password, email);
     }
 
     @Override

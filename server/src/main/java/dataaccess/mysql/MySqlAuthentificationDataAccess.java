@@ -6,6 +6,7 @@ import model.AuthData;
 import java.sql.SQLException;
 
 import static dataaccess.DatabaseManager.configureDatabase;
+import static dataaccess.DatabaseManager.getFromDatabase;
 
 public class MySqlAuthentificationDataAccess implements AuthentificationDataAccess {
     public MySqlAuthentificationDataAccess() throws DataAccessException {
@@ -19,8 +20,10 @@ public class MySqlAuthentificationDataAccess implements AuthentificationDataAcce
     }
 
     @Override
-    public AuthData getAuth(String authToken) {
-        return null;
+    public AuthData getAuth(String authToken) throws DataAccessException {
+        var databaseValues = getFromDatabase("SELECT authToken, username FROM authentifications WHERE authToken=?", authToken);
+        var authValues = databaseValues.getFirst();
+        new AuthData((String) authValues.get(0), (String) authValues.get(1));
     }
 
     @Override
