@@ -13,8 +13,9 @@ public class MySqlAuthentificationDataAccess implements AuthentificationDataAcce
     }
 
     @Override
-    public AuthData createAuth(String authToken, String username) throws TokenInUseException {
-        return null;
+    public AuthData createAuth(String authToken, String username) throws TokenInUseException, DataAccessException {
+        DatabaseManager.addToDatabase("INSERT INTO authentifications (authToken, username) VALUES(?)", authToken, username);
+        return new AuthData(authToken, username);
     }
 
     @Override

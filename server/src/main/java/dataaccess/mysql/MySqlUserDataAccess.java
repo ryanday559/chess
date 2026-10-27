@@ -21,8 +21,8 @@ public class MySqlUserDataAccess implements UserDataAccess {
     }
 
     @Override
-    public void createUser(String username, String password, String email) throws InUseException {
-
+    public void createUser(String username, String password, String email) throws InUseException, DataAccessException {
+        DatabaseManager.addToDatabase("INSERT INTO users (username, password, email) VALUES(?)", username, password, email);
     }
 
     @Override
