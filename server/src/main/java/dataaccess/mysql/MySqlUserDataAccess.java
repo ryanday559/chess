@@ -18,18 +18,25 @@ public class MySqlUserDataAccess implements UserDataAccess {
     @Override
     public UserData getUser(String username) throws DataAccessException {
         var databaseValues = getFromDatabase("SELECT username, password, email FROM users WHERE username=?", username);
+        if (databaseValues.isEmpty()) {
+            return null;
+        }
         var result = databaseValues.getFirst();
         return new UserData((String) result.get(0), (String) result.get(1), (String) result.get(2));
     }
 
     @Override
     public void createUser(String username, String password, String email) throws InUseException, DataAccessException {
-        addToDatabase("INSERT INTO users (username, password, email) VALUES(?)", username, password, email);
+        var databaseValues = getFromDatabase("SELECT username FROM users WHERE username=?", username);
+        if (!databaseValues.isEmpty()) {
+            throw new InUseException("Username already in use!");
+        }
+        addToDatabase("INSERT INTO users (username, password, email) VALUES(?, ?, ?)", username, password, email);
     }
 
     @Override
-    public void clear() {
-
+    public void clear() throws DataAccessException {
+        deleteFromDatabase("TRUNCATE TABLE users");
     }
 
     private final String[] createStatements = {
