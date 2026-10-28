@@ -1,5 +1,6 @@
 package service;
 
+import dataaccess.DataAccessException;
 import dataaccess.TokenInUseException;
 import dataaccess.UnauthorizedException;
 import model.AuthData;
@@ -10,13 +11,16 @@ import static service.AuthentificationService.generateAuthToken;
 public class AuthentificationServiceTests {
     private AuthentificationService authService = new AuthentificationService();
 
+    public AuthentificationServiceTests() throws DataAccessException {
+    }
+
     @Test
     public void testGenerateAuthToken() {
         assertNotNull(generateAuthToken());
     }
 
     @Test
-    public void testUpdateAuth() throws TokenInUseException {
+    public void testUpdateAuth() throws TokenInUseException, DataAccessException {
         String authToken = generateAuthToken();
         String username = "bob";
         authService.updateAuth(authToken, username);
@@ -24,7 +28,7 @@ public class AuthentificationServiceTests {
     }
 
     @Test
-    public void testClear() throws TokenInUseException {
+    public void testClear() throws TokenInUseException, DataAccessException {
         String authToken = generateAuthToken();
         String username = "bob";
         authService.updateAuth(authToken, username);
@@ -33,7 +37,7 @@ public class AuthentificationServiceTests {
     }
 
     @Test
-    public void testRemoveAuth() throws TokenInUseException, UnauthorizedException {
+    public void testRemoveAuth() throws TokenInUseException, UnauthorizedException, DataAccessException {
         String authToken = generateAuthToken();
         String username = "bob";
         authService.updateAuth(authToken, username);
@@ -42,7 +46,7 @@ public class AuthentificationServiceTests {
     }
 
     @Test
-    public void testGetAuthData() throws TokenInUseException {
+    public void testGetAuthData() throws TokenInUseException, DataAccessException {
         String authToken = generateAuthToken();
         String username = "bob";
         authService.updateAuth(authToken, username);

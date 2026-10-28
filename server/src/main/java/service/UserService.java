@@ -4,17 +4,18 @@ import dataaccess.DataAccessException;
 import dataaccess.UnauthorizedException;
 import dataaccess.InUseException;
 import dataaccess.memory.MemoryUserDataAccess;
+import dataaccess.mysql.MySqlUserDataAccess;
 import model.UserData;
 import result.LoginResult;
 
 import static service.AuthentificationService.generateAuthToken;
 
 public class UserService {
-    MemoryUserDataAccess userDAO = new MemoryUserDataAccess();
+    MySqlUserDataAccess userDAO = new MySqlUserDataAccess();
 
-    public UserService() {}
+    public UserService() throws DataAccessException {}
 
-    public void clear() {
+    public void clear() throws DataAccessException {
         userDAO.clear();
     }
 

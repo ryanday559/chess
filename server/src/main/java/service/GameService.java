@@ -3,6 +3,7 @@ package service;
 import dataaccess.DataAccessException;
 import dataaccess.InUseException;
 import dataaccess.memory.MemoryGameDataAccess;
+import dataaccess.mysql.MySqlGameDataAccess;
 import model.AuthData;
 import model.GameData;
 import model.GameJoinData;
@@ -10,15 +11,15 @@ import model.GameJoinData;
 import java.util.Collection;
 
 public class GameService {
-    private MemoryGameDataAccess gameDAO = new MemoryGameDataAccess();
+    private MySqlGameDataAccess gameDAO = new MySqlGameDataAccess();
 
-    public GameService(){}
+    public GameService() throws DataAccessException {}
 
-    public void clear() {
+    public void clear() throws DataAccessException {
         gameDAO.clear();
     }
 
-    public Collection<GameData> listGames() {
+    public Collection<GameData> listGames() throws DataAccessException {
         return gameDAO.getGames();
     }
 

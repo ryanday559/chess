@@ -14,6 +14,9 @@ import static org.junit.jupiter.api.Assertions.*;
 public class UserServiceTests {
     private UserService userService = new UserService();
 
+    public UserServiceTests() throws DataAccessException {
+    }
+
     @Test
     public void testClear() throws InUseException, DataAccessException {
         String username = "Bob";

@@ -3,6 +3,7 @@ package server;
 import com.google.gson.Gson;
 import dataaccess.*;
 import io.javalin.*;
+import io.javalin.http.BadRequestResponse;
 import io.javalin.http.Context;
 import model.AuthData;
 import model.GameData;
@@ -19,9 +20,26 @@ import java.util.Map;
 public class Server {
 
     private final Javalin javalin;
-    private AuthentificationService authService = new AuthentificationService();
-    private GameService gameService = new GameService();
-    private UserService userService = new UserService();
+    private AuthentificationService authService;
+    private GameService gameService;
+    private UserService userService;
+    {
+        try {
+            authService = new AuthentificationService();
+        } catch (DataAccessException e) {
+            throw new BadRequestResponse("Cannot Connect to Server!");
+        }
+        try {
+            gameService = new GameService();
+        } catch (DataAccessException e) {
+            throw new BadRequestResponse("Cannot Connect to Server!");
+        }
+        try {
+            userService = new UserService();
+        } catch (DataAccessException e) {
+            throw new BadRequestResponse("Cannot Connect to Server!");
+        }
+    }
 
     public Server() {
         javalin = Javalin.create(config -> config.staticFiles.add("web"))
@@ -39,7 +57,7 @@ public class Server {
         javalin.put("/game", this::joinGame);
     }
 
-    private void clear(Context ctx) {
+    private void clear(Context ctx) throws DataAccessException {
         authService.clear();
         gameService.clear();
         userService.clear();
@@ -63,13 +81,13 @@ public class Server {
         ctx.result(new Gson().toJson(result));
     }
 
-    private void logout(Context ctx) throws UnauthorizedException {
+    private void logout(Context ctx) throws UnauthorizedException, DataAccessException {
         String authToken = ctx.header("authorization");
         authService.removeAuth(authToken);
         ctx.result("{}");
     }
 
-    private void listGames(Context ctx) throws UnauthorizedException {
+    private void listGames(Context ctx) throws UnauthorizedException, DataAccessException {
         String authToken = ctx.header("authorization");
         authService.authenticate(authToken);
         Collection<GameData> games = gameService.listGames();

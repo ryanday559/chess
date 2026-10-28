@@ -17,6 +17,9 @@ import java.util.Collection;
 public class GameServiceTests {
     private GameService gameService = new GameService();
 
+    public GameServiceTests() throws DataAccessException {
+    }
+
     @Test
     public void testClear() throws DataAccessException {
         GameData gameData = new GameData(1, null, null, "name", new ChessGame());
