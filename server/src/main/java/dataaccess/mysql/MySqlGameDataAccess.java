@@ -67,7 +67,7 @@ public class MySqlGameDataAccess implements GameDataAccess {
     @Override
     public void updatePlayerColor(ChessGame.TeamColor playerColor, String username, int gameID) throws DataAccessException, InUseException {
         var games = getFromDatabase("SELECT id, blackPlayer, whitePlayer FROM games WHERE id=?", gameID);
-        if (games.isEmpty()) {
+        if (games.isEmpty() || (playerColor != ChessGame.TeamColor.WHITE && playerColor != ChessGame.TeamColor.BLACK)) {
             throw new DataAccessException("No valid games with given ID");
         }
         if (playerColor == ChessGame.TeamColor.BLACK) {
