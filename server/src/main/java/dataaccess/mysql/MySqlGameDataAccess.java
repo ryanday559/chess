@@ -27,7 +27,7 @@ public class MySqlGameDataAccess implements GameDataAccess {
         var games = getFromDatabase("SELECT id, whitePlayer, blackPlayer, gameName, chessGame FROM games");
         ArrayList<GameData> gamesData = new ArrayList<>();
         for (var game : games) {
-            ChessGame chessGame = new Gson().fromJson((String) game.get(5), ChessGame.class);
+            ChessGame chessGame = new Gson().fromJson((String) game.get(4), ChessGame.class);
             GameData gameData = new GameData(
                     (Integer) game.get(0),
                     (String) game.get(1),
@@ -54,7 +54,7 @@ public class MySqlGameDataAccess implements GameDataAccess {
             return null;
         }
         var gameValues = databaseValues.getFirst();
-        ChessGame chessGame = new Gson().fromJson((String) gameValues.get(5), ChessGame.class);
+        ChessGame chessGame = new Gson().fromJson((String) gameValues.get(4), ChessGame.class);
         GameData gameData = new GameData(
                 (Integer) gameValues.get(0),
                 (String) gameValues.get(1),
