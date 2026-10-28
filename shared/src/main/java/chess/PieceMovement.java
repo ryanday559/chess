@@ -1,8 +1,14 @@
 package chess;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializer;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
+
+import static chess.ChessPiece.PieceType.ROOK;
 
 public interface PieceMovement {
     default int[][] getSingleOffsets() {
@@ -62,5 +68,4 @@ public interface PieceMovement {
         moveOptions = getLoopMoves(board, myPosition, moveOptions);
         return moveOptions;
     }
-
 }

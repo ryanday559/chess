@@ -1,5 +1,9 @@
 package chess;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializer;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
@@ -71,14 +75,16 @@ public class ChessPiece {
     }
 
 
-    private Map<PieceType, PieceMovement> movementRuleMap = Map.of(
-            PieceType.BISHOP, new BishopMovement(),
-            PieceType.ROOK, new RookMovement(),
-            PieceType.KNIGHT, new KnightMovement(),
-            PieceType.KING, new KingMovement(),
-            PieceType.QUEEN, new QueenMovement(),
-            PieceType.PAWN, new PawnMovement()
-    );
+    private PieceMovement getPieceMovement() {
+        return switch (getPieceType()) {
+            case BISHOP -> new BishopMovement();
+            case ROOK -> new RookMovement();
+            case KNIGHT -> new KnightMovement();
+            case KING -> new KingMovement();
+            case QUEEN -> new QueenMovement();
+            case PAWN -> new PawnMovement();
+        };
+    }
 
 
     /**
@@ -93,8 +99,7 @@ public class ChessPiece {
         if (piece == null) {
             return new ArrayList<ChessMove>();
         }
-        ChessPiece.PieceType type = piece.getPieceType();
-        PieceMovement movementRules = movementRuleMap.get(type);
+        PieceMovement movementRules = getPieceMovement();
         return movementRules.getMoveOptions(board, myPosition);
     }
 
