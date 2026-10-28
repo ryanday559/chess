@@ -67,6 +67,26 @@ public class DatabaseManager {
         }
     }
 
+    public static void deleteFromDatabase(String databaseCall, Object... args) throws DataAccessException {
+        try (var conn = getConnection()) {
+            try (var preparedStatement = conn.prepareStatement(databaseCall, Statement.RETURN_GENERATED_KEYS)) {
+                int i = 1;
+                for (Object arg : args) {
+                    if (arg instanceof String a){
+                        preparedStatement.setString(i, a);
+                    }
+                    else if (arg instanceof Integer a) {
+                        preparedStatement.setInt(i, a);
+                    }
+                    i++;
+                }
+                preparedStatement.executeUpdate();
+            }
+        } catch (SQLException ex) {
+            throw new DataAccessException("Error While Connecting to the Database!", ex);
+        }
+    }
+
     public static ArrayList<ArrayList<Object>> getFromDatabase(String databaseCall, Object... args) throws DataAccessException {
         try (var conn = getConnection()) {
             try (var preparedStatement = conn.prepareStatement(databaseCall)) {

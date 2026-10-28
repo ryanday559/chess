@@ -5,8 +5,7 @@ import model.AuthData;
 
 import java.sql.SQLException;
 
-import static dataaccess.DatabaseManager.configureDatabase;
-import static dataaccess.DatabaseManager.getFromDatabase;
+import static dataaccess.DatabaseManager.*;
 
 public class MySqlAuthentificationDataAccess implements AuthentificationDataAccess {
     public MySqlAuthentificationDataAccess() throws DataAccessException {
@@ -27,8 +26,8 @@ public class MySqlAuthentificationDataAccess implements AuthentificationDataAcce
     }
 
     @Override
-    public void deleteAuth(String authToken) throws UnauthorizedException {
-
+    public void deleteAuth(String authToken) throws UnauthorizedException, DataAccessException {
+        deleteFromDatabase("DELETE FROM authentifications WHERE id=?", authToken);
     }
 
     @Override
