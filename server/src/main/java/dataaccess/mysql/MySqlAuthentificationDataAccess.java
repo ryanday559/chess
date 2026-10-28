@@ -14,6 +14,10 @@ public class MySqlAuthentificationDataAccess implements AuthentificationDataAcce
 
     @Override
     public AuthData createAuth(String authToken, String username) throws TokenInUseException, DataAccessException {
+        var databaseValues = getFromDatabase("SELECT authToken FROM authentifications WHERE authToken=?", authToken);
+        if (!databaseValues.isEmpty()) {
+            throw new TokenInUseException("Token already in use!");
+        }
         DatabaseManager.addToDatabase("INSERT INTO authentifications (authToken, username) VALUES(?, ?)", authToken, username);
         return new AuthData(authToken, username);
     }
@@ -21,18 +25,21 @@ public class MySqlAuthentificationDataAccess implements AuthentificationDataAcce
     @Override
     public AuthData getAuth(String authToken) throws DataAccessException {
         var databaseValues = getFromDatabase("SELECT authToken, username FROM authentifications WHERE authToken=?", authToken);
+        if (databaseValues.isEmpty()) {
+            return null;
+        }
         var authValues = databaseValues.getFirst();
         return new AuthData((String) authValues.get(0), (String) authValues.get(1));
     }
 
     @Override
     public void deleteAuth(String authToken) throws UnauthorizedException, DataAccessException {
-        deleteFromDatabase("DELETE FROM authentifications WHERE id=?", authToken);
+        deleteFromDatabase("DELETE FROM authentifications WHERE authToken=?", authToken);
     }
 
     @Override
-    public void clear() {
-
+    public void clear() throws DataAccessException {
+        deleteFromDatabase("TRUNCATE TABLE authentifications");
     }
 
     private final String[] createStatements = {
