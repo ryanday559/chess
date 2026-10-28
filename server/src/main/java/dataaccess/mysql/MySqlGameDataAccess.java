@@ -41,12 +41,27 @@ public class MySqlGameDataAccess implements GameDataAccess {
 
     @Override
     public int createGame(String gameName) throws DataAccessException {
-        return addToDatabase("INSERT INTO games (gameName) VALUES(?)", gameName);
+        ChessGame game = new ChessGame();
+        String jsonGame = new Gson().toJson(game);
+        return addToDatabase("INSERT INTO games (gameName, blackPlayer, WhitePlayer, chessGame) VALUES(?, ?, ?, ?)",
+                gameName, null, null, jsonGame);
     }
 
     @Override
-    public GameData getGame(int gameID) {
-        return null;
+    public GameData getGame(int gameID) throws DataAccessException {
+        var databaseValues = getFromDatabase("SELECT id, whitePlayer, blackPlayer, gameName, chessGame FROM games WHERE id=?", gameID);
+        if (databaseValues.isEmpty()) {
+            return null;
+        }
+        var gameValues = databaseValues.getFirst();
+        ChessGame chessGame = new Gson().fromJson((String) gameValues.get(5), ChessGame.class);
+        GameData gameData = new GameData(
+                (Integer) gameValues.get(0),
+                (String) gameValues.get(1),
+                (String) gameValues.get(2),
+                (String) gameValues.get(3),
+                chessGame);
+        return gameData;
     }
 
     @Override
@@ -60,14 +75,14 @@ public class MySqlGameDataAccess implements GameDataAccess {
     }
 
     @Override
-    public void clear() {
-
+    public void clear() throws DataAccessException {
+        deleteFromDatabase("TRUNCATE TABLE games");
     }
 
     private final String[] createStatements = {
             """
             CREATE TABLE IF NOT EXISTS games(
-                `id` int(256) NOT NULL AUTO_INCREMENT,
+                `id` int NOT NULL AUTO_INCREMENT,
                 `gameName` varchar(256) NOT NULL,
                 `blackPlayer` varchar(256),
                 `whitePlayer` varchar(256),

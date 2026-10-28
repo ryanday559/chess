@@ -129,6 +129,9 @@ public class DatabaseManager {
                     else if (arg instanceof Integer a) {
                         preparedStatement.setInt(i, a);
                     }
+                    else if (arg == null) {
+                        preparedStatement.setObject(i, null);
+                    }
                     i++;
                 }
                 preparedStatement.executeUpdate();
