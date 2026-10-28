@@ -34,6 +34,10 @@ public class MySqlAuthentificationDataAccess implements AuthentificationDataAcce
 
     @Override
     public void deleteAuth(String authToken) throws UnauthorizedException, DataAccessException {
+        var databaseValues = getFromDatabase("SELECT authToken FROM authentifications WHERE authToken=?", authToken);
+        if (databaseValues.isEmpty()) {
+            throw new UnauthorizedException("User not authorized!");
+        }
         deleteFromDatabase("DELETE FROM authentifications WHERE authToken=?", authToken);
     }
 
