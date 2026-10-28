@@ -6,6 +6,7 @@ import dataaccess.InUseException;
 import dataaccess.memory.MemoryUserDataAccess;
 import dataaccess.mysql.MySqlUserDataAccess;
 import model.UserData;
+import org.mindrot.jbcrypt.BCrypt;
 import result.LoginResult;
 
 import static service.AuthentificationService.generateAuthToken;
@@ -34,7 +35,7 @@ public class UserService {
         if (localUserData.username() == null || localUserData.password() == null) {
             throw new DataAccessException("Missing username field!");
         }
-        if (serverUserData == null || !localUserData.password().equals(serverUserData.password())) {
+        if (serverUserData == null || !BCrypt.checkpw(localUserData.password(), serverUserData.password())) {
             throw new UnauthorizedException(String.format("Password %s is incorrect!", localUserData.password()));
         }
         return new LoginResult(localUserData.username(), authToken);

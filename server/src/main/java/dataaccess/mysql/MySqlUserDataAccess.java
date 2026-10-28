@@ -5,6 +5,7 @@ import dataaccess.DatabaseManager;
 import dataaccess.InUseException;
 import dataaccess.UserDataAccess;
 import model.UserData;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.SQLException;
 
@@ -27,11 +28,12 @@ public class MySqlUserDataAccess implements UserDataAccess {
 
     @Override
     public void createUser(String username, String password, String email) throws InUseException, DataAccessException {
+        String encryptedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
         var databaseValues = getFromDatabase("SELECT username FROM users WHERE username=?", username);
         if (!databaseValues.isEmpty()) {
             throw new InUseException("Username already in use!");
         }
-        addToDatabase("INSERT INTO users (username, password, email) VALUES(?, ?, ?)", username, password, email);
+        addToDatabase("INSERT INTO users (username, password, email) VALUES(?, ?, ?)", username, encryptedPassword, email);
     }
 
     @Override
