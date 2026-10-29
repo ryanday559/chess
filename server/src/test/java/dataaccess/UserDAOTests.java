@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class UserDAOTests {
 
-    private UserDataAccess getDataAccessType(AuthentificationDAOTests.authType dataAccessType) throws DataAccessException {
+    private UserDataAccess getDataAccessType(AuthentificationDAOTests.AuthType dataAccessType) throws DataAccessException {
         return switch (dataAccessType) {
             case MEMORY -> new MemoryUserDataAccess();
             case MYSQL -> new MySqlUserDataAccess();
@@ -19,8 +19,8 @@ public class UserDAOTests {
     }
 
     @ParameterizedTest
-    @EnumSource(AuthentificationDAOTests.authType.class)
-    public void clearUserData(AuthentificationDAOTests.authType dataAccessType) throws InUseException, DataAccessException {
+    @EnumSource(AuthentificationDAOTests.AuthType.class)
+    public void clearUserData(AuthentificationDAOTests.AuthType dataAccessType) throws InUseException, DataAccessException {
         UserDataAccess userDAO = getDataAccessType(dataAccessType);
         userDAO.clear();
         String username = "Bob";
@@ -34,8 +34,8 @@ public class UserDAOTests {
     }
 
     @ParameterizedTest
-    @EnumSource(AuthentificationDAOTests.authType.class)
-    public void createGetUser(AuthentificationDAOTests.authType dataAccessType) throws InUseException, DataAccessException {
+    @EnumSource(AuthentificationDAOTests.AuthType.class)
+    public void createGetUser(AuthentificationDAOTests.AuthType dataAccessType) throws InUseException, DataAccessException {
         UserDataAccess userDAO = getDataAccessType(dataAccessType);
         userDAO.clear();
         String username = "Bob";
@@ -51,8 +51,8 @@ public class UserDAOTests {
     }
 
     @ParameterizedTest
-    @EnumSource(AuthentificationDAOTests.authType.class)
-    public void cannotCreateDuplicateUsernames(AuthentificationDAOTests.authType dataAccessType) throws InUseException, DataAccessException {
+    @EnumSource(AuthentificationDAOTests.AuthType.class)
+    public void cannotCreateDuplicateUsernames(AuthentificationDAOTests.AuthType dataAccessType) throws InUseException, DataAccessException {
         UserDataAccess userDAO = getDataAccessType(dataAccessType);
         userDAO.clear();
         String username = "Bob";
@@ -69,8 +69,8 @@ public class UserDAOTests {
     }
 
     @ParameterizedTest
-    @EnumSource(AuthentificationDAOTests.authType.class)
-    public void canCreateDuplicatePasswords(AuthentificationDAOTests.authType dataAccessType) throws InUseException, DataAccessException {
+    @EnumSource(AuthentificationDAOTests.AuthType.class)
+    public void canCreateDuplicatePasswords(AuthentificationDAOTests.AuthType dataAccessType) throws InUseException, DataAccessException {
         UserDataAccess userDAO = getDataAccessType(dataAccessType);
         userDAO.clear();
         String username1 = "Bob";
@@ -86,8 +86,8 @@ public class UserDAOTests {
     }
 
     @ParameterizedTest
-    @EnumSource(AuthentificationDAOTests.authType.class)
-    public void canCreateDuplicateEmails(AuthentificationDAOTests.authType dataAccessType) throws InUseException, DataAccessException {
+    @EnumSource(AuthentificationDAOTests.AuthType.class)
+    public void canCreateDuplicateEmails(AuthentificationDAOTests.AuthType dataAccessType) throws InUseException, DataAccessException {
         UserDataAccess userDAO = getDataAccessType(dataAccessType);
         userDAO.clear();
         String username1 = "Bob";

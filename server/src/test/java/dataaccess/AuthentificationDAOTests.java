@@ -8,12 +8,12 @@ import org.junit.jupiter.params.provider.EnumSource;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class AuthentificationDAOTests {
-    public enum authType {
+    public enum AuthType {
         MEMORY,
         MYSQL
     }
 
-    private AuthentificationDataAccess getDataAccessType(authType dataAccessType) throws DataAccessException {
+    private AuthentificationDataAccess getDataAccessType(AuthType dataAccessType) throws DataAccessException {
         return switch (dataAccessType) {
             case MEMORY -> new MemoryAuthentificationDataAccess();
             case MYSQL -> new MySqlAuthentificationDataAccess();
@@ -21,8 +21,8 @@ public class AuthentificationDAOTests {
     }
 
     @ParameterizedTest
-    @EnumSource(authType.class)
-    public void createGetAuthTest(authType dataAccessType) throws TokenInUseException, DataAccessException {
+    @EnumSource(AuthType.class)
+    public void createGetAuthTest(AuthType dataAccessType) throws TokenInUseException, DataAccessException {
         AuthentificationDataAccess authDAO = getDataAccessType(dataAccessType);
         authDAO.clear();
         String authToken = "Authenticated";
@@ -33,8 +33,8 @@ public class AuthentificationDAOTests {
     }
 
     @ParameterizedTest
-    @EnumSource(authType.class)
-    public void clearAuthDataTest(authType dataAccessType) throws TokenInUseException, DataAccessException {
+    @EnumSource(AuthType.class)
+    public void clearAuthDataTest(AuthType dataAccessType) throws TokenInUseException, DataAccessException {
         AuthentificationDataAccess authDAO = getDataAccessType(dataAccessType);
         authDAO.clear();
         String authToken1 = "Authenticated1";
@@ -50,8 +50,8 @@ public class AuthentificationDAOTests {
     }
 
     @ParameterizedTest
-    @EnumSource(authType.class)
-    public void cannotCreateMultipleAuthentificationsWithSameToken(authType dataAccessType) throws TokenInUseException, DataAccessException {
+    @EnumSource(AuthType.class)
+    public void cannotCreateMultipleAuthentificationsWithSameToken(AuthType dataAccessType) throws TokenInUseException, DataAccessException {
         AuthentificationDataAccess authDAO = getDataAccessType(dataAccessType);
         authDAO.clear();
         String authToken = "Authenticated";
@@ -64,8 +64,8 @@ public class AuthentificationDAOTests {
     }
 
     @ParameterizedTest
-    @EnumSource(authType.class)
-    public void deleteAuthDataTest(authType dataAccessType) throws TokenInUseException, UnauthorizedException, DataAccessException {
+    @EnumSource(AuthType.class)
+    public void deleteAuthDataTest(AuthType dataAccessType) throws TokenInUseException, UnauthorizedException, DataAccessException {
         AuthentificationDataAccess authDAO = getDataAccessType(dataAccessType);
         authDAO.clear();
         String authToken = "Authenticated";

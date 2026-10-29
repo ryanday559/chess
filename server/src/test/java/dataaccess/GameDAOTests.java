@@ -13,7 +13,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class GameDAOTests {
 
-    private GameDataAccess getDataAccessType(AuthentificationDAOTests.authType dataAccessType) throws DataAccessException {
+    private GameDataAccess getDataAccessType(AuthentificationDAOTests.AuthType dataAccessType)
+            throws DataAccessException {
         return switch (dataAccessType) {
             case MEMORY -> new MemoryGameDataAccess();
             case MYSQL -> new MySqlGameDataAccess();
@@ -21,8 +22,9 @@ public class GameDAOTests {
     }
 
     @ParameterizedTest
-    @EnumSource(AuthentificationDAOTests.authType.class)
-    public void clearTest(AuthentificationDAOTests.authType dataAccessType) throws DataAccessException {
+    @EnumSource(AuthentificationDAOTests.AuthType.class)
+    public void clearTest(AuthentificationDAOTests.AuthType dataAccessType)
+            throws DataAccessException {
         GameDataAccess gameDAO = getDataAccessType(dataAccessType);
         gameDAO.clear();
 
@@ -35,8 +37,9 @@ public class GameDAOTests {
     }
 
     @ParameterizedTest
-    @EnumSource(AuthentificationDAOTests.authType.class)
-    public void createGetGameTest(AuthentificationDAOTests.authType dataAccessType) throws DataAccessException {
+    @EnumSource(AuthentificationDAOTests.AuthType.class)
+    public void createGetGameTest(AuthentificationDAOTests.AuthType dataAccessType)
+            throws DataAccessException {
         GameDataAccess gameDAO = getDataAccessType(dataAccessType);
         gameDAO.clear();
 
@@ -50,8 +53,9 @@ public class GameDAOTests {
     }
 
     @ParameterizedTest
-    @EnumSource(AuthentificationDAOTests.authType.class)
-    public void getGamesReturnsAllGames(AuthentificationDAOTests.authType dataAccessType) throws DataAccessException {
+    @EnumSource(AuthentificationDAOTests.AuthType.class)
+    public void getGamesReturnsAllGames(AuthentificationDAOTests.AuthType dataAccessType)
+            throws DataAccessException {
         GameDataAccess gameDAO = getDataAccessType(dataAccessType);
         gameDAO.clear();
 
@@ -69,8 +73,9 @@ public class GameDAOTests {
     }
 
     @ParameterizedTest
-    @EnumSource(AuthentificationDAOTests.authType.class)
-    public void updateBlackPlayer(AuthentificationDAOTests.authType dataAccessType) throws DataAccessException, UnauthorizedException, InUseException {
+    @EnumSource(AuthentificationDAOTests.AuthType.class)
+    public void updateBlackPlayer(AuthentificationDAOTests.AuthType dataAccessType)
+            throws DataAccessException, UnauthorizedException, InUseException {
         GameDataAccess gameDAO = getDataAccessType(dataAccessType);
         gameDAO.clear();
 
@@ -83,8 +88,9 @@ public class GameDAOTests {
     }
 
     @ParameterizedTest
-    @EnumSource(AuthentificationDAOTests.authType.class)
-    public void updateBlackPlayerDoesNotAffectWhitePlayer(AuthentificationDAOTests.authType dataAccessType) throws DataAccessException, UnauthorizedException, InUseException {
+    @EnumSource(AuthentificationDAOTests.AuthType.class)
+    public void updateBlackPlayerDoesNotAffectWhitePlayer(AuthentificationDAOTests.AuthType dataAccessType)
+            throws DataAccessException, UnauthorizedException, InUseException {
         GameDataAccess gameDAO = getDataAccessType(dataAccessType);
         gameDAO.clear();
 
@@ -97,8 +103,9 @@ public class GameDAOTests {
     }
 
     @ParameterizedTest
-    @EnumSource(AuthentificationDAOTests.authType.class)
-    public void updateWhitePlayer(AuthentificationDAOTests.authType dataAccessType) throws DataAccessException, UnauthorizedException, InUseException {
+    @EnumSource(AuthentificationDAOTests.AuthType.class)
+    public void updateWhitePlayer(AuthentificationDAOTests.AuthType dataAccessType)
+            throws DataAccessException, UnauthorizedException, InUseException {
         GameDataAccess gameDAO = getDataAccessType(dataAccessType);
         gameDAO.clear();
 
@@ -111,8 +118,9 @@ public class GameDAOTests {
     }
 
     @ParameterizedTest
-    @EnumSource(AuthentificationDAOTests.authType.class)
-    public void updateWhitePlayerDoesNotAffectBlackPlayer(AuthentificationDAOTests.authType dataAccessType) throws DataAccessException, UnauthorizedException, InUseException {
+    @EnumSource(AuthentificationDAOTests.AuthType.class)
+    public void updateWhitePlayerDoesNotAffectBlackPlayer(AuthentificationDAOTests.AuthType dataAccessType)
+            throws DataAccessException, UnauthorizedException, InUseException {
         GameDataAccess gameDAO = getDataAccessType(dataAccessType);
         gameDAO.clear();
 
@@ -125,8 +133,9 @@ public class GameDAOTests {
     }
 
     @ParameterizedTest
-    @EnumSource(AuthentificationDAOTests.authType.class)
-    public void updateBothPlayers(AuthentificationDAOTests.authType dataAccessType) throws DataAccessException, UnauthorizedException, InUseException {
+    @EnumSource(AuthentificationDAOTests.AuthType.class)
+    public void updateBothPlayers(AuthentificationDAOTests.AuthType dataAccessType)
+            throws DataAccessException, UnauthorizedException, InUseException {
         GameDataAccess gameDAO = getDataAccessType(dataAccessType);
         gameDAO.clear();
 
