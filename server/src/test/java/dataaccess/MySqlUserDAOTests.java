@@ -4,6 +4,8 @@ import dataaccess.memory.MemoryUserDataAccess;
 import dataaccess.mysql.MySqlUserDataAccess;
 import model.UserData;
 import org.junit.jupiter.api.Test;
+import org.mindrot.jbcrypt.BCrypt;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class MySqlUserDAOTests {
@@ -36,7 +38,7 @@ public class MySqlUserDAOTests {
         UserData user = userDAO.getUser(username);
 
         assertEquals(username, user.username());
-        assertEquals(password, user.password());
+        assertTrue(BCrypt.checkpw(password, user.password()));
         assertEquals(email, user.email());
     }
 
