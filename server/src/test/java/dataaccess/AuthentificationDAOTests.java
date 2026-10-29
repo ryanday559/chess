@@ -13,14 +13,12 @@ public class AuthentificationDAOTests {
         MYSQL
     }
 
-
     private AuthentificationDataAccess getDataAccessType(authType dataAccessType) throws DataAccessException {
         return switch (dataAccessType) {
             case MEMORY -> new MemoryAuthentificationDataAccess();
             case MYSQL -> new MySqlAuthentificationDataAccess();
         };
     }
-
 
     @ParameterizedTest
     @EnumSource(authType.class)

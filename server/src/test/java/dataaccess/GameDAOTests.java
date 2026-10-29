@@ -4,20 +4,28 @@ import chess.ChessGame;
 import dataaccess.memory.MemoryGameDataAccess;
 import dataaccess.mysql.MySqlGameDataAccess;
 import model.GameData;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 
 import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class MySqlGameDAOTests {
-    private MySqlGameDataAccess gameDAO = new MySqlGameDataAccess();
-
-    public MySqlGameDAOTests() throws DataAccessException {
+public class GameDAOTests {
+    public GameDAOTests() throws DataAccessException {
     }
 
-    @Test
-    public void clearTest() throws DataAccessException {
+    private GameDataAccess getDataAccessType(AuthentificationDAOTests.authType dataAccessType) throws DataAccessException {
+        return switch (dataAccessType) {
+            case MEMORY -> new MemoryGameDataAccess();
+            case MYSQL -> new MySqlGameDataAccess();
+        };
+    }
+
+    @ParameterizedTest
+    @EnumSource(AuthentificationDAOTests.authType.class)
+    public void clearTest(AuthentificationDAOTests.authType dataAccessType) throws DataAccessException {
+        GameDataAccess gameDAO = getDataAccessType(AuthentificationDAOTests.authType.MEMORY);
         gameDAO.clear();
 
         String gameName = "TestGame";
@@ -28,8 +36,10 @@ public class MySqlGameDAOTests {
         assertNull(gameDAO.getGame(gameID));
     }
 
-    @Test
-    public void createGetGameTest() throws DataAccessException {
+    @ParameterizedTest
+    @EnumSource(AuthentificationDAOTests.authType.class)
+    public void createGetGameTest(AuthentificationDAOTests.authType dataAccessType) throws DataAccessException {
+        GameDataAccess gameDAO = getDataAccessType(AuthentificationDAOTests.authType.MEMORY);
         gameDAO.clear();
 
         String gameName = "TestGame";
@@ -41,8 +51,10 @@ public class MySqlGameDAOTests {
         assertEquals(ChessGame.class, gameData.game().getClass());
     }
 
-    @Test
-    public void getGamesReturnsAllGames() throws DataAccessException {
+    @ParameterizedTest
+    @EnumSource(AuthentificationDAOTests.authType.class)
+    public void getGamesReturnsAllGames(AuthentificationDAOTests.authType dataAccessType) throws DataAccessException {
+        GameDataAccess gameDAO = getDataAccessType(AuthentificationDAOTests.authType.MEMORY);
         gameDAO.clear();
 
         String gameName1 = "TestGame1";
@@ -58,8 +70,10 @@ public class MySqlGameDAOTests {
         assertTrue(allGames.contains(game2));
     }
 
-    @Test
-    public void updateBlackPlayer() throws DataAccessException, UnauthorizedException, InUseException {
+    @ParameterizedTest
+    @EnumSource(AuthentificationDAOTests.authType.class)
+    public void updateBlackPlayer(AuthentificationDAOTests.authType dataAccessType) throws DataAccessException, UnauthorizedException, InUseException {
+        GameDataAccess gameDAO = getDataAccessType(AuthentificationDAOTests.authType.MEMORY);
         gameDAO.clear();
 
         String gameName = "TestGame";
@@ -70,8 +84,10 @@ public class MySqlGameDAOTests {
         assertEquals(playerName, gameDAO.getGame(gameID).blackUsername());
     }
 
-    @Test
-    public void updateBlackPlayerDoesNotAffectWhitePlayer() throws DataAccessException, UnauthorizedException, InUseException {
+    @ParameterizedTest
+    @EnumSource(AuthentificationDAOTests.authType.class)
+    public void updateBlackPlayerDoesNotAffectWhitePlayer(AuthentificationDAOTests.authType dataAccessType) throws DataAccessException, UnauthorizedException, InUseException {
+        GameDataAccess gameDAO = getDataAccessType(AuthentificationDAOTests.authType.MEMORY);
         gameDAO.clear();
 
         String gameName = "TestGame";
@@ -82,8 +98,10 @@ public class MySqlGameDAOTests {
         assertNull(gameDAO.getGame(gameID).whiteUsername());
     }
 
-    @Test
-    public void updateWhitePlayer() throws DataAccessException, UnauthorizedException, InUseException {
+    @ParameterizedTest
+    @EnumSource(AuthentificationDAOTests.authType.class)
+    public void updateWhitePlayer(AuthentificationDAOTests.authType dataAccessType) throws DataAccessException, UnauthorizedException, InUseException {
+        GameDataAccess gameDAO = getDataAccessType(AuthentificationDAOTests.authType.MEMORY);
         gameDAO.clear();
 
         String gameName = "TestGame";
@@ -94,8 +112,10 @@ public class MySqlGameDAOTests {
         assertEquals(playerName, gameDAO.getGame(gameID).whiteUsername());
     }
 
-    @Test
-    public void updateWhitePlayerDoesNotAffectBlackPlayer() throws DataAccessException, UnauthorizedException, InUseException {
+    @ParameterizedTest
+    @EnumSource(AuthentificationDAOTests.authType.class)
+    public void updateWhitePlayerDoesNotAffectBlackPlayer(AuthentificationDAOTests.authType dataAccessType) throws DataAccessException, UnauthorizedException, InUseException {
+        GameDataAccess gameDAO = getDataAccessType(AuthentificationDAOTests.authType.MEMORY);
         gameDAO.clear();
 
         String gameName = "TestGame";
@@ -106,8 +126,10 @@ public class MySqlGameDAOTests {
         assertNull(gameDAO.getGame(gameID).blackUsername());
     }
 
-    @Test
-    public void updateBothPlayers() throws DataAccessException, UnauthorizedException, InUseException {
+    @ParameterizedTest
+    @EnumSource(AuthentificationDAOTests.authType.class)
+    public void updateBothPlayers(AuthentificationDAOTests.authType dataAccessType) throws DataAccessException, UnauthorizedException, InUseException {
+        GameDataAccess gameDAO = getDataAccessType(AuthentificationDAOTests.authType.MEMORY);
         gameDAO.clear();
 
         String gameName = "TestGame";
