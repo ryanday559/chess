@@ -3,8 +3,7 @@ package service;
 import dataaccess.DataAccessException;
 import dataaccess.TokenInUseException;
 import dataaccess.UnauthorizedException;
-import dataaccess.memory.MemoryAuthentificationDataAccess;
-import dataaccess.mysql.MySqlAuthentificationDataAccess;
+import dataaccess.sql.MySqlAuthentificationDataAccess;
 import model.AuthData;
 
 import java.util.UUID;

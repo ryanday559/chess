@@ -4,7 +4,6 @@ import dataaccess.DataAccessException;
 import dataaccess.InUseException;
 import dataaccess.UserDataAccess;
 import dataaccess.memory.MemoryUserDataAccess;
-import dataaccess.mysql.MySqlUserDataAccess;
 import model.UserData;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;

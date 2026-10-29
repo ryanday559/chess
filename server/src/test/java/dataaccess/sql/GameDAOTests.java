@@ -6,7 +6,6 @@ import dataaccess.GameDataAccess;
 import dataaccess.InUseException;
 import dataaccess.UnauthorizedException;
 import dataaccess.memory.MemoryGameDataAccess;
-import dataaccess.mysql.MySqlGameDataAccess;
 import model.GameData;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;

@@ -1,16 +1,12 @@
-package dataaccess.mysql;
+package dataaccess.sql;
 
 import chess.ChessGame;
 import com.google.gson.Gson;
 import dataaccess.*;
 import model.GameData;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import static dataaccess.DatabaseManager.*;
 

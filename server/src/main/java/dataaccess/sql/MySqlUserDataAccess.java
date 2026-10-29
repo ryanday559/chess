@@ -1,13 +1,10 @@
-package dataaccess.mysql;
+package dataaccess.sql;
 
 import dataaccess.DataAccessException;
-import dataaccess.DatabaseManager;
 import dataaccess.InUseException;
 import dataaccess.UserDataAccess;
 import model.UserData;
 import org.mindrot.jbcrypt.BCrypt;
-
-import java.sql.SQLException;
 
 import static dataaccess.DatabaseManager.*;
 

@@ -5,7 +5,6 @@ import dataaccess.DataAccessException;
 import dataaccess.TokenInUseException;
 import dataaccess.UnauthorizedException;
 import dataaccess.memory.MemoryAuthentificationDataAccess;
-import dataaccess.mysql.MySqlAuthentificationDataAccess;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 

@@ -1,9 +1,7 @@
-package dataaccess.mysql;
+package dataaccess.sql;
 
 import dataaccess.*;
 import model.AuthData;
-
-import java.sql.SQLException;
 
 import static dataaccess.DatabaseManager.*;
 
