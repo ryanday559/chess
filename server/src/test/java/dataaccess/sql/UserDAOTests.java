@@ -1,5 +1,8 @@
-package dataaccess;
+package dataaccess.sql;
 
+import dataaccess.DataAccessException;
+import dataaccess.InUseException;
+import dataaccess.UserDataAccess;
 import dataaccess.memory.MemoryUserDataAccess;
 import dataaccess.mysql.MySqlUserDataAccess;
 import model.UserData;

@@ -1,6 +1,10 @@
-package dataaccess;
+package dataaccess.sql;
 
 import chess.ChessGame;
+import dataaccess.DataAccessException;
+import dataaccess.GameDataAccess;
+import dataaccess.InUseException;
+import dataaccess.UnauthorizedException;
 import dataaccess.memory.MemoryGameDataAccess;
 import dataaccess.mysql.MySqlGameDataAccess;
 import model.GameData;
