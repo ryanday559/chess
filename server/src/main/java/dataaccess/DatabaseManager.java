@@ -101,21 +101,25 @@ public class DatabaseManager {
                     i++;
                 }
                 try (var result = preparedStatement.executeQuery()) {
-                    ArrayList<ArrayList<Object>> results = new ArrayList<>();
-                    int columnCount = result.getMetaData().getColumnCount();
-                    while (result.next()) {
-                        ArrayList<Object> rowValues = new ArrayList<>();
-                        for (i = 0; i < columnCount; i++) {
-                            rowValues.add(result.getObject(i + 1));
-                        }
-                        results.add(rowValues);
-                    }
-                    return results;
+                    return compileResults(result);
                 }
             }
         } catch (SQLException ex) {
             throw new DataAccessException("Cannot Connect to Database!");
         }
+    }
+
+    private static ArrayList<ArrayList<Object>> compileResults(ResultSet result) throws SQLException {
+        ArrayList<ArrayList<Object>> results = new ArrayList<>();
+        int columnCount = result.getMetaData().getColumnCount();
+        while (result.next()) {
+            ArrayList<Object> rowValues = new ArrayList<>();
+            for (int i = 0; i < columnCount; i++) {
+                rowValues.add(result.getObject(i + 1));
+            }
+            results.add(rowValues);
+        }
+        return results;
     }
 
     public static int addToDatabase(String databaseCall, Object... args) throws DataAccessException {
