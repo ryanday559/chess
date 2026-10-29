@@ -1,30 +1,27 @@
 package dataaccess;
 
-import dataaccess.memory.MemoryGameDataAccess;
 import dataaccess.memory.MemoryUserDataAccess;
-import dataaccess.mysql.MySqlGameDataAccess;
 import dataaccess.mysql.MySqlUserDataAccess;
 import model.UserData;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.mindrot.jbcrypt.BCrypt;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class MySqlUserDAOTests {
-    private MySqlUserDataAccess userDAO = new MySqlUserDataAccess();
+public class UserDAOTests {
 
-    public MySqlUserDAOTests() throws DataAccessException {
-    }
-
-    private GameDataAccess getDataAccessType(AuthentificationDAOTests.authType dataAccessType) throws DataAccessException {
+    private UserDataAccess getDataAccessType(AuthentificationDAOTests.authType dataAccessType) throws DataAccessException {
         return switch (dataAccessType) {
-            case MEMORY -> new MemoryGameDataAccess();
-            case MYSQL -> new MySqlGameDataAccess();
+            case MEMORY -> new MemoryUserDataAccess();
+            case MYSQL -> new MySqlUserDataAccess();
         };
     }
 
-    @Test
-    public void clearUserData() throws InUseException, DataAccessException {
+    @ParameterizedTest
+    @EnumSource(AuthentificationDAOTests.authType.class)
+    public void clearUserData(AuthentificationDAOTests.authType dataAccessType) throws InUseException, DataAccessException {
+        UserDataAccess userDAO = getDataAccessType(dataAccessType);
         userDAO.clear();
         String username = "Bob";
         String password = "secret";
@@ -36,8 +33,10 @@ public class MySqlUserDAOTests {
         assertNull(userDAO.getUser("Bob"));
     }
 
-    @Test
-    public void createGetUser() throws InUseException, DataAccessException {
+    @ParameterizedTest
+    @EnumSource(AuthentificationDAOTests.authType.class)
+    public void createGetUser(AuthentificationDAOTests.authType dataAccessType) throws InUseException, DataAccessException {
+        UserDataAccess userDAO = getDataAccessType(dataAccessType);
         userDAO.clear();
         String username = "Bob";
         String password = "secret";
@@ -51,8 +50,10 @@ public class MySqlUserDAOTests {
         assertEquals(email, user.email());
     }
 
-    @Test
-    public void cannotCreateDuplicateUsernames() throws InUseException, DataAccessException {
+    @ParameterizedTest
+    @EnumSource(AuthentificationDAOTests.authType.class)
+    public void cannotCreateDuplicateUsernames(AuthentificationDAOTests.authType dataAccessType) throws InUseException, DataAccessException {
+        UserDataAccess userDAO = getDataAccessType(dataAccessType);
         userDAO.clear();
         String username = "Bob";
         String password1 = "secret1";
@@ -67,8 +68,10 @@ public class MySqlUserDAOTests {
         );
     }
 
-    @Test
-    public void canCreateDuplicatePasswords() throws InUseException, DataAccessException {
+    @ParameterizedTest
+    @EnumSource(AuthentificationDAOTests.authType.class)
+    public void canCreateDuplicatePasswords(AuthentificationDAOTests.authType dataAccessType) throws InUseException, DataAccessException {
+        UserDataAccess userDAO = getDataAccessType(dataAccessType);
         userDAO.clear();
         String username1 = "Bob";
         String password = "secret";
@@ -82,8 +85,10 @@ public class MySqlUserDAOTests {
         );
     }
 
-    @Test
-    public void canCreateDuplicateEmails() throws InUseException, DataAccessException {
+    @ParameterizedTest
+    @EnumSource(AuthentificationDAOTests.authType.class)
+    public void canCreateDuplicateEmails(AuthentificationDAOTests.authType dataAccessType) throws InUseException, DataAccessException {
+        UserDataAccess userDAO = getDataAccessType(dataAccessType);
         userDAO.clear();
         String username1 = "Bob";
         String password1 = "secret1";

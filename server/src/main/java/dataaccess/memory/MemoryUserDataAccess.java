@@ -3,6 +3,7 @@ package dataaccess.memory;
 import dataaccess.UserDataAccess;
 import dataaccess.InUseException;
 import model.UserData;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +22,8 @@ public class MemoryUserDataAccess implements UserDataAccess {
         if (userMap.containsKey(username)) {
             throw new InUseException("Username Already In Use!");
         }
-        userMap.put(username, new UserData(username, password, email));
+        String encryptedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+        userMap.put(username, new UserData(username, encryptedPassword, email));
     }
 
     public void clear() {
