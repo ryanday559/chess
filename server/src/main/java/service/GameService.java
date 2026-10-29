@@ -1,5 +1,6 @@
 package service;
 
+import dataaccess.BadRequestException;
 import dataaccess.DataAccessException;
 import dataaccess.InUseException;
 import dataaccess.memory.MemoryGameDataAccess;
@@ -24,6 +25,9 @@ public class GameService {
     }
 
     public int createGame(GameData gameData) throws DataAccessException {
+        if (gameData.gameName() == null) {
+            throw new BadRequestException("No game name given!");
+        }
         return gameDAO.createGame(gameData.gameName());
     }
 

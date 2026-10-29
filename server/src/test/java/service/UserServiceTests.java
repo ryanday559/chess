@@ -1,9 +1,11 @@
 package service;
 
+import dataaccess.BadRequestException;
 import dataaccess.DataAccessException;
 import dataaccess.InUseException;
 import dataaccess.UnauthorizedException;
 import model.UserData;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -16,6 +18,12 @@ public class UserServiceTests {
 
     public UserServiceTests() throws DataAccessException {
     }
+
+    @BeforeEach
+    public void doClear() throws DataAccessException {
+        userService.clear();
+    }
+
 
     @Test
     public void testClear() throws InUseException, DataAccessException {
@@ -60,7 +68,7 @@ public class UserServiceTests {
     })
     public void testMissingFieldsRegister(String username, String password, String email) {
         UserData user = new UserData(username, password, email);
-        assertThrows(DataAccessException.class, ()->userService.register(user));
+        assertThrows(BadRequestException.class, ()->userService.register(user));
     }
 
     @ParameterizedTest
@@ -72,7 +80,7 @@ public class UserServiceTests {
         UserData registerUserData = new UserData("bob", "password", "email");
         userService.register(registerUserData);
         UserData loginUserData = new UserData(username, password, "email");
-        assertThrows(DataAccessException.class, ()-> userService.login(loginUserData));
+        assertThrows(BadRequestException.class, ()-> userService.login(loginUserData));
     }
 
     @Test

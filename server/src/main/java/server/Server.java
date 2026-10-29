@@ -44,7 +44,8 @@ public class Server {
     public Server() {
         javalin = Javalin.create(config -> config.staticFiles.add("web"))
                 .exception(Exception.class, this::exceptionHandler)
-                .exception(DataAccessException.class, this::badRequestExceptionHandler)
+                .exception(DataAccessException.class, this::exceptionHandler) //badRequestExceptionHandler
+                .exception(BadRequestException.class, this::badRequestExceptionHandler)
                 .exception(UnauthorizedException.class, this::unauthorizedExceptionHandler)
                 .exception(InUseException.class, this::inUseExceptionHandler);
 

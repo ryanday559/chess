@@ -1,11 +1,13 @@
 package service;
 
 import chess.ChessGame;
+import dataaccess.BadRequestException;
 import dataaccess.DataAccessException;
 import dataaccess.InUseException;
 import model.AuthData;
 import model.GameData;
 import model.GameJoinData;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.Collection;
@@ -19,6 +21,12 @@ public class GameServiceTests {
 
     public GameServiceTests() throws DataAccessException {
     }
+
+    @BeforeEach
+    public void clear() throws DataAccessException {
+        gameService.clear();
+    }
+
 
     @Test
     public void testClear() throws DataAccessException {
@@ -73,7 +81,7 @@ public class GameServiceTests {
     @Test
     public void testCannotCreateGameWithoutName() throws DataAccessException {
         GameData gameData = new GameData(1, null, null, null, new ChessGame());
-        assertThrows(DataAccessException.class, ()->gameService.createGame(gameData));
+        assertThrows(BadRequestException.class, ()->gameService.createGame(gameData));
     }
 
     @Test
@@ -94,6 +102,6 @@ public class GameServiceTests {
     public void cannotJoinNonexistentGame() throws DataAccessException, InUseException {
         AuthData authData = new AuthData("abc", "bob");
         GameJoinData whiteGameJoinData = new GameJoinData(ChessGame.TeamColor.WHITE, 1);
-        assertThrows(DataAccessException.class, ()->gameService.joinGame(whiteGameJoinData, authData));
+        assertThrows(BadRequestException.class, ()->gameService.joinGame(whiteGameJoinData, authData));
     }
 }

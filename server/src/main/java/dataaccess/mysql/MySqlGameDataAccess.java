@@ -2,10 +2,7 @@ package dataaccess.mysql;
 
 import chess.ChessGame;
 import com.google.gson.Gson;
-import dataaccess.DataAccessException;
-import dataaccess.DatabaseManager;
-import dataaccess.GameDataAccess;
-import dataaccess.InUseException;
+import dataaccess.*;
 import model.GameData;
 
 import java.sql.Connection;
@@ -68,7 +65,7 @@ public class MySqlGameDataAccess implements GameDataAccess {
     public void updatePlayerColor(ChessGame.TeamColor playerColor, String username, int gameID) throws DataAccessException, InUseException {
         var games = getFromDatabase("SELECT id, blackPlayer, whitePlayer FROM games WHERE id=?", gameID);
         if (games.isEmpty() || (playerColor != ChessGame.TeamColor.WHITE && playerColor != ChessGame.TeamColor.BLACK)) {
-            throw new DataAccessException("No valid games with given ID");
+            throw new BadRequestException("No valid games with given ID");
         }
         if (playerColor == ChessGame.TeamColor.BLACK) {
             if (games.getFirst().get(1) != null) {
