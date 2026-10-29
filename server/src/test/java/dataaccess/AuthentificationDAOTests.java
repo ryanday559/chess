@@ -23,7 +23,7 @@ public class AuthentificationDAOTests {
     @ParameterizedTest
     @EnumSource(authType.class)
     public void createGetAuthTest(authType dataAccessType) throws TokenInUseException, DataAccessException {
-        AuthentificationDataAccess authDAO = getDataAccessType(authType.MEMORY);
+        AuthentificationDataAccess authDAO = getDataAccessType(dataAccessType);
         authDAO.clear();
         String authToken = "Authenticated";
 
@@ -35,7 +35,7 @@ public class AuthentificationDAOTests {
     @ParameterizedTest
     @EnumSource(authType.class)
     public void clearAuthDataTest(authType dataAccessType) throws TokenInUseException, DataAccessException {
-        AuthentificationDataAccess authDAO = getDataAccessType(authType.MEMORY);
+        AuthentificationDataAccess authDAO = getDataAccessType(dataAccessType);
         authDAO.clear();
         String authToken1 = "Authenticated1";
         String authToken2 = "Authenticated2";
@@ -52,7 +52,7 @@ public class AuthentificationDAOTests {
     @ParameterizedTest
     @EnumSource(authType.class)
     public void cannotCreateMultipleAuthentificationsWithSameToken(authType dataAccessType) throws TokenInUseException, DataAccessException {
-        AuthentificationDataAccess authDAO = getDataAccessType(authType.MEMORY);
+        AuthentificationDataAccess authDAO = getDataAccessType(dataAccessType);
         authDAO.clear();
         String authToken = "Authenticated";
 
@@ -66,7 +66,7 @@ public class AuthentificationDAOTests {
     @ParameterizedTest
     @EnumSource(authType.class)
     public void deleteAuthDataTest(authType dataAccessType) throws TokenInUseException, UnauthorizedException, DataAccessException {
-        AuthentificationDataAccess authDAO = getDataAccessType(authType.MEMORY);
+        AuthentificationDataAccess authDAO = getDataAccessType(dataAccessType);
         authDAO.clear();
         String authToken = "Authenticated";
 

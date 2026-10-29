@@ -12,8 +12,6 @@ import java.util.Collection;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class GameDAOTests {
-    public GameDAOTests() throws DataAccessException {
-    }
 
     private GameDataAccess getDataAccessType(AuthentificationDAOTests.authType dataAccessType) throws DataAccessException {
         return switch (dataAccessType) {
@@ -25,7 +23,7 @@ public class GameDAOTests {
     @ParameterizedTest
     @EnumSource(AuthentificationDAOTests.authType.class)
     public void clearTest(AuthentificationDAOTests.authType dataAccessType) throws DataAccessException {
-        GameDataAccess gameDAO = getDataAccessType(AuthentificationDAOTests.authType.MEMORY);
+        GameDataAccess gameDAO = getDataAccessType(dataAccessType);
         gameDAO.clear();
 
         String gameName = "TestGame";
@@ -39,7 +37,7 @@ public class GameDAOTests {
     @ParameterizedTest
     @EnumSource(AuthentificationDAOTests.authType.class)
     public void createGetGameTest(AuthentificationDAOTests.authType dataAccessType) throws DataAccessException {
-        GameDataAccess gameDAO = getDataAccessType(AuthentificationDAOTests.authType.MEMORY);
+        GameDataAccess gameDAO = getDataAccessType(dataAccessType);
         gameDAO.clear();
 
         String gameName = "TestGame";
@@ -54,7 +52,7 @@ public class GameDAOTests {
     @ParameterizedTest
     @EnumSource(AuthentificationDAOTests.authType.class)
     public void getGamesReturnsAllGames(AuthentificationDAOTests.authType dataAccessType) throws DataAccessException {
-        GameDataAccess gameDAO = getDataAccessType(AuthentificationDAOTests.authType.MEMORY);
+        GameDataAccess gameDAO = getDataAccessType(dataAccessType);
         gameDAO.clear();
 
         String gameName1 = "TestGame1";
@@ -73,7 +71,7 @@ public class GameDAOTests {
     @ParameterizedTest
     @EnumSource(AuthentificationDAOTests.authType.class)
     public void updateBlackPlayer(AuthentificationDAOTests.authType dataAccessType) throws DataAccessException, UnauthorizedException, InUseException {
-        GameDataAccess gameDAO = getDataAccessType(AuthentificationDAOTests.authType.MEMORY);
+        GameDataAccess gameDAO = getDataAccessType(dataAccessType);
         gameDAO.clear();
 
         String gameName = "TestGame";
@@ -87,7 +85,7 @@ public class GameDAOTests {
     @ParameterizedTest
     @EnumSource(AuthentificationDAOTests.authType.class)
     public void updateBlackPlayerDoesNotAffectWhitePlayer(AuthentificationDAOTests.authType dataAccessType) throws DataAccessException, UnauthorizedException, InUseException {
-        GameDataAccess gameDAO = getDataAccessType(AuthentificationDAOTests.authType.MEMORY);
+        GameDataAccess gameDAO = getDataAccessType(dataAccessType);
         gameDAO.clear();
 
         String gameName = "TestGame";
@@ -101,7 +99,7 @@ public class GameDAOTests {
     @ParameterizedTest
     @EnumSource(AuthentificationDAOTests.authType.class)
     public void updateWhitePlayer(AuthentificationDAOTests.authType dataAccessType) throws DataAccessException, UnauthorizedException, InUseException {
-        GameDataAccess gameDAO = getDataAccessType(AuthentificationDAOTests.authType.MEMORY);
+        GameDataAccess gameDAO = getDataAccessType(dataAccessType);
         gameDAO.clear();
 
         String gameName = "TestGame";
@@ -115,7 +113,7 @@ public class GameDAOTests {
     @ParameterizedTest
     @EnumSource(AuthentificationDAOTests.authType.class)
     public void updateWhitePlayerDoesNotAffectBlackPlayer(AuthentificationDAOTests.authType dataAccessType) throws DataAccessException, UnauthorizedException, InUseException {
-        GameDataAccess gameDAO = getDataAccessType(AuthentificationDAOTests.authType.MEMORY);
+        GameDataAccess gameDAO = getDataAccessType(dataAccessType);
         gameDAO.clear();
 
         String gameName = "TestGame";
@@ -129,7 +127,7 @@ public class GameDAOTests {
     @ParameterizedTest
     @EnumSource(AuthentificationDAOTests.authType.class)
     public void updateBothPlayers(AuthentificationDAOTests.authType dataAccessType) throws DataAccessException, UnauthorizedException, InUseException {
-        GameDataAccess gameDAO = getDataAccessType(AuthentificationDAOTests.authType.MEMORY);
+        GameDataAccess gameDAO = getDataAccessType(dataAccessType);
         gameDAO.clear();
 
         String gameName = "TestGame";

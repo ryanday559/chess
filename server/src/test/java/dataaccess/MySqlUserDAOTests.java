@@ -1,6 +1,8 @@
 package dataaccess;
 
+import dataaccess.memory.MemoryGameDataAccess;
 import dataaccess.memory.MemoryUserDataAccess;
+import dataaccess.mysql.MySqlGameDataAccess;
 import dataaccess.mysql.MySqlUserDataAccess;
 import model.UserData;
 import org.junit.jupiter.api.Test;
@@ -12,6 +14,13 @@ public class MySqlUserDAOTests {
     private MySqlUserDataAccess userDAO = new MySqlUserDataAccess();
 
     public MySqlUserDAOTests() throws DataAccessException {
+    }
+
+    private GameDataAccess getDataAccessType(AuthentificationDAOTests.authType dataAccessType) throws DataAccessException {
+        return switch (dataAccessType) {
+            case MEMORY -> new MemoryGameDataAccess();
+            case MYSQL -> new MySqlGameDataAccess();
+        };
     }
 
     @Test
