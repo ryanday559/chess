@@ -1,7 +1,9 @@
 package client;
 
+import chess.ChessGame;
 import exception.ResponseException;
 import model.GameData;
+import model.GameJoinData;
 import model.UserData;
 import org.junit.jupiter.api.*;
 import result.LoginResult;
@@ -81,4 +83,12 @@ public class ServerFacadeTests {
         Assertions.assertDoesNotThrow(()->facade.listGames(result.authToken()));
     }
 
+    @Test
+    public void joinGameTest() throws ResponseException {
+        LoginResult result = createUser();
+        GameData gameData = new GameData(-1, null, null, "gameName", null);
+        facade.createGame(result.authToken(), gameData);
+        GameJoinData gameJoinData = new GameJoinData(ChessGame.TeamColor.BLACK, 1);
+        Assertions.assertDoesNotThrow(()->facade.joinGame(result.authToken(), gameJoinData));
+    }
 }
