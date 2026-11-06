@@ -36,6 +36,7 @@ public class ServerFacadeTests {
     public void registerTest() {
         UserData user = new UserData("bob", "bobsPassword", "bobsemail@email.com");
         Assertions.assertDoesNotThrow(()->facade.register(user));
+
     }
 
     @Test

@@ -24,6 +24,12 @@ public class ServerFacade {
         return handleResponse(response, LoginResult.class);
     }
 
+    public LoginResult login(UserData user) throws IOException, InterruptedException {
+        var request = buildRequest("POST", "/session", user);
+        var response = sendRequest(request);
+        return handleResponse(response, LoginResult.class);
+    }
+
     private HttpRequest buildRequest(String method, String path, Object body) {
         var request = HttpRequest.newBuilder()
                 .uri(URI.create(serverUrl + path))
