@@ -34,6 +34,7 @@ public class ServerFacadeTests {
     }
 
     @BeforeEach
+    @Test
     public void clearTest() {
         Assertions.assertDoesNotThrow(()->facade.clear());
     }
@@ -43,7 +44,6 @@ public class ServerFacadeTests {
     public void registerTest() {
         UserData user = new UserData("bob", "bobsPassword", "bobsemail@email.com");
         Assertions.assertDoesNotThrow(()->facade.register(user));
-
     }
 
     @Test
@@ -54,7 +54,7 @@ public class ServerFacadeTests {
     }
 
     @Test
-    public void logoutTest() throws IOException, InterruptedException, ResponseException {
+    public void logoutTest() throws ResponseException {
         UserData user = new UserData("bob", "bobsPassword", "bobsemail@email.com");
         LoginResult result = facade.register(user);
         Assertions.assertDoesNotThrow(()->facade.logout(result.authToken()));

@@ -19,20 +19,26 @@ public class ServerFacade {
         this.serverUrl = serverUrl;
     }
 
-    public LoginResult register(UserData user) throws IOException, InterruptedException, ResponseException {
+    public void clear() throws ResponseException {
+        var request = buildRequest("DELETE", "/db", null);
+        var response = sendRequest(request);
+        handleResponse(response, LoginResult.class);
+    }
+
+    public LoginResult register(UserData user) throws ResponseException {
         var request = buildRequest("POST", "/user", user);
         var response = sendRequest(request);
         return handleResponse(response, LoginResult.class);
     }
 
-    public LoginResult login(UserData user) throws IOException, InterruptedException, ResponseException {
+    public LoginResult login(UserData user) throws ResponseException {
         var request = buildRequest("POST", "/session", user);
         var response = sendRequest(request);
         return handleResponse(response, LoginResult.class);
     }
 
-    public void logout(String authToken) throws IOException, InterruptedException, ResponseException {
-        var request = buildRequest("POST", "/session", authToken);
+    public void logout(String authToken) throws ResponseException {
+        var request = buildRequestOnlyHeader("DELETE", "/session", "authorization", authToken);
         var response = sendRequest(request);
         handleResponse(response, null);
     }
@@ -47,6 +53,14 @@ public class ServerFacade {
         return request.build();
     }
 
+    private HttpRequest buildRequestOnlyHeader(String method, String path, String headerName, String headerValue) {
+        var request = HttpRequest.newBuilder()
+                .uri(URI.create(serverUrl + path))
+                .header(headerName, headerValue)
+                .method(method, makeRequestBody(null));
+        return request.build();
+    }
+
     private HttpRequest.BodyPublisher makeRequestBody(Object request) {
         if (request != null) {
             return HttpRequest.BodyPublishers.ofString(new Gson().toJson(request));
@@ -55,8 +69,13 @@ public class ServerFacade {
         }
     }
 
-    private HttpResponse<String> sendRequest(HttpRequest request) throws IOException, InterruptedException {
-        return client.send(request, HttpResponse.BodyHandlers.ofString());
+    private HttpResponse<String> sendRequest(HttpRequest request) throws ResponseException {
+        try {
+            return client.send(request, HttpResponse.BodyHandlers.ofString());
+        }
+        catch (Exception e) {
+            throw new ResponseException(e.getMessage());
+        }
     }
 
     private <T> T handleResponse(HttpResponse<String> response, Class<T> responseClass) throws ResponseException {
