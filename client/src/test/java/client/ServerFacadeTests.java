@@ -7,7 +7,8 @@ import server.Server;
 public class ServerFacadeTests {
 
     private static Server server;
-    private static ServerFacade facade;
+
+    private static final ServerFacade facade = new ServerFacade("http://localhost:8080");
 
     @BeforeAll
     public static void init() {
@@ -29,6 +30,8 @@ public class ServerFacadeTests {
 
 
     @Test
-
+    public void registerTest(){
+        Assertions.assertDoesNotThrow(()->facade.register("bob", "bobsPassword", "bobsemail@email.com"));
+    }
 
 }
