@@ -71,4 +71,12 @@ public class ServerFacadeTests {
         Assertions.assertDoesNotThrow(()->facade.createGame(result.authToken(), gameData));
     }
 
+    @Test
+    public void listGamesTest() throws ResponseException {
+        LoginResult result = createUser();
+        GameData gameData = new GameData(-1, null, null, "gameName", null);
+        facade.createGame(result.authToken(), gameData);
+        Assertions.assertDoesNotThrow(()->facade.listGames(result.authToken()));
+    }
+
 }
