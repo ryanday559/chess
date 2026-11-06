@@ -2,6 +2,7 @@ package client;
 
 import com.google.gson.Gson;
 import exception.ResponseException;
+import model.GameData;
 import model.UserData;
 import result.LoginResult;
 
@@ -38,7 +39,7 @@ public class ServerFacade {
     }
 
     public void logout(String authToken) throws ResponseException {
-        var request = buildRequestOnlyHeader("DELETE", "/session", "authorization", authToken);
+        var request = buildRequestWithHeader("DELETE", "/session", null, "authorization", authToken);
         var response = sendRequest(request);
         handleResponse(response, null);
     }
@@ -53,11 +54,11 @@ public class ServerFacade {
         return request.build();
     }
 
-    private HttpRequest buildRequestOnlyHeader(String method, String path, String headerName, String headerValue) {
+    private HttpRequest buildRequestWithHeader(String method, String path, Object body, String headerName, String headerValue) {
         var request = HttpRequest.newBuilder()
                 .uri(URI.create(serverUrl + path))
                 .header(headerName, headerValue)
-                .method(method, makeRequestBody(null));
+                .method(method, makeRequestBody(body));
         return request.build();
     }
 
