@@ -3,6 +3,7 @@ package client;
 import com.google.gson.Gson;
 import exception.ResponseException;
 import model.GameData;
+import model.GameJoinData;
 import model.UserData;
 import result.LoginResult;
 
@@ -56,6 +57,12 @@ public class ServerFacade {
         var response = sendRequest(request);
         var mappedResult = handleResponse(response, Map.class);
         return new Gson().fromJson(new Gson().toJson(mappedResult.get("games")), GameData[].class);
+    }
+
+    public void joinGame(String authToken, GameJoinData gameJoinData) throws ResponseException {
+        var request = buildRequestWithHeader("PUT", "/game", gameJoinData, "authorization", authToken);
+        var response = sendRequest(request);
+        handleResponse(response, null);
     }
 
     private HttpRequest buildRequest(String method, String path, Object body) {
