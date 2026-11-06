@@ -1,5 +1,6 @@
 package client;
 
+import model.UserData;
 import org.junit.jupiter.api.*;
 import server.Server;
 
@@ -13,7 +14,7 @@ public class ServerFacadeTests {
     @BeforeAll
     public static void init() {
         server = new Server();
-        var port = server.run(0);
+        var port = server.run(8080);
         System.out.println("Started test HTTP server on " + port);
     }
 
@@ -30,8 +31,9 @@ public class ServerFacadeTests {
 
 
     @Test
-    public void registerTest(){
-        Assertions.assertDoesNotThrow(()->facade.register("bob", "bobsPassword", "bobsemail@email.com"));
+    public void registerTest() {
+        UserData user = new UserData("bob", "bobsPassword", "bobsemail@email.com");
+        Assertions.assertDoesNotThrow(()->facade.register(user));
     }
 
 }
