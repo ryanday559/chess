@@ -1,6 +1,12 @@
 package client;
 
+import exception.ResponseException;
+import model.UserData;
+
+import java.util.Arrays;
 import java.util.Scanner;
+
+import static client.ClientMain.*;
 
 public class PreLoginREPL {
 
@@ -13,24 +19,66 @@ public class PreLoginREPL {
         Scanner scanner = new Scanner(System.in);
         String result = "";
         while (!result.equals("quit")) {
-            System.out.print(">>> ");
+            System.out.print("\n>>> ");
             try {
-                result = ClientMain.evaluate(scanner.nextLine());
+                result = evaluate(scanner.nextLine());
                 System.out.print(result);
             } catch (Throwable e) {
                 System.out.print(e.toString());
             }
         }
-        ClientMain.startREPL();
     }
 
-    public static String helpText() {
+    public static String evaluate(String userInput) {
+        String[] tokens = userInput.toLowerCase().split(" ");
+        String command = (tokens.length > 0) ? tokens[0] : "help";
+        var arguments = Arrays.copyOfRange(tokens, 1, tokens.length);
+        return switch(command) {
+            case "quit"->quit();
+            case "login"->login(arguments);
+            case "register"->register(arguments);
+            default ->help();
+        };
+    }
+
+    private static String login(String[] arguments) {
+        if (arguments.length != 2) {
+            return "Unexpected number of login credentials! To login provide a username and password!";
+        }
+        UserData userData = new UserData(arguments[0], arguments[1], null);
+        try {
+            authToken = facade.login(userData).authToken();
+        } catch (ResponseException e) {
+            return e.toString();
+        }
+        activeREPL = "postLogin";
+        System.out.print("Successfully logged in as " + arguments[0] + "! Type help for new options.");
+        startREPL();
+        return "";
+    }
+
+    private static String register(String[] arguments) {
+        if (arguments.length != 3) {
+            return "Unexpected number of register credentials! To register provide a username, password, and email! Type help for new options.";
+        }
+        UserData userData = new UserData(arguments[0], arguments[1], arguments[2]);
+        try {
+            authToken = facade.register(userData).authToken();
+        } catch (ResponseException e) {
+            return e.toString();
+        }
+        activeREPL = "postLogin";
+        System.out.print("Successfully registered and logged in as " + arguments[0] + "!");
+        startREPL();
+        return "";
+    }
+
+    public static String help() {
         return """
                 register <USERNAME> <PASSWORD> <EMAIL>
                 login <USERNAME> <PASSWORD>
                 quit
-                help
-                """;
+                help""";
     }
 
 }
