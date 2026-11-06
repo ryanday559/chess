@@ -11,6 +11,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Map;
 
 public class ServerFacade {
     private final HttpClient client = HttpClient.newHttpClient();
@@ -45,9 +46,16 @@ public class ServerFacade {
     }
 
     public void createGame(String authToken, GameData gameData) throws ResponseException {
-        var request = buildRequestWithHeader("DELETE", "/session", gameData, "authorization", authToken);
+        var request = buildRequestWithHeader("POST", "/game", gameData, "authorization", authToken);
         var response = sendRequest(request);
         handleResponse(response, null);
+    }
+
+    public GameData[] listGames(String authToken) throws ResponseException {
+        var request = buildRequestWithHeader("GET", "/game", null, "authorization", authToken);
+        var response = sendRequest(request);
+        var mappedResult = handleResponse(response, Map.class);
+        return new Gson().fromJson(new Gson().toJson(mappedResult.get("games")), GameData[].class);
     }
 
     private HttpRequest buildRequest(String method, String path, Object body) {
@@ -93,9 +101,10 @@ public class ServerFacade {
                 throw ResponseException.fromJson(body);
             }
 
-            throw new ResponseException("Connection Failure!");
+            throw new ResponseException("Response Failure!");
         }
         if (responseClass != null) {
+            var body = response.body();
             return new Gson().fromJson(response.body(), responseClass);
         }
         return null;

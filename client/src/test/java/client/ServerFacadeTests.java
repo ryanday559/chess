@@ -76,6 +76,8 @@ public class ServerFacadeTests {
         LoginResult result = createUser();
         GameData gameData = new GameData(-1, null, null, "gameName", null);
         facade.createGame(result.authToken(), gameData);
+        facade.createGame(result.authToken(), gameData);
+        var games = facade.listGames(result.authToken());
         Assertions.assertDoesNotThrow(()->facade.listGames(result.authToken()));
     }
 
