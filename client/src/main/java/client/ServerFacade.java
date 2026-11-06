@@ -1,6 +1,7 @@
 package client;
 
 import com.google.gson.Gson;
+import exception.ResponseException;
 import model.UserData;
 import result.LoginResult;
 
@@ -18,16 +19,22 @@ public class ServerFacade {
         this.serverUrl = serverUrl;
     }
 
-    public LoginResult register(UserData user) throws IOException, InterruptedException {
+    public LoginResult register(UserData user) throws IOException, InterruptedException, ResponseException {
         var request = buildRequest("POST", "/user", user);
         var response = sendRequest(request);
         return handleResponse(response, LoginResult.class);
     }
 
-    public LoginResult login(UserData user) throws IOException, InterruptedException {
+    public LoginResult login(UserData user) throws IOException, InterruptedException, ResponseException {
         var request = buildRequest("POST", "/session", user);
         var response = sendRequest(request);
         return handleResponse(response, LoginResult.class);
+    }
+
+    public void logout(String authToken) throws IOException, InterruptedException, ResponseException {
+        var request = buildRequest("POST", "/session", authToken);
+        var response = sendRequest(request);
+        handleResponse(response, null);
     }
 
     private HttpRequest buildRequest(String method, String path, Object body) {
@@ -52,10 +59,15 @@ public class ServerFacade {
         return client.send(request, HttpResponse.BodyHandlers.ofString());
     }
 
-    private <T> T handleResponse(HttpResponse<String> response, Class<T> responseClass) {
+    private <T> T handleResponse(HttpResponse<String> response, Class<T> responseClass) throws ResponseException {
         var status = response.statusCode();
         if (!isSuccessful(status)) {
             var body = response.body();
+            if (body != null) {
+                throw ResponseException.fromJson(body);
+            }
+
+            throw new ResponseException("Connection Failure!");
         }
         if (responseClass != null) {
             return new Gson().fromJson(response.body(), responseClass);

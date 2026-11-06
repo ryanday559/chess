@@ -1,5 +1,6 @@
 package client;
 
+import exception.ResponseException;
 import model.UserData;
 import org.junit.jupiter.api.*;
 import result.LoginResult;
@@ -32,6 +33,11 @@ public class ServerFacadeTests {
         Assertions.assertTrue(true);
     }
 
+    @BeforeEach
+    public void clearTest() {
+        Assertions.assertDoesNotThrow(()->facade.clear());
+    }
+
 
     @Test
     public void registerTest() {
@@ -41,17 +47,17 @@ public class ServerFacadeTests {
     }
 
     @Test
-    public void loginTest() throws IOException, InterruptedException {
+    public void loginTest() throws IOException, InterruptedException, ResponseException {
         UserData user = new UserData("bob", "bobsPassword", "bobsemail@email.com");
         facade.register(user);
         Assertions.assertDoesNotThrow(()->facade.login(user));
     }
 
     @Test
-    public void logoutTest() throws IOException, InterruptedException {
+    public void logoutTest() throws IOException, InterruptedException, ResponseException {
         UserData user = new UserData("bob", "bobsPassword", "bobsemail@email.com");
         LoginResult result = facade.register(user);
-        Assertions.assertDoesNotThrow(()->facade.logout(user));
+        Assertions.assertDoesNotThrow(()->facade.logout(result.authToken()));
     }
 
 }
