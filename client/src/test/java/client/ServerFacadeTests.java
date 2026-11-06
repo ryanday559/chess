@@ -27,6 +27,10 @@ public class ServerFacadeTests {
         server.stop();
     }
 
+    LoginResult createUser() throws ResponseException {
+        UserData user = new UserData("bob", "bobsPassword", "bobsemail@email.com");
+        return facade.register(user);
+    }
 
     @Test
     public void sampleTest() {
@@ -55,9 +59,13 @@ public class ServerFacadeTests {
 
     @Test
     public void logoutTest() throws ResponseException {
-        UserData user = new UserData("bob", "bobsPassword", "bobsemail@email.com");
-        LoginResult result = facade.register(user);
+        LoginResult result = createUser();
         Assertions.assertDoesNotThrow(()->facade.logout(result.authToken()));
+    }
+
+    public void createGameTest() throws ResponseException {
+        LoginResult result = createUser();
+        Assertions.assertDoesNotThrow(()->facade.createGame(result.authToken(), "gameName"));
     }
 
 }
