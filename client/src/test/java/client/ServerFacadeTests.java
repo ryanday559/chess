@@ -1,6 +1,7 @@
 package client;
 
 import exception.ResponseException;
+import model.GameData;
 import model.UserData;
 import org.junit.jupiter.api.*;
 import result.LoginResult;
@@ -63,9 +64,11 @@ public class ServerFacadeTests {
         Assertions.assertDoesNotThrow(()->facade.logout(result.authToken()));
     }
 
+    @Test
     public void createGameTest() throws ResponseException {
         LoginResult result = createUser();
-        Assertions.assertDoesNotThrow(()->facade.createGame(result.authToken(), "gameName"));
+        GameData gameData = new GameData(-1, null, null, "gameName", null);
+        Assertions.assertDoesNotThrow(()->facade.createGame(result.authToken(), gameData));
     }
 
 }

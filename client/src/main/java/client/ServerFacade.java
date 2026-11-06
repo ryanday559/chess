@@ -44,6 +44,12 @@ public class ServerFacade {
         handleResponse(response, null);
     }
 
+    public void createGame(String authToken, GameData gameData) throws ResponseException {
+        var request = buildRequestWithHeader("DELETE", "/session", gameData, "authorization", authToken);
+        var response = sendRequest(request);
+        handleResponse(response, null);
+    }
+
     private HttpRequest buildRequest(String method, String path, Object body) {
         var request = HttpRequest.newBuilder()
                 .uri(URI.create(serverUrl + path))
