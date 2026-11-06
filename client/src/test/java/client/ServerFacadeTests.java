@@ -2,6 +2,7 @@ package client;
 
 import model.UserData;
 import org.junit.jupiter.api.*;
+import result.LoginResult;
 import server.Server;
 
 import java.io.IOException;
@@ -44,6 +45,13 @@ public class ServerFacadeTests {
         UserData user = new UserData("bob", "bobsPassword", "bobsemail@email.com");
         facade.register(user);
         Assertions.assertDoesNotThrow(()->facade.login(user));
+    }
+
+    @Test
+    public void logoutTest() throws IOException, InterruptedException {
+        UserData user = new UserData("bob", "bobsPassword", "bobsemail@email.com");
+        LoginResult result = facade.register(user);
+        Assertions.assertDoesNotThrow(()->facade.logout(user));
     }
 
 }
