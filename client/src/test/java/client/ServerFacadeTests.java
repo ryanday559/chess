@@ -4,6 +4,8 @@ import model.UserData;
 import org.junit.jupiter.api.*;
 import server.Server;
 
+import java.io.IOException;
+
 
 public class ServerFacadeTests {
 
@@ -34,6 +36,13 @@ public class ServerFacadeTests {
     public void registerTest() {
         UserData user = new UserData("bob", "bobsPassword", "bobsemail@email.com");
         Assertions.assertDoesNotThrow(()->facade.register(user));
+    }
+
+    @Test
+    public void loginTest() throws IOException, InterruptedException {
+        UserData user = new UserData("bob", "bobsPassword", "bobsemail@email.com");
+        facade.register(user);
+        Assertions.assertDoesNotThrow(()->facade.login(user));
     }
 
 }
