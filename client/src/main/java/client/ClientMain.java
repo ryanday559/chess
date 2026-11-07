@@ -4,17 +4,21 @@ import chess.*;
 import exception.ResponseException;
 import model.UserData;
 import server.Server;
+import service.GameService;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Map;
 
 import java.util.function.Supplier;
+import client.GameREPL.UserStatus;
 
 public class ClientMain {
     private static Map<String, Supplier<Object>> repls = Map.of(
             "preLogin", PreLoginREPL::new,
-            "postLogin", PostLoginREPL::new
+            "postLogin", PostLoginREPL::new,
+            "observeGame", ()-> new GameREPL(UserStatus.OBSERVER),
+            "joinGame", ()-> new GameREPL(UserStatus.PLAYER)
     );
     public static String activeREPL;
     private static Server server;
@@ -23,7 +27,7 @@ public class ClientMain {
 
 
     public static void main(String[] args) {
-        setupServer();
+        //setupServer();
         activeREPL = "preLogin";
         startREPL();
     }

@@ -100,7 +100,10 @@ public class PostLoginREPL {
         } catch (ResponseException e) {
             return e.toString();
         }
-        return "Successfully joined game " + arguments[0] + "!";
+        System.out.print("Successfully joined game " + arguments[0] + "!");
+        activeREPL = "joinGame";
+        startREPL();
+        return "";
     }
 
     private static String observe(String[] arguments) {
@@ -120,7 +123,10 @@ public class PostLoginREPL {
         } catch (ResponseException e) {
             return e.toString();
         }
-        return "Successfully observing game " + game.gameName() + "!";
+        System.out.print("Successfully observing game " + arguments[0] + "!");
+        activeREPL = "observeGame";
+        startREPL();
+        return "";
     }
 
     private static GameData findGameById(GameData[] games, Integer gameID) throws ResponseException {

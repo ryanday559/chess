@@ -59,7 +59,7 @@ public class PreLoginREPL {
 
     private static String register(String[] arguments) {
         if (arguments.length != 3) {
-            return "Unexpected number of register credentials! To register provide a username, password, and email! Type help for new options.";
+            return "Unexpected number of register credentials! To register provide a username, password, and email!";
         }
         UserData userData = new UserData(arguments[0], arguments[1], arguments[2]);
         try {
@@ -68,7 +68,7 @@ public class PreLoginREPL {
             return e.toString();
         }
         activeREPL = "postLogin";
-        System.out.print("Successfully registered and logged in as " + arguments[0] + "!");
+        System.out.print("Successfully registered and logged in as " + arguments[0] + "! Type help for new options.");
         startREPL();
         return "";
     }
