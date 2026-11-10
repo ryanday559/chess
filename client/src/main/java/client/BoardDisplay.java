@@ -34,14 +34,7 @@ public class BoardDisplay {
     private String prepareWhiteFirstSpaceRow(int row) {
         String rowString = SET_BG_COLOR_LIGHT_GREY + " " + String.valueOf(row) + " " + RESET_BG_COLOR;
         for (int i = 1; i < 9; i++) {
-            ChessPiece piece = board.getPiece(new ChessPosition(row, i));
-            String pieceString;
-            if (piece == null) {
-                pieceString = " ";
-            }
-            else {
-                pieceString = piece.toString();
-            }
+            String pieceString = getPieceWithColor(row, i);
             if (i % 2 == 1) {
                 rowString += SET_BG_COLOR_WHITE + " " + pieceString + " " + RESET_BG_COLOR;
             }
@@ -52,17 +45,24 @@ public class BoardDisplay {
         return rowString + SET_BG_COLOR_LIGHT_GREY + " " + String.valueOf(row) + " " + RESET_BG_COLOR + "\n";
     }
 
+    String getPieceWithColor(int row, int col) {
+        ChessPiece piece = board.getPiece(new ChessPosition(row, col));
+        String pieceString;
+        if (piece == null) {
+            return " ";
+        }
+        pieceString = piece.toString();
+        String colorCode = switch(piece.getTeamColor()) {
+            case BLACK -> SET_TEXT_COLOR_BLUE;
+            case WHITE -> SET_TEXT_COLOR_RED;
+        };
+        return colorCode + pieceString + RESET_TEXT_COLOR;
+    }
+
     private String prepareBlackFirstSpaceRow(int row) {
         String rowString = SET_BG_COLOR_LIGHT_GREY + " " + String.valueOf(row) + " " + RESET_BG_COLOR;
         for (int i = 1; i < 9; i++) {
-            ChessPiece piece = board.getPiece(new ChessPosition(row, i));
-            String pieceString;
-            if (piece == null) {
-                pieceString = " ";
-            }
-            else {
-                pieceString = piece.toString();
-            }
+            String pieceString = getPieceWithColor(row, i);
             if (i % 2 == 0) {
                 rowString += SET_BG_COLOR_WHITE + " " + pieceString + " " + RESET_BG_COLOR;
             }
