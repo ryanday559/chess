@@ -101,7 +101,10 @@ public class PostLoginREPL {
             return e.toString();
         }
         System.out.print("Successfully joined game " + arguments[0] + "!");
-        activeREPL = "joinGame";
+        activeREPL = switch (teamColor) {
+            case BLACK -> "joinGameBlack";
+            case WHITE -> "joinGameWhite";
+        };
         startREPL();
         return "";
     }

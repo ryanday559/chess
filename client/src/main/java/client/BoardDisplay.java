@@ -10,7 +10,7 @@ import static ui.EscapeSequences.*;
 public class BoardDisplay {
     private ChessBoard board;
     private final String boardLettering = "   a  b  c  d  e  f  g  h   ";
-    private final String reversedBoardLettering = " hgfedcba ";
+    private final String reversedBoardLettering = "   h  g  f  e  d  c  b  a   ";
 
     public BoardDisplay(ChessBoard board) {
         this.board = board;
@@ -74,8 +74,8 @@ public class BoardDisplay {
     }
 
     public void printBlackView() {
-        String boardString = "\n" + SET_BG_COLOR_LIGHT_GREY + " " + boardLettering + " " + RESET_BG_COLOR + "\n";
-        for (int i = 8; i >= 1; i--) {
+        String boardString = "\n" + SET_BG_COLOR_LIGHT_GREY + " " + reversedBoardLettering + " " + RESET_BG_COLOR + "\n";
+        for (int i = 1; i <= 8; i++) {
             if (i % 2 == 0) {
                 boardString += prepareWhiteFirstSpaceRow(i);
             }
@@ -83,7 +83,7 @@ public class BoardDisplay {
                 boardString += prepareBlackFirstSpaceRow(i);
             }
         }
-        boardString += SET_BG_COLOR_LIGHT_GREY + " " + boardLettering + " " + RESET_BG_COLOR + "\n";
+        boardString += SET_BG_COLOR_LIGHT_GREY + " " + reversedBoardLettering + " " + RESET_BG_COLOR + "\n";
         System.out.print(boardString);
     }
 }

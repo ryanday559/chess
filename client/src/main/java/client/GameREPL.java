@@ -6,16 +6,16 @@ import chess.ChessGame;
 public class GameREPL {
     public enum UserStatus {
         OBSERVER,
-        PLAYER
+        WHITEPLAYER,
+        BLACKPLAYER
     }
     private BoardDisplay boardDisplay = new BoardDisplay(new ChessBoard());
 
     public GameREPL(UserStatus userStatus) {
-        if (userStatus == UserStatus.OBSERVER) {
-            observerREPL();
-        }
-        else {
-            playerREPL();
+        switch (userStatus) {
+            case WHITEPLAYER -> whitePlayerREPL();
+            case BLACKPLAYER -> blackPlayerREPL();
+            case OBSERVER -> observerREPL();
         }
     }
 
@@ -23,8 +23,12 @@ public class GameREPL {
         boardDisplay.printWhiteView();
     }
 
-    private void playerREPL() {
+    private void whitePlayerREPL() {
         boardDisplay.printWhiteView();
+    }
+
+    private void blackPlayerREPL() {
+        boardDisplay.printBlackView();
     }
 
 }

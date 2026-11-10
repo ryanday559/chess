@@ -18,7 +18,8 @@ public class ClientMain {
             "preLogin", PreLoginREPL::new,
             "postLogin", PostLoginREPL::new,
             "observeGame", ()-> new GameREPL(UserStatus.OBSERVER),
-            "joinGame", ()-> new GameREPL(UserStatus.PLAYER)
+            "joinGameWhite", ()-> new GameREPL(UserStatus.WHITEPLAYER),
+            "joinGameBlack", ()-> new GameREPL(UserStatus.BLACKPLAYER)
     );
     public static String activeREPL;
     private static Server server;
