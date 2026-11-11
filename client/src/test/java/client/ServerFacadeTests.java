@@ -9,14 +9,12 @@ import org.junit.jupiter.api.*;
 import result.LoginResult;
 import server.Server;
 
-import java.io.IOException;
-
 
 public class ServerFacadeTests {
 
     private static Server server;
 
-    private static final ServerFacade facade = new ServerFacade("http://localhost:8080");
+    private static final ServerFacade FACADE = new ServerFacade("http://localhost:8080");
 
     @BeforeAll
     public static void init() {
@@ -32,7 +30,7 @@ public class ServerFacadeTests {
 
     LoginResult createUser() throws ResponseException {
         UserData user = new UserData("bob", "bobsPassword", "bobsemail@email.com");
-        return facade.register(user);
+        return FACADE.register(user);
     }
 
     @Test
@@ -43,103 +41,103 @@ public class ServerFacadeTests {
     @BeforeEach
     @Test
     public void clearTest() {
-        Assertions.assertDoesNotThrow(()->facade.clear());
+        Assertions.assertDoesNotThrow(()-> FACADE.clear());
     }
 
 
     @Test
     public void registerTest() {
         UserData user = new UserData("bob", "bobsPassword", "bobsemail@email.com");
-        Assertions.assertDoesNotThrow(()->facade.register(user));
+        Assertions.assertDoesNotThrow(()-> FACADE.register(user));
     }
 
     @Test
     public void cannotRegisterTest() throws ResponseException {
         UserData user = new UserData("bob", "bobsPassword", "bobsemail@email.com");
-        facade.register(user);
-        Assertions.assertThrows(ResponseException.class, ()->facade.register(user));
+        FACADE.register(user);
+        Assertions.assertThrows(ResponseException.class, ()-> FACADE.register(user));
     }
 
     @Test
     public void loginTest() throws ResponseException {
         UserData user = new UserData("bob", "bobsPassword", "bobsemail@email.com");
-        facade.register(user);
-        Assertions.assertDoesNotThrow(()->facade.login(user));
+        FACADE.register(user);
+        Assertions.assertDoesNotThrow(()-> FACADE.login(user));
     }
 
     @Test
     public void badLoginTest() throws ResponseException {
         UserData user = new UserData("bob", "bobsPassword", "bobsemail@email.com");
-        facade.register(user);
+        FACADE.register(user);
         UserData badLogin = new UserData("bob", "wrong", "bobsemail@email.com");
-        Assertions.assertThrows(ResponseException.class, ()->facade.login(badLogin));
+        Assertions.assertThrows(ResponseException.class, ()-> FACADE.login(badLogin));
     }
 
     @Test
     public void logoutTest() throws ResponseException {
         LoginResult result = createUser();
-        Assertions.assertDoesNotThrow(()->facade.logout(result.authToken()));
+        Assertions.assertDoesNotThrow(()-> FACADE.logout(result.authToken()));
     }
 
     @Test
     public void badAuthLogoutTest() throws ResponseException {
         createUser();
-        Assertions.assertThrows(ResponseException.class, ()->facade.logout("bad"));
+        Assertions.assertThrows(ResponseException.class, ()-> FACADE.logout("bad"));
     }
 
     @Test
     public void createGameTest() throws ResponseException {
         LoginResult result = createUser();
         GameData gameData = new GameData(-1, null, null, "gameName", null);
-        Assertions.assertDoesNotThrow(()->facade.createGame(result.authToken(), gameData));
+        Assertions.assertDoesNotThrow(()-> FACADE.createGame(result.authToken(), gameData));
     }
 
     @Test
     public void unauthorizedCreateGameTest() throws ResponseException {
         createUser();
         GameData gameData = new GameData(-1, null, null, "gameName", null);
-        Assertions.assertThrows(ResponseException.class, ()->facade.createGame("bad", gameData));
+        Assertions.assertThrows(ResponseException.class, ()-> FACADE.createGame("bad", gameData));
     }
 
     @Test
     public void listGamesTest() throws ResponseException {
         LoginResult result = createUser();
         GameData gameData = new GameData(-1, null, null, "gameName", null);
-        facade.createGame(result.authToken(), gameData);
-        facade.createGame(result.authToken(), gameData);
-        Assertions.assertDoesNotThrow(()->facade.listGames(result.authToken()));
+        FACADE.createGame(result.authToken(), gameData);
+        FACADE.createGame(result.authToken(), gameData);
+        Assertions.assertDoesNotThrow(()-> FACADE.listGames(result.authToken()));
     }
 
     @Test
     public void unauthorizedListGamesTest() throws ResponseException {
         LoginResult result = createUser();
         GameData gameData = new GameData(-1, null, null, "gameName", null);
-        facade.createGame(result.authToken(), gameData);
-        facade.createGame(result.authToken(), gameData);
-        facade.listGames(result.authToken());
-        Assertions.assertThrows(ResponseException.class, ()->facade.listGames("bad"));
+        FACADE.createGame(result.authToken(), gameData);
+        FACADE.createGame(result.authToken(), gameData);
+        FACADE.listGames(result.authToken());
+        Assertions.assertThrows(ResponseException.class, ()-> FACADE.listGames("bad"));
     }
 
     @Test
     public void joinGameTest() throws ResponseException {
         LoginResult result = createUser();
         GameData gameData = new GameData(-1, null, null, "gameName", null);
-        facade.createGame(result.authToken(), gameData);
+        FACADE.createGame(result.authToken(), gameData);
         GameJoinData gameJoinData = new GameJoinData(ChessGame.TeamColor.BLACK, 1);
-        Assertions.assertDoesNotThrow(()->facade.joinGame(result.authToken(), gameJoinData));
+        Assertions.assertDoesNotThrow(()-> FACADE.joinGame(result.authToken(), gameJoinData));
     }
 
     @Test
     public void cannotJoinOccupiedTeamTest() throws ResponseException {
         LoginResult result = createUser();
         GameData gameData = new GameData(-1, null, null, "gameName", null);
-        facade.createGame(result.authToken(), gameData);
+        FACADE.createGame(result.authToken(), gameData);
         GameJoinData gameJoinData = new GameJoinData(ChessGame.TeamColor.BLACK, 1);
-        facade.joinGame(result.authToken(), gameJoinData);
-        facade.logout(result.authToken());
+        FACADE.joinGame(result.authToken(), gameJoinData);
+        FACADE.logout(result.authToken());
         UserData secondUser = new UserData("sherry", "sherrysPassword", "sherry@email.com");
-        LoginResult result2 = facade.register(secondUser);
-        Assertions.assertThrows(ResponseException.class, ()->facade.joinGame(result2.authToken(), gameJoinData));
+        LoginResult result2 = FACADE.register(secondUser);
+        Assertions.assertThrows(ResponseException.class, ()-> FACADE.joinGame(result2.authToken(), gameJoinData));
 
     }
 }
