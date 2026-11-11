@@ -45,6 +45,20 @@ public class BoardDisplay {
         return rowString + SET_BG_COLOR_LIGHT_GREY + " " + String.valueOf(row) + " " + RESET_BG_COLOR + "\n";
     }
 
+    private String prepareReverseWhiteFirstSpaceRow(int row) {
+        String rowString = SET_BG_COLOR_LIGHT_GREY + " " + String.valueOf(row) + " " + RESET_BG_COLOR;
+        for (int i = 8; i >= 1; i--) {
+            String pieceString = getPieceWithColor(row, i);
+            if (i % 2 == 0) {
+                rowString += SET_BG_COLOR_WHITE + " " + pieceString + " " + RESET_BG_COLOR;
+            }
+            else {
+                rowString += SET_BG_COLOR_BLACK + " " + pieceString + " " + RESET_BG_COLOR;
+            }
+        }
+        return rowString + SET_BG_COLOR_LIGHT_GREY + " " + String.valueOf(row) + " " + RESET_BG_COLOR + "\n";
+    }
+
     String getPieceWithColor(int row, int col) {
         ChessPiece piece = board.getPiece(new ChessPosition(row, col));
         String pieceString;
@@ -73,14 +87,28 @@ public class BoardDisplay {
         return rowString + SET_BG_COLOR_LIGHT_GREY + " " + String.valueOf(row) + " " + RESET_BG_COLOR + "\n";
     }
 
+    private String prepareReverseBlackFirstSpaceRow(int row) {
+        String rowString = SET_BG_COLOR_LIGHT_GREY + " " + String.valueOf(row) + " " + RESET_BG_COLOR;
+        for (int i = 8; i >= 1; i--) {
+            String pieceString = getPieceWithColor(row, i);
+            if (i % 2 == 1) {
+                rowString += SET_BG_COLOR_WHITE + " " + pieceString + " " + RESET_BG_COLOR;
+            }
+            else {
+                rowString += SET_BG_COLOR_BLACK + " " + pieceString + " " + RESET_BG_COLOR;
+            }
+        }
+        return rowString + SET_BG_COLOR_LIGHT_GREY + " " + String.valueOf(row) + " " + RESET_BG_COLOR + "\n";
+    }
+
     public void printBlackView() {
         String boardString = "\n" + SET_BG_COLOR_LIGHT_GREY + " " + reversedBoardLettering + " " + RESET_BG_COLOR + "\n";
         for (int i = 1; i <= 8; i++) {
-            if (i % 2 == 0) {
-                boardString += prepareWhiteFirstSpaceRow(i);
+            if (i % 2 == 1) {
+                boardString += prepareReverseWhiteFirstSpaceRow(i);
             }
             else {
-                boardString += prepareBlackFirstSpaceRow(i);
+                boardString += prepareReverseBlackFirstSpaceRow(i);
             }
         }
         boardString += SET_BG_COLOR_LIGHT_GREY + " " + reversedBoardLettering + " " + RESET_BG_COLOR + "\n";
