@@ -17,6 +17,10 @@ public class ServerFacade {
     private final HttpClient client = HttpClient.newHttpClient();
     private String serverUrl;
 
+    public ServerFacade() {
+        this.serverUrl = "http://localhost:8080";
+    }
+
     public ServerFacade(String serverUrl) {
         this.serverUrl = serverUrl;
     }

@@ -14,7 +14,7 @@ public class ServerFacadeTests {
 
     private static Server server;
 
-    private static final ServerFacade FACADE = new ServerFacade("http://localhost:0");
+    private static final ServerFacade FACADE = new ServerFacade();
 
     @BeforeAll
     public static void init() {
