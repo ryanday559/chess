@@ -19,14 +19,14 @@ public class PostLoginREPL {
 
     private void repl() {
         Scanner scanner = new Scanner(System.in);
-        String result = "";
-        while (!result.equals("quit")) {
+        String scannerResult = "";
+        while (!scannerResult.equals("quit")) {
             System.out.print("\n>>> ");
             try {
-                result = evaluate(scanner.nextLine());
-                System.out.print(result);
+                scannerResult = evaluate(scanner.nextLine());
+                System.out.print(scannerResult);
             } catch (Throwable e) {
-                System.out.print(e.toString());
+                System.out.print(e.getMessage());
             }
         }
     }

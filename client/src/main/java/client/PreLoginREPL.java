@@ -26,7 +26,7 @@ public class PreLoginREPL {
                 result = evaluate(scanner.nextLine());
                 System.out.print(result);
             } catch (Throwable e) {
-                System.out.print(e.toString());
+                System.out.print(e.getMessage());
             }
         }
     }
