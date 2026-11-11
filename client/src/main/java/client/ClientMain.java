@@ -13,7 +13,7 @@ public class ClientMain {
             "joinGameBlack", ()-> new GameREPL(UserStatus.BLACKPLAYER)
     );
     public static String activeREPL;
-    public static final ServerFacade FACADE = new ServerFacade("http://localhost:8080");
+    public static final ServerFacade FACADE = new ServerFacade("http://localhost:0");
     public static String authToken;
 
 
