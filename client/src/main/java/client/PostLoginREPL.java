@@ -52,7 +52,7 @@ public class PostLoginREPL {
         }
         GameData gameData = new GameData(-1, null, null, arguments[0], null);
         try {
-            facade.createGame(authToken, gameData);
+            FACADE.createGame(authToken, gameData);
         } catch (ResponseException e) {
             return makeStringRed("Error: Could not create game!");
         }
@@ -61,7 +61,7 @@ public class PostLoginREPL {
 
     private static String list() {
         try {
-            GameData[] gamesArray = facade.listGames(authToken);
+            GameData[] gamesArray = FACADE.listGames(authToken);
             return formatGamesArray(gamesArray);
         } catch (ResponseException e) {
             return makeStringRed("Error: Could not list games!");
@@ -98,7 +98,7 @@ public class PostLoginREPL {
         }
         GameData game;
         try {
-            facade.joinGame(authToken, gameJoinData);
+            FACADE.joinGame(authToken, gameJoinData);
         } catch (ResponseException e) {
             return makeStringRed(e.getMessage());
         }
@@ -123,7 +123,7 @@ public class PostLoginREPL {
         }
         GameData game;
         try {
-            GameData[] games = facade.listGames(authToken);
+            GameData[] games = FACADE.listGames(authToken);
             game = findGameById(games, gameID);
         } catch (ResponseException e) {
             return makeStringRed(e.getMessage());
@@ -145,7 +145,7 @@ public class PostLoginREPL {
 
     private static String logout() {
         try {
-            facade.logout(authToken);
+            FACADE.logout(authToken);
         } catch (ResponseException e) {
             return makeStringRed(e.getMessage());
         }

@@ -1,6 +1,5 @@
 package client;
 
-import chess.*;
 import java.util.Map;
 import java.util.function.Supplier;
 import client.GameREPL.UserStatus;
@@ -14,7 +13,7 @@ public class ClientMain {
             "joinGameBlack", ()-> new GameREPL(UserStatus.BLACKPLAYER)
     );
     public static String activeREPL;
-    public static ServerFacade facade = new ServerFacade("http://localhost:8080");
+    public static ServerFacade FACADE = new ServerFacade("http://localhost:8080");
     public static String authToken;
 
 

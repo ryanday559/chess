@@ -51,7 +51,7 @@ public class PreLoginREPL {
         }
         UserData userData = new UserData(arguments[0], arguments[1], null);
         try {
-            authToken = facade.login(userData).authToken();
+            authToken = FACADE.login(userData).authToken();
         } catch (ResponseException e) {
             return SET_TEXT_COLOR_RED + e.getMessage() + RESET_TEXT_COLOR;
         }
@@ -69,7 +69,7 @@ public class PreLoginREPL {
         }
         UserData userData = new UserData(arguments[0], arguments[1], arguments[2]);
         try {
-            authToken = facade.register(userData).authToken();
+            authToken = FACADE.register(userData).authToken();
         } catch (ResponseException e) {
             return SET_TEXT_COLOR_RED + e.getMessage() + RESET_TEXT_COLOR;
         }
