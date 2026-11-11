@@ -1,14 +1,7 @@
 package client;
 
 import chess.*;
-import exception.ResponseException;
-import model.UserData;
-import service.GameService;
-
-import java.lang.reflect.Array;
-import java.util.Arrays;
 import java.util.Map;
-
 import java.util.function.Supplier;
 import client.GameREPL.UserStatus;
 
