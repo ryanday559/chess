@@ -8,6 +8,8 @@ import model.UserData;
 import result.LoginResult;
 
 import java.io.IOException;
+import java.lang.module.ResolutionException;
+import java.net.ConnectException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -95,6 +97,9 @@ public class ServerFacade {
         try {
             return client.send(request, HttpResponse.BodyHandlers.ofString());
         }
+        catch (ConnectException e) {
+            throw new ResponseException("Error: Cannot connect to Chess Server!");
+        }
         catch (Exception e) {
             throw new ResponseException(e.getMessage());
         }
@@ -108,7 +113,7 @@ public class ServerFacade {
                 throw ResponseException.fromJson(body);
             }
 
-            throw new ResponseException("Response Failure!");
+            throw new ResponseException("Error: Response Failure!");
         }
         if (responseClass != null) {
             var body = response.body();

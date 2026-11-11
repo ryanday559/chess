@@ -7,6 +7,8 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 import static client.ClientMain.*;
+import static ui.EscapeSequences.RESET_TEXT_COLOR;
+import static ui.EscapeSequences.SET_TEXT_COLOR_RED;
 
 public class PreLoginREPL {
 
@@ -43,13 +45,15 @@ public class PreLoginREPL {
 
     private static String login(String[] arguments) {
         if (arguments.length != 2) {
-            return "Unexpected number of login credentials! To login provide a username and password!";
+            return SET_TEXT_COLOR_RED
+                    + "ERROR: Unexpected number of login credentials! To login provide a username and password!"
+                    + RESET_TEXT_COLOR;
         }
         UserData userData = new UserData(arguments[0], arguments[1], null);
         try {
             authToken = facade.login(userData).authToken();
         } catch (ResponseException e) {
-            return e.toString();
+            return SET_TEXT_COLOR_RED + e.getMessage() + RESET_TEXT_COLOR;
         }
         activeREPL = "postLogin";
         System.out.print("Successfully logged in as " + arguments[0] + "! Type help for new options.");
@@ -59,13 +63,15 @@ public class PreLoginREPL {
 
     private static String register(String[] arguments) {
         if (arguments.length != 3) {
-            return "Unexpected number of register credentials! To register provide a username, password, and email!";
+            return SET_TEXT_COLOR_RED
+                    + "Error: Unexpected number of register credentials! To register provide a username, password, and email!"
+                    + RESET_TEXT_COLOR;
         }
         UserData userData = new UserData(arguments[0], arguments[1], arguments[2]);
         try {
             authToken = facade.register(userData).authToken();
         } catch (ResponseException e) {
-            return e.toString();
+            return SET_TEXT_COLOR_RED + e.getMessage() + RESET_TEXT_COLOR;
         }
         activeREPL = "postLogin";
         System.out.print("Successfully registered and logged in as " + arguments[0] + "! Type help for new options.");

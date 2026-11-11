@@ -9,6 +9,8 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 import static client.ClientMain.*;
+import static ui.EscapeSequences.RESET_TEXT_COLOR;
+import static ui.EscapeSequences.SET_TEXT_COLOR_RED;
 
 public class PostLoginREPL {
     public PostLoginREPL() {
@@ -46,13 +48,13 @@ public class PostLoginREPL {
 
     private static String create(String[] arguments) {
         if (arguments.length != 1) {
-            return "ERROR: correct format is 'create <GAME NAME>'";
+            return makeStringRed("Error: correct format is 'create <GAME NAME>'");
         }
         GameData gameData = new GameData(-1, null, null, arguments[0], null);
         try {
             facade.createGame(authToken, gameData);
         } catch (ResponseException e) {
-            return "ERROR: Could not create game!";
+            return makeStringRed("Error: Could not create game!");
         }
         return "Game " + arguments[0] + " successfully created!";
     }
@@ -62,7 +64,7 @@ public class PostLoginREPL {
             GameData[] gamesArray = facade.listGames(authToken);
             return formatGamesArray(gamesArray);
         } catch (ResponseException e) {
-            return "ERROR: Could not list games!";
+            return makeStringRed("Error: Could not list games!");
         }
     }
 
@@ -78,7 +80,7 @@ public class PostLoginREPL {
 
     private static String join(String[] arguments) {
         if (arguments.length != 2) {
-            return "ERROR: join requires 2 arguments, [WHITE|BLACK] <GAME ID>";
+            return makeStringRed("Error: join requires 2 arguments, [WHITE|BLACK] <GAME ID>");
         }
         ChessGame.TeamColor teamColor;
         if (arguments[1].equals("white")) {
@@ -86,19 +88,19 @@ public class PostLoginREPL {
         } else if (arguments[1].equals("black")) {
             teamColor = ChessGame.TeamColor.BLACK;
         } else {
-            return "ERROR: Team color must either be WHITE or BLACK";
+            return makeStringRed("Error: Team color must either be WHITE or BLACK");
         }
         GameJoinData gameJoinData;
         try {
             gameJoinData = new GameJoinData(teamColor, Integer.parseInt(arguments[0]));
         } catch (NumberFormatException e) {
-            return "ERROR: Game IDs must be integers!";
+            return makeStringRed("Error: Game Numbers must be integers!");
         }
         GameData game;
         try {
             facade.joinGame(authToken, gameJoinData);
         } catch (ResponseException e) {
-            return e.toString();
+            return makeStringRed(e.getMessage());
         }
         System.out.print("Successfully joined game " + arguments[0] + "!");
         activeREPL = switch (teamColor) {
@@ -111,20 +113,20 @@ public class PostLoginREPL {
 
     private static String observe(String[] arguments) {
         if (arguments.length != 1) {
-            return "ERROR: observe requires 1 argument, <GAME ID>";
+            return makeStringRed("Error: observe requires 1 argument, <GAME Number>");
         }
         int gameID;
         try {
             gameID = Integer.parseInt(arguments[0]);
         } catch (NumberFormatException e) {
-            return "ERROR: Game ID must be an integer!";
+            return makeStringRed("Error: Game Number must be an integer!");
         }
         GameData game;
         try {
             GameData[] games = facade.listGames(authToken);
             game = findGameById(games, gameID);
         } catch (ResponseException e) {
-            return e.toString();
+            return makeStringRed(e.getMessage());
         }
         System.out.print("Successfully observing game " + arguments[0] + "!");
         activeREPL = "observeGame";
@@ -138,14 +140,14 @@ public class PostLoginREPL {
                 return game;
             }
         }
-        throw new ResponseException("No games with " + gameID.toString() + " available!");
+        throw new ResponseException("Error: No games with Game Number " + gameID.toString() + " available!");
     }
 
     private static String logout() {
         try {
             facade.logout(authToken);
         } catch (ResponseException e) {
-            return e.toString();
+            return makeStringRed(e.getMessage());
         }
         authToken = null;
         activeREPL = "preLogin";
@@ -157,10 +159,14 @@ public class PostLoginREPL {
         return """
                 create <GAME NAME>
                 list
-                join <ID> [WHITE|BLACK]
-                observe <ID>
+                join <Game Number> [WHITE|BLACK]
+                observe <Game Number>
                 logout
                 quit
                 help""";
+    }
+
+    private static String makeStringRed(String input) {
+        return SET_TEXT_COLOR_RED + input + RESET_TEXT_COLOR;
     }
 }
