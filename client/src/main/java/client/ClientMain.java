@@ -3,7 +3,6 @@ package client;
 import chess.*;
 import exception.ResponseException;
 import model.UserData;
-import server.Server;
 import service.GameService;
 
 import java.lang.reflect.Array;
@@ -22,21 +21,13 @@ public class ClientMain {
             "joinGameBlack", ()-> new GameREPL(UserStatus.BLACKPLAYER)
     );
     public static String activeREPL;
-    private static Server server;
     public static final ServerFacade facade = new ServerFacade("http://localhost:8080");
     public static String authToken;
 
 
     public static void main(String[] args) {
-        //setupServer();
         activeREPL = "preLogin";
         startREPL();
-    }
-
-    public static void setupServer() {
-        server = new Server();
-        var port = server.run(8080);
-        System.out.println("Started test HTTP server on " + port);
     }
 
     public static void startREPL() {
