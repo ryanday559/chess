@@ -6,9 +6,6 @@ import model.GameData;
 import model.GameJoinData;
 import model.UserData;
 import result.LoginResult;
-
-import java.io.IOException;
-import java.lang.module.ResolutionException;
 import java.net.ConnectException;
 import java.net.URI;
 import java.net.http.HttpClient;
