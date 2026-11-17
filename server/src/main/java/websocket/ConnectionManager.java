@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ConnectionManager {
+    // Maybe I need to update this map to be a map of maps, where the internal map stores sessions by player color and observers
     public final ConcurrentHashMap<Integer, HashSet<Session>> connections = new ConcurrentHashMap<>();
 
     public void add(Integer gameID, Session session) {

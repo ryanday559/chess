@@ -3,6 +3,7 @@ package client;
 import java.util.Map;
 import java.util.function.Supplier;
 import client.GameREPL.UserStatus;
+import client.websocket.WebSocketFacade;
 
 public class ClientMain {
     private static Map<String, Supplier<Object>> repls = Map.of(
@@ -14,6 +15,7 @@ public class ClientMain {
     );
     public static String activeREPL;
     public static final ServerFacade FACADE = new ServerFacade("http://localhost:8080");
+    public static final WebSocketFacade WEB_SOCKET_FACADE = new WebSocketFacade("http://localhost:8080");
     public static String authToken;
 
 
