@@ -26,7 +26,7 @@ public class BoardDisplay {
                 boardString += prepareBlackFirstSpaceRow(i);
             }
         }
-        boardString += SET_BG_COLOR_LIGHT_GREY + " " + boardLettering + " " + RESET_BG_COLOR + "\n";
+        boardString += SET_BG_COLOR_LIGHT_GREY + " " + boardLettering + " " + RESET_BG_COLOR + "\n>>> ";
         return boardString;
     }
 
@@ -110,7 +110,7 @@ public class BoardDisplay {
                 boardString += prepareReverseBlackFirstSpaceRow(i);
             }
         }
-        boardString += SET_BG_COLOR_LIGHT_GREY + " " + reversedBoardLettering + " " + RESET_BG_COLOR + "\n";
+        boardString += SET_BG_COLOR_LIGHT_GREY + " " + reversedBoardLettering + " " + RESET_BG_COLOR + "\n>>> ";
         return boardString;
     }
 }
