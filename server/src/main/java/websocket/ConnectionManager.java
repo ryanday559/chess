@@ -1,7 +1,10 @@
 package websocket;
 
+import chess.ChessGame;
+import model.GameData;
 import org.eclipse.jetty.websocket.api.Session;
 import websocket.messages.LoadGameMessage;
+import websocket.messages.NotificationMessage;
 import websocket.messages.ServerMessage;
 
 import java.io.IOException;
@@ -29,18 +32,36 @@ public class ConnectionManager {
         sessionSet.remove(session);
     }
 
-    public void gameBroadcast(Integer gameID, Session excludeSession, ServerMessage message) throws IOException {
+    public void broadcastGameUpdate(Integer gameID, LoadGameMessage message) throws IOException {
         String msg = message.toString();
         for (Session c : connections.get(gameID)) {
             if (c.isOpen()) {
-                if (!c.equals(excludeSession)) {
-                    c.getRemote().sendString(msg);
-                }
+                c.getRemote().sendString(msg);
             }
         }
     }
 
-    public void broadcastGameUpdate(Integer gameID, LoadGameMessage message) throws IOException {
+    public void broadcastJoinMessage(GameData gameData, String username) throws IOException {
+        String whitePlayer = gameData.whiteUsername();
+        String blackPlayer = gameData.blackUsername();
+        String colorMessage;
+        if (whitePlayer.equals(username)) {
+            colorMessage = " as the white player!";
+        }
+        else if (blackPlayer.equals(username)) {
+            colorMessage = " as the black player!";
+        }
+        else {
+            colorMessage = " as an observer!";
+        }
+        NotificationMessage notificationMessage = new NotificationMessage(
+                ServerMessage.ServerMessageType.NOTIFICATION,
+                username + " joined" + colorMessage
+            );
+        broadcastMessage(gameData.gameID(), notificationMessage);
+    }
+
+    public void broadcastMessage(Integer gameID, NotificationMessage message) throws IOException {
         String msg = message.toString();
         for (Session c : connections.get(gameID)) {
             if (c.isOpen()) {

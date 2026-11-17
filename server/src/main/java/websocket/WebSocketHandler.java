@@ -66,10 +66,12 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
             Integer gameID = command.getGameID();
             String authToken = command.getAuthToken();
             authService.authenticate(authToken);
+            String user = authService.getAuthData(authToken).username();
             connections.add(gameID, session);
             GameData gameData = gameService.getGameData(gameID);
-            LoadGameMessage broadcastMessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, gameData.game());
-            connections.broadcastGameUpdate(gameID, broadcastMessage);
+            LoadGameMessage gameBroadcast = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, gameData.game());
+            connections.broadcastJoinMessage(gameData, user);
+            connections.broadcastGameUpdate(gameID, gameBroadcast);
         } catch(UnauthorizedException | DataAccessException ex) {
             throw new IOException(ex.getMessage());
         }
