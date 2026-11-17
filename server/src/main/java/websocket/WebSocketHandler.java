@@ -71,13 +71,20 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
             ChessGame game = gameService.makeMove(gameID);
             LoadGameMessage broadcastMessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game);
             connections.broadcastGameUpdate(gameID, broadcastMessage);
-
         } catch(UnauthorizedException | DataAccessException ex) {
             throw new IOException(ex.getMessage());
         }
     }
 
     private void leave(UserGameCommand command, Session session) throws IOException {
+        try {
+            Integer gameID = command.getGameID();
+            String authToken = command.getAuthToken();
+            authService.authenticate(authToken);
+            connections.remove(gameID, session);
+        } catch(UnauthorizedException | DataAccessException ex) {
+            throw new IOException(ex.getMessage());
+        }
     }
 
     private void resign(UserGameCommand command, Session session) throws IOException {
