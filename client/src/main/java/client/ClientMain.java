@@ -6,17 +6,18 @@ import client.GameREPL.UserStatus;
 import client.websocket.WebSocketFacade;
 
 public class ClientMain {
+    public static String activeREPL;
+    private final static String URL = "http://localhost:8080";
+    public static final ServerFacade FACADE = new ServerFacade(URL);
+    public static String authToken;
+
     private static Map<String, Supplier<Object>> repls = Map.of(
             "preLogin", PreLoginREPL::new,
             "postLogin", PostLoginREPL::new,
-            "observeGame", ()-> new GameREPL(UserStatus.OBSERVER),
-            "joinGameWhite", ()-> new GameREPL(UserStatus.WHITEPLAYER),
-            "joinGameBlack", ()-> new GameREPL(UserStatus.BLACKPLAYER)
+            "observeGame", ()-> new GameREPL(UserStatus.OBSERVER, URL),
+            "joinGameWhite", ()-> new GameREPL(UserStatus.WHITEPLAYER, URL),
+            "joinGameBlack", ()-> new GameREPL(UserStatus.BLACKPLAYER, URL)
     );
-    public static String activeREPL;
-    public static final ServerFacade FACADE = new ServerFacade("http://localhost:8080");
-    public static final WebSocketFacade WEB_SOCKET_FACADE = new WebSocketFacade("http://localhost:8080");
-    public static String authToken;
 
 
     public static void main(String[] args) {
