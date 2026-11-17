@@ -1,10 +1,15 @@
 package client.websocket;
 
+import chess.ChessMove;
+import chess.InvalidMoveException;
 import com.google.gson.Gson;
 import exception.ResponseException;
 import jakarta.websocket.*;
+import websocket.commands.UserGameCommand;
+import websocket.commands.MakeMoveCommand;
 import websocket.messages.ServerMessage;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -37,4 +42,12 @@ public class WebSocketFacade extends Endpoint {
     public void onOpen(Session session, EndpointConfig endpointConfig){
     }
 
+    public void makeMove(String authToken, Integer gameID, ChessMove move) throws ResponseException {
+        try {
+            UserGameCommand action = new MakeMoveCommand(MakeMoveCommand.CommandType.MAKE_MOVE, authToken, gameID, move);
+            this.session.getBasicRemote().sendText(new Gson().toJson(action));
+        } catch (IOException ex) {
+            throw new ResponseException("Move " + move + " is not a valid move!");
+        }
+    }
 }
