@@ -13,6 +13,8 @@ import static ui.EscapeSequences.RESET_TEXT_COLOR;
 import static ui.EscapeSequences.SET_TEXT_COLOR_RED;
 
 public class PostLoginREPL {
+    public static Integer currentGameID;
+
     public PostLoginREPL() {
         repl();
     }
@@ -97,6 +99,7 @@ public class PostLoginREPL {
             return makeStringRed("Error: Game Numbers must be integers!");
         }
         GameData game;
+        currentGameID = Integer.parseInt(arguments[0]);
         try {
             FACADE.joinGame(authToken, gameJoinData);
         } catch (ResponseException e) {

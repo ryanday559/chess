@@ -9,7 +9,9 @@ import service.UserService;
 import java.util.Arrays;
 import java.util.Scanner;
 
+import static client.ClientMain.authToken;
 import static client.ClientMain.quit;
+import static client.PostLoginREPL.currentGameID;
 
 public class GameREPL {
     public enum UserStatus {
@@ -49,14 +51,17 @@ public class GameREPL {
 
     private void observerConnection() throws ResponseException {
         webSocketFacade = new WebSocketFacade(url, new WhitePlayerHandler());
+        webSocketFacade.connect(authToken, currentGameID);
     }
 
     private void whitePlayerConnection() throws ResponseException {
         webSocketFacade = new WebSocketFacade(url, new WhitePlayerHandler());
+        webSocketFacade.connect(authToken, currentGameID);
     }
 
     private void blackPlayerConnection() throws ResponseException {
         webSocketFacade = new WebSocketFacade(url, new BlackPlayerHandler());
+        webSocketFacade.connect(authToken, currentGameID);
     }
 
     public static String evaluate(String userInput) {
@@ -68,7 +73,7 @@ public class GameREPL {
             case "highlight"->highlight(arguments);
             case "move"->move(arguments);
             case "resign"->resign();
-            case "leave"->logout();
+            case "leave"->leave();
             default ->help();
         };
     }
@@ -97,7 +102,7 @@ public class GameREPL {
         return "NOT YET IMPLEMENTED";
     }
 
-    private static String logout() {
+    private static String leave() {
         return "NOT YET IMPLEMENTED";
     }
 
