@@ -8,6 +8,7 @@ import dataaccess.AuthentificationDataAccess;
 import dataaccess.DataAccessException;
 import dataaccess.UnauthorizedException;
 import io.javalin.websocket.*;
+import model.GameData;
 import service.AuthentificationService;
 import service.GameService;
 import service.UserService;
@@ -66,6 +67,9 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
             String authToken = command.getAuthToken();
             authService.authenticate(authToken);
             connections.add(gameID, session);
+            GameData gameData = gameService.getGameData(gameID);
+            LoadGameMessage broadcastMessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, gameData.game());
+            connections.broadcastGameUpdate(gameID, broadcastMessage);
         } catch(UnauthorizedException | DataAccessException ex) {
             throw new IOException(ex.getMessage());
         }
