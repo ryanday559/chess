@@ -42,6 +42,15 @@ public class WebSocketFacade extends Endpoint {
     public void onOpen(Session session, EndpointConfig endpointConfig){
     }
 
+    public void connect(String authToken, Integer gameID) throws ResponseException {
+        try {
+            UserGameCommand action = new UserGameCommand(UserGameCommand.CommandType.CONNECT, authToken, gameID);
+            this.session.getBasicRemote().sendText(new Gson().toJson(action));
+        } catch (IOException ex) {
+            throw new ResponseException("Connection Error: Cannot Connect to Server!");
+        }
+    }
+
     public void makeMove(String authToken, Integer gameID, ChessMove move) throws ResponseException {
         try {
             UserGameCommand action = new MakeMoveCommand(MakeMoveCommand.CommandType.MAKE_MOVE, authToken, gameID, move);
