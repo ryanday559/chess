@@ -1,6 +1,7 @@
 package client.websocket;
 
 import chess.ChessGame;
+import com.google.gson.Gson;
 import jakarta.websocket.Endpoint;
 import jakarta.websocket.EndpointConfig;
 import jakarta.websocket.Session;
@@ -9,24 +10,28 @@ import websocket.messages.LoadGameMessage;
 import websocket.messages.NotificationMessage;
 import websocket.messages.ServerMessage;
 
+import static websocket.messages.ServerMessage.ServerMessageType.LOAD_GAME;
+
 public abstract class NotificationHandler {
-    public void notify(ServerMessage message) {
-        switch (message.getServerMessageType()) {
+    public void notify(String message) {
+        ServerMessage serverMessage = new Gson().fromJson(message, ServerMessage.class);
+        ServerMessage.ServerMessageType messageType = serverMessage.getServerMessageType();
+        switch (messageType) {
             case LOAD_GAME -> handleLoadGame(message);
             case ERROR -> handleError(message);
             case NOTIFICATION -> handleNotification(message);
         };
     }
 
-    protected abstract void handleLoadGame(ServerMessage message);
+    protected abstract void handleLoadGame(String message);
 
-    private void handleError(ServerMessage message) {
-        ErrorMessage errorMessage = (ErrorMessage) message;
+    private void handleError(String message) {
+        ErrorMessage errorMessage = new Gson().fromJson(message, ErrorMessage.class);
         System.out.print(errorMessage.getErrorMessage());
     }
 
-    private void handleNotification(ServerMessage message) {
-        NotificationMessage notificationMessage = (NotificationMessage) message;
+    private void handleNotification(String message) {
+        NotificationMessage notificationMessage = new Gson().fromJson(message, NotificationMessage.class);
         System.out.print(notificationMessage.getMessage());
     }
 }
