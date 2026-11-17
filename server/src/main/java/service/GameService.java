@@ -1,5 +1,8 @@
 package service;
 
+import chess.ChessGame;
+import chess.ChessMove;
+import chess.InvalidMoveException;
 import dataaccess.BadRequestException;
 import dataaccess.DataAccessException;
 import dataaccess.InUseException;
@@ -32,5 +35,20 @@ public class GameService {
 
     public void joinGame(GameJoinData gameJoinData, AuthData authData) throws DataAccessException, InUseException {
         gameDAO.updatePlayerColor(gameJoinData.playerColor(), authData.username(), gameJoinData.gameID());
+    }
+
+    public ChessGame makeMove(int gameID, ChessMove move) throws DataAccessException, InvalidMoveException {
+        GameData gameData = gameDAO.getGame(gameID);
+        ChessGame game = gameData.game();
+        game.makeMove(move);
+        GameData updatedGameData = new GameData(
+                gameData.gameID(),
+                gameData.whiteUsername(),
+                gameData.blackUsername(),
+                gameData.gameName(),
+                game
+        );
+        gameDAO.updateGameState(updatedGameData);
+        return game;
     }
 }
