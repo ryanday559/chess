@@ -9,6 +9,7 @@ import dataaccess.UnauthorizedException;
 import io.javalin.websocket.*;
 import service.AuthentificationService;
 import service.GameService;
+import service.UserService;
 import websocket.commands.UserGameCommand;
 import websocket.commands.MakeMoveCommand;
 
@@ -21,8 +22,16 @@ import java.io.IOException;
 public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsCloseHandler {
     private final ConnectionManager connections = new ConnectionManager();
     // I should probably be calling into the server here that stores the single instances of the services
-    private AuthentificationService authService = new AuthentificationService();
-    private AuthentificationService gameService = new GameService();
+    // Pass a reference of the services into the handler here. The server will still own them, but there will be a ref here
+    private AuthentificationService authService;
+    private GameService gameService;
+    private UserService userService;
+
+    public WebSocketHandler(AuthentificationService authService, GameService gameService, UserService userService) {
+        this.authService = authService;
+        this.gameService = gameService;
+        this.userService = userService;
+    }
 
     @Override
     public void handleConnect(WsConnectContext ctx) {

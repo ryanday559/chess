@@ -13,6 +13,7 @@ import result.LoginResult;
 import service.AuthentificationService;
 import service.GameService;
 import service.UserService;
+import websocket.WebSocketHandler;
 
 import java.util.Collection;
 import java.util.Map;
@@ -40,6 +41,7 @@ public class Server {
             throw new BadRequestResponse("Cannot Connect to Server!");
         }
     }
+    private WebSocketHandler webSocketHandler = new WebSocketHandler();
 
     public Server() {
         javalin = Javalin.create(config -> config.staticFiles.add("web"))
