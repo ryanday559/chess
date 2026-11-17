@@ -50,4 +50,13 @@ public class WebSocketFacade extends Endpoint {
             throw new ResponseException("Move " + move + " is not a valid move!");
         }
     }
+
+    public void leave(String authToken, Integer gameID) throws ResponseException {
+        try {
+            UserGameCommand action = new UserGameCommand(UserGameCommand.CommandType.LEAVE, authToken, gameID);
+            this.session.getBasicRemote().sendText(new Gson().toJson(action));
+        } catch (IOException ex) {
+            throw new ResponseException("Connection Error: Cannot Leave Game!");
+        }
+    }
 }
