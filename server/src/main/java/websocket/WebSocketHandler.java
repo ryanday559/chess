@@ -1,7 +1,11 @@
 package websocket;
 
 import com.google.gson.Gson;
+import dataaccess.AuthentificationDataAccess;
+import dataaccess.DataAccessException;
+import dataaccess.UnauthorizedException;
 import io.javalin.websocket.*;
+import service.AuthentificationService;
 import websocket.commands.UserGameCommand;
 import org.eclipse.jetty.websocket.api.Session;
 
@@ -9,6 +13,7 @@ import java.io.IOException;
 
 public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsCloseHandler {
     private final ConnectionManager connections = new ConnectionManager();
+    private AuthentificationService authService = new AuthentificationService();
 
     @Override
     public void handleConnect(WsConnectContext ctx) {
@@ -37,7 +42,14 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
     }
 
     private void connect(UserGameCommand command, Session session) throws IOException {
-
+        try {
+            Integer gameID = command.getGameID();
+            String authToken = command.getAuthToken();
+            authService.authenticate(authToken);
+            connections.add(gameID, session);
+        } catch(UnauthorizedException | DataAccessException ex) {
+            throw new IOException(ex.getMessage());
+        }
     }
 
     private void makeMove(UserGameCommand command, Session session) throws IOException {
