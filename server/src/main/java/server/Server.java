@@ -41,7 +41,7 @@ public class Server {
             throw new BadRequestResponse("Cannot Connect to Server!");
         }
     }
-    private WebSocketHandler webSocketHandler = new WebSocketHandler();
+    private WebSocketHandler webSocketHandler = new WebSocketHandler(authService, gameService, userService);
 
     public Server() {
         javalin = Javalin.create(config -> config.staticFiles.add("web"))
@@ -49,7 +49,12 @@ public class Server {
                 .exception(DataAccessException.class, this::exceptionHandler) //badRequestExceptionHandler
                 .exception(BadRequestException.class, this::badRequestExceptionHandler)
                 .exception(UnauthorizedException.class, this::unauthorizedExceptionHandler)
-                .exception(InUseException.class, this::inUseExceptionHandler);
+                .exception(InUseException.class, this::inUseExceptionHandler)
+                .ws("/ws", ws -> {
+                    ws.onConnect(webSocketHandler);
+                    ws.onMessage(webSocketHandler);
+                    ws.onClose(webSocketHandler);
+                });
 
         javalin.delete("/db", this::clear);
         javalin.post("/user", this::register);
