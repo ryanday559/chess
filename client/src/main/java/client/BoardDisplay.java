@@ -14,10 +14,9 @@ public class BoardDisplay {
 
     public BoardDisplay(ChessBoard board) {
         this.board = board;
-        this.board.resetBoard();
     }
 
-    public void printWhiteView() {
+    public String getWhiteView() {
         String boardString = "\n" + SET_BG_COLOR_LIGHT_GREY + " " + boardLettering + " " + RESET_BG_COLOR + "\n";
         for (int i = 8; i >= 1; i--) {
             if (i % 2 == 0) {
@@ -28,7 +27,7 @@ public class BoardDisplay {
             }
         }
         boardString += SET_BG_COLOR_LIGHT_GREY + " " + boardLettering + " " + RESET_BG_COLOR + "\n";
-        System.out.print(boardString);
+        return boardString;
     }
 
     private String prepareWhiteFirstSpaceRow(int row) {
@@ -101,7 +100,7 @@ public class BoardDisplay {
         return rowString + SET_BG_COLOR_LIGHT_GREY + " " + String.valueOf(row) + " " + RESET_BG_COLOR + "\n";
     }
 
-    public void printBlackView() {
+    public String getBlackView() {
         String boardString = "\n" + SET_BG_COLOR_LIGHT_GREY + " " + reversedBoardLettering + " " + RESET_BG_COLOR + "\n";
         for (int i = 1; i <= 8; i++) {
             if (i % 2 == 1) {
@@ -112,6 +111,6 @@ public class BoardDisplay {
             }
         }
         boardString += SET_BG_COLOR_LIGHT_GREY + " " + reversedBoardLettering + " " + RESET_BG_COLOR + "\n";
-        System.out.print(boardString);
+        return boardString;
     }
 }

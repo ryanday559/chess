@@ -20,15 +20,14 @@ public class GameREPL {
     }
 
     private void observerREPL() {
-        boardDisplay.printWhiteView();
+
     }
 
     private void whitePlayerREPL() {
-        boardDisplay.printWhiteView();
+
     }
 
     private void blackPlayerREPL() {
-        boardDisplay.printBlackView();
     }
 
 }
