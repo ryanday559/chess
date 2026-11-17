@@ -23,7 +23,8 @@ public class ConnectionManager {
     }
 
     public void remove(Integer gameID, Session session) {
-        connections.remove(gameID, session);
+        HashSet<Session> sessionSet = connections.get(gameID);
+        sessionSet.remove(session);
     }
 
     public void gameBroadcast(Integer gameID, Session excludeSession, ServerMessage message) throws IOException {
