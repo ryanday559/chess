@@ -10,10 +10,10 @@ public class WhitePlayerHandler extends NotificationHandler {
     }
 
     @Override
-    protected String handleLoadGame(ServerMessage message) {
-        LoadGameMessage gameMessage = (LoadGameMessage) message;
+    protected void handleLoadGame(ServerMessage message) {
+        LoadGameMessage gameMessage = (LoadGameMessage) message; //Getting an error here while casting. Can't cast from servermessage to loadgamemessage.
         ChessGame game = gameMessage.getGame();
         BoardDisplay display = new BoardDisplay(game.getBoard());
-        return display.getWhiteView();
+        System.out.print(display.getWhiteView());
     }
 }

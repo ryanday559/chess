@@ -5,6 +5,7 @@ import chess.InvalidMoveException;
 import com.google.gson.Gson;
 import exception.ResponseException;
 import jakarta.websocket.*;
+import jakarta.websocket.MessageHandler;
 import websocket.commands.UserGameCommand;
 import websocket.commands.MakeMoveCommand;
 import websocket.messages.ServerMessage;

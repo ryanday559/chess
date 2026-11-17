@@ -1,29 +1,32 @@
 package client.websocket;
 
 import chess.ChessGame;
+import jakarta.websocket.Endpoint;
+import jakarta.websocket.EndpointConfig;
+import jakarta.websocket.Session;
 import websocket.messages.ErrorMessage;
 import websocket.messages.LoadGameMessage;
 import websocket.messages.NotificationMessage;
 import websocket.messages.ServerMessage;
 
 public abstract class NotificationHandler {
-    public String notify(ServerMessage message) {
-        return switch (message.getServerMessageType()) {
+    public void notify(ServerMessage message) {
+        switch (message.getServerMessageType()) {
             case LOAD_GAME -> handleLoadGame(message);
             case ERROR -> handleError(message);
             case NOTIFICATION -> handleNotification(message);
         };
     }
 
-    protected abstract String handleLoadGame(ServerMessage message);
+    protected abstract void handleLoadGame(ServerMessage message);
 
-    private String handleError(ServerMessage message) {
+    private void handleError(ServerMessage message) {
         ErrorMessage errorMessage = (ErrorMessage) message;
-        return errorMessage.getErrorMessage();
+        System.out.print(errorMessage.getErrorMessage());
     }
 
-    private String handleNotification(ServerMessage message) {
+    private void handleNotification(ServerMessage message) {
         NotificationMessage notificationMessage = (NotificationMessage) message;
-        return notificationMessage.getMessage();
+        System.out.print(notificationMessage.getMessage());
     }
 }

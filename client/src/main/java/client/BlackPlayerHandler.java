@@ -2,6 +2,7 @@ package client;
 
 import chess.ChessGame;
 import client.websocket.NotificationHandler;
+import jakarta.websocket.Endpoint;
 import websocket.messages.LoadGameMessage;
 import websocket.messages.ServerMessage;
 
@@ -10,10 +11,10 @@ public class BlackPlayerHandler extends NotificationHandler {
     }
 
     @Override
-    protected String handleLoadGame(ServerMessage message) {
+    protected void handleLoadGame(ServerMessage message) {
         LoadGameMessage gameMessage = (LoadGameMessage) message;
         ChessGame game = gameMessage.getGame();
         BoardDisplay display = new BoardDisplay(game.getBoard());
-        return display.getBlackView();
+        System.out.print(display.getBlackView());
     }
 }
