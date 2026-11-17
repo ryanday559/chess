@@ -11,6 +11,7 @@ import model.AuthData;
 import model.GameData;
 import model.GameJoinData;
 
+import javax.xml.crypto.Data;
 import java.util.Collection;
 
 public class GameService {
@@ -43,5 +44,9 @@ public class GameService {
         game.makeMove(move);
         gameDAO.updateGameState(game, gameID);
         return game;
+    }
+
+    public GameData getGameData(int gameID) throws DataAccessException {
+        return gameDAO.getGame(gameID);
     }
 }
