@@ -41,14 +41,7 @@ public class GameService {
         GameData gameData = gameDAO.getGame(gameID);
         ChessGame game = gameData.game();
         game.makeMove(move);
-        GameData updatedGameData = new GameData(
-                gameData.gameID(),
-                gameData.whiteUsername(),
-                gameData.blackUsername(),
-                gameData.gameName(),
-                game
-        );
-        gameDAO.updateGameState(updatedGameData);
+        gameDAO.updateGameState(game, gameID);
         return game;
     }
 }

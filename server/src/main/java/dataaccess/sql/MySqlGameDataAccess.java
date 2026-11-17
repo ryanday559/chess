@@ -82,6 +82,11 @@ public class MySqlGameDataAccess implements GameDataAccess {
         deleteFromDatabase("TRUNCATE TABLE games");
     }
 
+    public void updateGameState(ChessGame game, int gameID) throws DataAccessException {
+        String jsonGame = new Gson().toJson(game);
+        addToDatabase("UPDATE games SET chessGame=? WHERE id=?", jsonGame, gameID);
+    }
+
     private final String[] createStatements = {
             """
             CREATE TABLE IF NOT EXISTS games(

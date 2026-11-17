@@ -10,4 +10,5 @@ public interface GameDataAccess {
     public GameData getGame(int gameID) throws DataAccessException;
     public void updatePlayerColor(ChessGame.TeamColor playerColor, String username, int gameID) throws DataAccessException, InUseException;
     public void clear() throws DataAccessException;
+    public void updateGameState(ChessGame game, int gameID) throws DataAccessException;
 }

@@ -58,6 +58,18 @@ public class MemoryGameDataAccess implements GameDataAccess {
         gameMap = new HashMap<Integer, GameData>();
     }
 
+    public void updateGameState(ChessGame game, int gameID) {
+        GameData gameData = gameMap.get(gameID);
+        GameData updatedGameData = new GameData(
+                gameData.gameID(),
+                gameData.whiteUsername(),
+                gameData.blackUsername(),
+                gameData.gameName(),
+                game
+        );
+        gameMap.put(gameID, updatedGameData);
+    }
+
     private int createGameID() {
         Random rng = new Random();
         int gameID;
