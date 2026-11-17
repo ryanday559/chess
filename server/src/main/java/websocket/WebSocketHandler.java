@@ -1,19 +1,28 @@
 package websocket;
 
+import chess.ChessGame;
+import chess.ChessMove;
 import com.google.gson.Gson;
 import dataaccess.AuthentificationDataAccess;
 import dataaccess.DataAccessException;
 import dataaccess.UnauthorizedException;
 import io.javalin.websocket.*;
 import service.AuthentificationService;
+import service.GameService;
 import websocket.commands.UserGameCommand;
+import websocket.commands.MakeMoveCommand;
+
 import org.eclipse.jetty.websocket.api.Session;
+import websocket.messages.LoadGameMessage;
+import websocket.messages.ServerMessage;
 
 import java.io.IOException;
 
 public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsCloseHandler {
     private final ConnectionManager connections = new ConnectionManager();
+    // I should probably be calling into the server here that stores the single instances of the services
     private AuthentificationService authService = new AuthentificationService();
+    private AuthentificationService gameService = new GameService();
 
     @Override
     public void handleConnect(WsConnectContext ctx) {
@@ -53,6 +62,19 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
     }
 
     private void makeMove(UserGameCommand command, Session session) throws IOException {
+        try {
+            MakeMoveCommand moveCommand = (MakeMoveCommand) command;
+            Integer gameID = moveCommand.getGameID();
+            String authToken = moveCommand.getAuthToken();
+            authService.authenticate(authToken);
+            ChessMove move = moveCommand.getMove();
+            ChessGame game = gameService.makeMove(gameID);
+            LoadGameMessage broadcastMessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game);
+            connections.broadcastGameUpdate(gameID, broadcastMessage);
+
+        } catch(UnauthorizedException | DataAccessException ex) {
+            throw new IOException(ex.getMessage());
+        }
     }
 
     private void leave(UserGameCommand command, Session session) throws IOException {

@@ -1,6 +1,7 @@
 package websocket;
 
 import org.eclipse.jetty.websocket.api.Session;
+import websocket.messages.LoadGameMessage;
 import websocket.messages.ServerMessage;
 
 import java.io.IOException;
@@ -28,12 +29,21 @@ public class ConnectionManager {
     }
 
     public void gameBroadcast(Integer gameID, Session excludeSession, ServerMessage message) throws IOException {
-        String msg = ServerMessage.toString();
+        String msg = message.toString();
         for (Session c : connections.get(gameID)) {
             if (c.isOpen()) {
                 if (!c.equals(excludeSession)) {
                     c.getRemote().sendString(msg);
                 }
+            }
+        }
+    }
+
+    public void broadcastGameUpdate(Integer gameID, LoadGameMessage message) throws IOException {
+        String msg = message.toString();
+        for (Session c : connections.get(gameID)) {
+            if (c.isOpen()) {
+                c.getRemote().sendString(msg);
             }
         }
     }
