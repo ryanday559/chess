@@ -77,6 +77,19 @@ public class MySqlGameDataAccess implements GameDataAccess {
         }
     }
 
+    public void removePlayerColor(ChessGame.TeamColor playerColor, int gameID) throws DataAccessException {
+        var games = getFromDatabase("SELECT id, blackPlayer, whitePlayer FROM games WHERE id=?", gameID);
+        if (games.isEmpty() || (playerColor != ChessGame.TeamColor.WHITE && playerColor != ChessGame.TeamColor.BLACK)) {
+            throw new BadRequestException("No valid games with given Game Number");
+        }
+        if (playerColor == ChessGame.TeamColor.BLACK) {
+            addToDatabase("UPDATE games SET blackPlayer=? WHERE id=?", null, gameID);
+        }
+        else {
+            addToDatabase("UPDATE games SET whitePlayer=? WHERE id=?", null, gameID);
+        }
+    }
+
     @Override
     public void clear() throws DataAccessException {
         deleteFromDatabase("TRUNCATE TABLE games");

@@ -8,8 +8,7 @@ import service.UserService;
 import java.util.Arrays;
 import java.util.Scanner;
 
-import static client.ClientMain.authToken;
-import static client.ClientMain.quit;
+import static client.ClientMain.*;
 import static client.PostLoginREPL.currentGameID;
 import static client.PostLoginREPL.makeStringRed;
 
@@ -140,7 +139,15 @@ public class GameREPL {
     }
 
     private static String leave() {
-        return "NOT YET IMPLEMENTED";
+        try {
+            webSocketFacade.leave(authToken, currentGameID);
+        } catch (ResponseException ex) {
+            return makeStringRed(ex.getMessage());
+        }
+        currentGameID = null;
+        activeREPL = "postLogin";
+        startREPL();
+        return "";
     }
 
     private static String playerHelp() {

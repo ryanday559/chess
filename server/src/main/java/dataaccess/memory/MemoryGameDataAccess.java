@@ -5,6 +5,8 @@ import dataaccess.DataAccessException;
 import dataaccess.GameDataAccess;
 import dataaccess.InUseException;
 import model.GameData;
+
+import javax.xml.crypto.Data;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Collection;
@@ -50,6 +52,23 @@ public class MemoryGameDataAccess implements GameDataAccess {
         }
         else {
             throw new InUseException(String.format("Team %s already assigned!", playerColor));
+        }
+        gameMap.put(gameID, gameData);
+    }
+
+    public void removePlayerColor(ChessGame.TeamColor playerColor, int gameID) throws DataAccessException {
+        GameData gameData = getGame(gameID);
+        if (!gameMap.containsKey(gameID)) {
+            throw new DataAccessException(String.format("Game ID %d does not have a matching game!", gameID));
+        }
+        if (playerColor == null) {
+            throw new DataAccessException("Invalid playerColor!");
+        }
+        else if (playerColor == ChessGame.TeamColor.BLACK) {
+            gameData = gameData.updateBlackUsername(null);
+        }
+        else if (playerColor == ChessGame.TeamColor.WHITE) {
+            gameData = gameData.updateWhiteUsername(null);
         }
         gameMap.put(gameID, gameData);
     }

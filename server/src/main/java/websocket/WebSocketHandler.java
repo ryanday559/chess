@@ -76,7 +76,8 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
             connections.broadcastJoinMessage(gameData, user);
             connections.selfBroadcastGameUpdate(gameBroadcast, session);
         } catch(UnauthorizedException | DataAccessException ex) {
-            throw new IOException(ex.getMessage());
+            ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, ex.getMessage());
+            connections.selfBroadcastErrorMessage(errorMessage, session);
         }
     }
 
@@ -91,7 +92,7 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
             String user = authService.getAuthData(authToken).username();
             NotificationMessage moveMessage = new NotificationMessage(
                     ServerMessage.ServerMessageType.NOTIFICATION,
-                    user + " moved from " + move);
+                    user + " moved from " + move + "!");
             connections.broadcastMessage(gameID, moveMessage);
             LoadGameMessage broadcastMessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game);
             connections.broadcastGameUpdate(gameID, broadcastMessage);
@@ -106,11 +107,32 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
             UserGameCommand command = new Gson().fromJson(message, UserGameCommand.class);
             Integer gameID = command.getGameID();
             String authToken = command.getAuthToken();
+            String user = authService.getAuthData(authToken).username();
+            NotificationMessage moveMessage = new NotificationMessage(
+                    ServerMessage.ServerMessageType.NOTIFICATION,
+                    user + " left the game!");
+            connections.broadcastMessage(gameID, moveMessage);
             authService.authenticate(authToken);
+            ChessGame.TeamColor color = getTeamColor(gameID, user);
+            if (color != null) {
+                gameService.removePlayer(gameID, color);
+            }
             connections.remove(gameID, session);
         } catch(UnauthorizedException | DataAccessException ex) {
-            throw new IOException(ex.getMessage());
+            ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, ex.getMessage());
+            connections.selfBroadcastErrorMessage(errorMessage, session);
         }
+    }
+
+    ChessGame.TeamColor getTeamColor(int gameID, String user) throws DataAccessException {
+        GameData gameData = gameService.getGameData(gameID);
+        if (user != null && user.equals(gameData.whiteUsername())) {
+            return ChessGame.TeamColor.WHITE;
+        }
+        else if (user != null && user.equals(gameData.blackUsername())) {
+            return ChessGame.TeamColor.BLACK;
+        }
+        return null;
     }
 
     private void resign(String message, Session session) throws IOException {
