@@ -114,10 +114,10 @@ public class GameREPL {
         }
         String firstArg = arguments[0].toLowerCase();
         String secondArg = arguments[1].toLowerCase();
-        int firstPositionRow = (int) firstArg.charAt(0) - 96;
-        int firstPositionCol = Character.getNumericValue(firstArg.charAt(1));
-        int secondPositionRow = (int) secondArg.charAt(0) - 96;
-        int secondPositionCol = Character.getNumericValue(secondArg.charAt(1));
+        int firstPositionCol = (int) firstArg.charAt(0) - 96;
+        int firstPositionRow = Character.getNumericValue(firstArg.charAt(1));
+        int secondPositionCol = (int) secondArg.charAt(0) - 96;
+        int secondPositionRow = Character.getNumericValue(secondArg.charAt(1));
         ChessPosition firstPosition = new ChessPosition(firstPositionRow, firstPositionCol);
         ChessPosition secondPosition = new ChessPosition(secondPositionRow, secondPositionCol);
         ChessPiece.PieceType promotionType = null;

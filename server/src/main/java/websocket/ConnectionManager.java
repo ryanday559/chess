@@ -3,6 +3,7 @@ package websocket;
 import chess.ChessGame;
 import model.GameData;
 import org.eclipse.jetty.websocket.api.Session;
+import websocket.messages.ErrorMessage;
 import websocket.messages.LoadGameMessage;
 import websocket.messages.NotificationMessage;
 import websocket.messages.ServerMessage;
@@ -33,6 +34,11 @@ public class ConnectionManager {
     }
 
     public void selfBroadcastGameUpdate(LoadGameMessage message, Session session) throws IOException {
+        String msg = message.toString();
+        session.getRemote().sendString(msg);
+    }
+
+    public void selfBroadcastErrorMessage(ErrorMessage message, Session session) throws IOException {
         String msg = message.toString();
         session.getRemote().sendString(msg);
     }

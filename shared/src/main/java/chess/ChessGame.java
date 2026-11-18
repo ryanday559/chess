@@ -298,12 +298,15 @@ public class ChessGame {
     public void makeMove(ChessMove move) throws InvalidMoveException {
         ChessPosition startPosition = move.getStartPosition();
         ChessPosition endPosition = move.getEndPosition();
+        if (!isMoveTurn(move)) {
+            throw new InvalidMoveException("Error: Not your turn!");
+        }
         if (!moveContainsPiece(move)) {
-            throw new InvalidMoveException("Move " + move + "is invalid!");
+            throw new InvalidMoveException("Error: Chosen move is invalid!");
         }
         Collection<ChessMove> possibleMoves = validMoves(startPosition);
-        if (!possibleMoves.contains(move) || !isMoveTurn(move)) {
-            throw new InvalidMoveException("Move " + move + "is invalid!");
+        if (!possibleMoves.contains(move)) {
+            throw new InvalidMoveException("Error: Chosen move is invalid!");
         }
         board.movePiece(move);
         board.getPiece(endPosition).setHasMoved(true);

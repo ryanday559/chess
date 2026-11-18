@@ -16,6 +16,7 @@ import websocket.commands.UserGameCommand;
 import websocket.commands.MakeMoveCommand;
 
 import org.eclipse.jetty.websocket.api.Session;
+import websocket.messages.ErrorMessage;
 import websocket.messages.LoadGameMessage;
 import websocket.messages.ServerMessage;
 
@@ -89,7 +90,8 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
             LoadGameMessage broadcastMessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game);
             connections.broadcastGameUpdate(gameID, broadcastMessage);
         } catch(UnauthorizedException | DataAccessException | InvalidMoveException ex) {
-            throw new IOException(ex.getMessage());
+            ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, ex.getMessage());
+            connections.selfBroadcastErrorMessage(errorMessage, session);
         }
     }
 
