@@ -46,10 +46,10 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         try {
             UserGameCommand userGameCommand = new Gson().fromJson(ctx.message(), UserGameCommand.class);
             switch (userGameCommand.getCommandType()) {
-                case CONNECT -> connect(userGameCommand, ctx.session);
-                case MAKE_MOVE -> makeMove(userGameCommand, ctx.session);
-                case LEAVE -> leave(userGameCommand, ctx.session);
-                case RESIGN -> resign(userGameCommand, ctx.session);
+                case CONNECT -> connect(ctx.message(), ctx.session);
+                case MAKE_MOVE -> makeMove(ctx.message(), ctx.session);
+                case LEAVE -> leave(ctx.message(), ctx.session);
+                case RESIGN -> resign(ctx.message(), ctx.session);
             }
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -61,8 +61,9 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         System.out.println("Websocket closed");
     }
 
-    private void connect(UserGameCommand command, Session session) throws IOException {
+    private void connect(String message, Session session) throws IOException {
         try {
+            UserGameCommand command = new Gson().fromJson(message, UserGameCommand.class);
             Integer gameID = command.getGameID();
             String authToken = command.getAuthToken();
             authService.authenticate(authToken);
@@ -77,9 +78,9 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         }
     }
 
-    private void makeMove(UserGameCommand command, Session session) throws IOException {
+    private void makeMove(String message, Session session) throws IOException {
         try {
-            MakeMoveCommand moveCommand = (MakeMoveCommand) command;
+            MakeMoveCommand moveCommand = new Gson().fromJson(message, MakeMoveCommand.class);
             Integer gameID = moveCommand.getGameID();
             String authToken = moveCommand.getAuthToken();
             authService.authenticate(authToken);
@@ -92,8 +93,9 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         }
     }
 
-    private void leave(UserGameCommand command, Session session) throws IOException {
+    private void leave(String message, Session session) throws IOException {
         try {
+            UserGameCommand command = new Gson().fromJson(message, UserGameCommand.class);
             Integer gameID = command.getGameID();
             String authToken = command.getAuthToken();
             authService.authenticate(authToken);
@@ -103,6 +105,6 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         }
     }
 
-    private void resign(UserGameCommand command, Session session) throws IOException {
+    private void resign(String message, Session session) throws IOException {
     }
 }
