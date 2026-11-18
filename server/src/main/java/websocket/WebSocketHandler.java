@@ -92,6 +92,7 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
             NotificationMessage moveMessage = new NotificationMessage(
                     ServerMessage.ServerMessageType.NOTIFICATION,
                     user + " moved from " + move);
+            connections.broadcastMessage(gameID, moveMessage);
             LoadGameMessage broadcastMessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game);
             connections.broadcastGameUpdate(gameID, broadcastMessage);
         } catch(UnauthorizedException | DataAccessException | InvalidMoveException ex) {
