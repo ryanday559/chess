@@ -27,11 +27,11 @@ public abstract class NotificationHandler {
 
     private void handleError(String message) {
         ErrorMessage errorMessage = new Gson().fromJson(message, ErrorMessage.class);
-        System.out.print(errorMessage.getErrorMessage());
+        System.out.print("\n" + errorMessage.getErrorMessage() + "\n>>> ");
     }
 
     private void handleNotification(String message) {
         NotificationMessage notificationMessage = new Gson().fromJson(message, NotificationMessage.class);
-        System.out.print(notificationMessage.getMessage());
+        System.out.print("\n" + notificationMessage.getMessage() + "\n>>> ");
     }
 }

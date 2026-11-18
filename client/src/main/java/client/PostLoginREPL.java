@@ -131,6 +131,7 @@ public class PostLoginREPL {
         } catch (ResponseException e) {
             return makeStringRed(e.getMessage());
         }
+        currentGameID = Integer.parseInt(arguments[0]);
         System.out.print("Successfully observing game " + arguments[0] + "!");
         activeREPL = "observeGame";
         startREPL();

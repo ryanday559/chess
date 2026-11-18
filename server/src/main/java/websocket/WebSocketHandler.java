@@ -71,7 +71,7 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
             GameData gameData = gameService.getGameData(gameID);
             LoadGameMessage gameBroadcast = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, gameData.game());
             connections.broadcastJoinMessage(gameData, user);
-            connections.broadcastGameUpdate(gameID, gameBroadcast);
+            connections.selfBroadcastGameUpdate(gameBroadcast, session);
         } catch(UnauthorizedException | DataAccessException ex) {
             throw new IOException(ex.getMessage());
         }

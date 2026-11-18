@@ -32,6 +32,11 @@ public class ConnectionManager {
         sessionSet.remove(session);
     }
 
+    public void selfBroadcastGameUpdate(LoadGameMessage message, Session session) throws IOException {
+        String msg = message.toString();
+        session.getRemote().sendString(msg);
+    }
+
     public void broadcastGameUpdate(Integer gameID, LoadGameMessage message) throws IOException {
         String msg = message.toString();
         for (Session c : connections.get(gameID)) {
@@ -45,10 +50,10 @@ public class ConnectionManager {
         String whitePlayer = gameData.whiteUsername();
         String blackPlayer = gameData.blackUsername();
         String colorMessage;
-        if (whitePlayer.equals(username)) {
+        if (whitePlayer != null && whitePlayer.equals(username)) {
             colorMessage = " as the white player!";
         }
-        else if (blackPlayer.equals(username)) {
+        else if (blackPlayer != null && blackPlayer.equals(username)) {
             colorMessage = " as the black player!";
         }
         else {
