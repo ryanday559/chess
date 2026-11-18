@@ -64,6 +64,7 @@ public class ChessPosition {
 
     @Override
     public String toString() {
-        return "(" + Objects.toString(getRow()) + "," + Objects.toString(getColumn()) + ")";
+        char columnLetter = (char) (col + 96);
+        return columnLetter + String.valueOf(row);
     }
 }

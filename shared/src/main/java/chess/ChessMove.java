@@ -101,6 +101,6 @@ public class ChessMove {
 
     @Override
     public String toString() {
-        return "Move[" + getStartPosition().toString() + "->" + getEndPosition().toString() + "]";
+        return getStartPosition() + " to " + getEndPosition();
     }
 }
