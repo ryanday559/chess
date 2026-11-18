@@ -90,7 +90,16 @@ public class GameREPL {
     }
 
     private static String highlight(String[] arguments) {
-        return "NOT YET IMPLEMENTED";
+        if (arguments.length != 1) {
+            return makeStringRed("Error: Highlight expects a chess position!");
+        }
+        try {
+            ChessPosition position = getChessPositionFromPositionString(arguments[0]);
+            webSocketFacade.highlightMoves(authToken, currentGameID, position);
+        } catch (ResponseException ex) {
+            return makeStringRed(ex.getMessage());
+        }
+        return "";
     }
 
     private static String move(String[] arguments) {

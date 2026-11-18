@@ -1,11 +1,13 @@
 package client.websocket;
 
 import chess.ChessMove;
+import chess.ChessPosition;
 import chess.InvalidMoveException;
 import com.google.gson.Gson;
 import exception.ResponseException;
 import jakarta.websocket.*;
 import jakarta.websocket.MessageHandler;
+import websocket.commands.RequestLegalMovesCommand;
 import websocket.commands.UserGameCommand;
 import websocket.commands.MakeMoveCommand;
 import websocket.messages.ServerMessage;
@@ -64,6 +66,20 @@ public class WebSocketFacade extends Endpoint {
     public void leave(String authToken, Integer gameID) throws ResponseException {
         try {
             UserGameCommand action = new UserGameCommand(UserGameCommand.CommandType.LEAVE, authToken, gameID);
+            this.session.getBasicRemote().sendText(new Gson().toJson(action));
+        } catch (IOException ex) {
+            throw new ResponseException("Connection Error: Cannot Leave Game!");
+        }
+    }
+
+    public void highlightMoves(String authToken, Integer gameID, ChessPosition position) {
+        try {
+            RequestLegalMovesCommand action = new RequestLegalMovesCommand(
+                    UserGameCommand.CommandType.REQUEST_MOVES,
+                    authToken,
+                    gameID,
+                    position
+            );
             this.session.getBasicRemote().sendText(new Gson().toJson(action));
         } catch (IOException ex) {
             throw new ResponseException("Connection Error: Cannot Leave Game!");

@@ -2,6 +2,7 @@ package websocket;
 
 import chess.ChessGame;
 import chess.ChessMove;
+import chess.ChessPosition;
 import chess.InvalidMoveException;
 import com.google.gson.Gson;
 import dataaccess.AuthentificationDataAccess;
@@ -12,6 +13,7 @@ import model.GameData;
 import service.AuthentificationService;
 import service.GameService;
 import service.UserService;
+import websocket.commands.RequestLegalMovesCommand;
 import websocket.commands.UserGameCommand;
 import websocket.commands.MakeMoveCommand;
 
@@ -22,6 +24,7 @@ import websocket.messages.NotificationMessage;
 import websocket.messages.ServerMessage;
 
 import java.io.IOException;
+import java.util.Collection;
 
 public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsCloseHandler {
     private final ConnectionManager connections = new ConnectionManager();
@@ -52,6 +55,7 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
                 case MAKE_MOVE -> makeMove(ctx.message(), ctx.session);
                 case LEAVE -> leave(ctx.message(), ctx.session);
                 case RESIGN -> resign(ctx.message(), ctx.session);
+                case REQUEST_MOVES -> getValidMoves(ctx.message(), ctx.session);
             }
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -136,5 +140,14 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
     }
 
     private void resign(String message, Session session) throws IOException {
+    }
+
+    private void getValidMoves(String message, Session session) throws IOException {
+        RequestLegalMovesCommand command = new Gson().fromJson(message, RequestLegalMovesCommand.class);
+        Integer gameID = command.getGameID();
+        String authToken = command.getAuthToken();
+        ChessPosition position = command.getPosition();
+        ChessGame game = gameService.getGameData(gameID).game();
+        Collection<ChessMove> moves = game.validMoves(position);
     }
 }
