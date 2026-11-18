@@ -9,6 +9,8 @@ import websocket.messages.ErrorMessage;
 import websocket.messages.LoadGameMessage;
 import websocket.messages.NotificationMessage;
 import websocket.messages.ServerMessage;
+import static ui.EscapeSequences.RESET_TEXT_COLOR;
+import static ui.EscapeSequences.SET_TEXT_COLOR_RED;
 
 import static websocket.messages.ServerMessage.ServerMessageType.LOAD_GAME;
 
@@ -27,7 +29,7 @@ public abstract class NotificationHandler {
 
     private void handleError(String message) {
         ErrorMessage errorMessage = new Gson().fromJson(message, ErrorMessage.class);
-        System.out.print("\n" + errorMessage.getErrorMessage() + "\n>>> ");
+        System.out.print("\n" + SET_TEXT_COLOR_RED + errorMessage.getErrorMessage() + RESET_TEXT_COLOR + "\n>>> ");
     }
 
     private void handleNotification(String message) {
