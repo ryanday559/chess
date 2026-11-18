@@ -103,9 +103,48 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
             connections.broadcastMessage(gameID, moveMessage);
             LoadGameMessage broadcastMessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game);
             connections.broadcastGameUpdate(gameID, broadcastMessage);
+            GameData gameData = gameService.getGameData(gameID);
+            sendCheckMessages(gameData, gameID);
+            sendCheckmateMessages(gameData, gameID);
         } catch(UnauthorizedException | DataAccessException | ArrayIndexOutOfBoundsException | InvalidMoveException ex) {
             ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, ex.getMessage());
             connections.selfBroadcastErrorMessage(errorMessage, session);
+        }
+    }
+
+    private void sendCheckMessages(GameData gameData, int gameID) throws IOException {
+        String checkBaseMessage = " is in check!";
+        if (gameData.game().isInCheck(ChessGame.TeamColor.WHITE)) {
+            NotificationMessage checkMessage = new NotificationMessage(
+                    ServerMessage.ServerMessageType.NOTIFICATION,
+                    gameData.whiteUsername() + checkBaseMessage
+            );
+            connections.broadcastMessage(gameID, checkMessage);
+        }
+        else if (gameData.game().isInCheck(ChessGame.TeamColor.BLACK)) {
+            NotificationMessage checkMessage = new NotificationMessage(
+                    ServerMessage.ServerMessageType.NOTIFICATION,
+                    gameData.blackUsername() + checkBaseMessage
+            );
+            connections.broadcastMessage(gameID, checkMessage);
+        }
+    }
+
+    private void sendCheckmateMessages(GameData gameData, int gameID) throws IOException {
+        String checkmateBaseMessage = "CHECKMATE! %s wins!";
+        if (gameData.game().isInCheckmate(ChessGame.TeamColor.WHITE)) {
+            NotificationMessage checkMessage = new NotificationMessage(
+                    ServerMessage.ServerMessageType.NOTIFICATION,
+                    String.format(checkmateBaseMessage, gameData.whiteUsername())
+            );
+            connections.broadcastMessage(gameID, checkMessage);
+        }
+        else if (gameData.game().isInCheckmate(ChessGame.TeamColor.BLACK)) {
+            NotificationMessage checkMessage = new NotificationMessage(
+                    ServerMessage.ServerMessageType.NOTIFICATION,
+                    String.format(checkmateBaseMessage, gameData.blackUsername())
+            );
+            connections.broadcastMessage(gameID, checkMessage);
         }
     }
 
