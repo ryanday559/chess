@@ -50,7 +50,7 @@ public class GameService {
         return gameDAO.getGame(gameID);
     }
 
-    public void removePlayer(int gameID, ChessGame.TeamColor color) throws InUseException, DataAccessException {
-        gameDAO.updatePlayerColor(color, null, gameID);
+    public void removePlayer(int gameID, ChessGame.TeamColor color) throws DataAccessException {
+        gameDAO.removePlayerColor(color, gameID);
     }
 }
