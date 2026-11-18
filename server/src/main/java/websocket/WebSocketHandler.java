@@ -96,7 +96,7 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
             connections.broadcastMessage(gameID, moveMessage);
             LoadGameMessage broadcastMessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game);
             connections.broadcastGameUpdate(gameID, broadcastMessage);
-        } catch(UnauthorizedException | DataAccessException | InvalidMoveException ex) {
+        } catch(UnauthorizedException | DataAccessException | ArrayIndexOutOfBoundsException | InvalidMoveException ex) {
             ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, ex.getMessage());
             connections.selfBroadcastErrorMessage(errorMessage, session);
         }

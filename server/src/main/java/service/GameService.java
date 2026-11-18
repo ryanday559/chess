@@ -41,7 +41,11 @@ public class GameService {
     public ChessGame makeMove(int gameID, ChessMove move) throws DataAccessException, InvalidMoveException {
         GameData gameData = gameDAO.getGame(gameID);
         ChessGame game = gameData.game();
-        game.makeMove(move);
+        try {
+            game.makeMove(move);
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            throw new InvalidMoveException(String.format("Error: move %s is invalid!", move));
+        }
         gameDAO.updateGameState(game, gameID);
         return game;
     }
