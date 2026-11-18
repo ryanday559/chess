@@ -23,8 +23,11 @@ import websocket.messages.LoadGameMessage;
 import websocket.messages.NotificationMessage;
 import websocket.messages.ServerMessage;
 
+import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsCloseHandler {
     private final ConnectionManager connections = new ConnectionManager();
@@ -143,11 +146,28 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
     }
 
     private void getValidMoves(String message, Session session) throws IOException {
-        RequestLegalMovesCommand command = new Gson().fromJson(message, RequestLegalMovesCommand.class);
-        Integer gameID = command.getGameID();
-        String authToken = command.getAuthToken();
-        ChessPosition position = command.getPosition();
-        ChessGame game = gameService.getGameData(gameID).game();
-        Collection<ChessMove> moves = game.validMoves(position);
+        try {
+            RequestLegalMovesCommand command = new Gson().fromJson(message, RequestLegalMovesCommand.class);
+            Integer gameID = command.getGameID();
+            String authToken = command.getAuthToken();
+            authService.authenticate(authToken);
+            ChessPosition position = command.getPosition();
+            ChessGame game = gameService.getGameData(gameID).game();
+            Collection<ChessPosition> endPositions = getValidEndPositionsFromPosition(game, position);
+            LoadGameMessage broadcastMessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game, endPositions);
+            connections.selfBroadcastGameUpdate(broadcastMessage, session);
+        } catch (DataAccessException | UnauthorizedException ex) {
+            ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, ex.getMessage());
+            connections.selfBroadcastErrorMessage(errorMessage, session);
+        }
+    }
+
+    private Collection<ChessPosition> getValidEndPositionsFromPosition(ChessGame game, ChessPosition startPosition) {
+        Set<ChessPosition> endPositions = new HashSet<ChessPosition>();
+        Collection<ChessMove> moves = game.validMoves(startPosition);
+        for (ChessMove move : moves) {
+            endPositions.add(move.getEndPosition());
+        }
+        return endPositions;
     }
 }

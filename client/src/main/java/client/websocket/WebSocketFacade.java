@@ -72,7 +72,7 @@ public class WebSocketFacade extends Endpoint {
         }
     }
 
-    public void highlightMoves(String authToken, Integer gameID, ChessPosition position) {
+    public void highlightMoves(String authToken, Integer gameID, ChessPosition position) throws ResponseException {
         try {
             RequestLegalMovesCommand action = new RequestLegalMovesCommand(
                     UserGameCommand.CommandType.REQUEST_MOVES,

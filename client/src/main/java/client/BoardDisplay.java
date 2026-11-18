@@ -1,19 +1,20 @@
 package client;
 
-import chess.ChessBoard;
-import chess.ChessGame;
-import chess.ChessPiece;
-import chess.ChessPosition;
+import chess.*;
+
+import java.util.Collection;
 
 import static ui.EscapeSequences.*;
 
 public class BoardDisplay {
     private ChessBoard board;
+    private Collection<ChessPosition> highlightPositions;
     private final String boardLettering = "   a  b  c  d  e  f  g  h   ";
     private final String reversedBoardLettering = "   h  g  f  e  d  c  b  a   ";
 
-    public BoardDisplay(ChessBoard board) {
+    public BoardDisplay(ChessBoard board, Collection<ChessPosition> highlightPositions) {
         this.board = board;
+        this.highlightPositions = highlightPositions;
     }
 
     public String getWhiteView() {
@@ -35,10 +36,12 @@ public class BoardDisplay {
         for (int i = 1; i < 9; i++) {
             String pieceString = getPieceWithColor(row, i);
             if (i % 2 == 1) {
-                rowString += SET_BG_COLOR_WHITE + " " + pieceString + " " + RESET_BG_COLOR;
+                String cellColor = getWhiteCellBackgroundColor(row, i);
+                rowString += cellColor + " " + pieceString + " " + RESET_BG_COLOR;
             }
             else {
-                rowString += SET_BG_COLOR_BLACK + " " + pieceString + " " + RESET_BG_COLOR;
+                String cellColor = getBlackCellBackgroundColor(row, i);
+                rowString += cellColor + " " + pieceString + " " + RESET_BG_COLOR;
             }
         }
         return rowString + SET_BG_COLOR_LIGHT_GREY + " " + String.valueOf(row) + " " + RESET_BG_COLOR + "\n";
@@ -49,13 +52,31 @@ public class BoardDisplay {
         for (int i = 8; i >= 1; i--) {
             String pieceString = getPieceWithColor(row, i);
             if (i % 2 == 0) {
-                rowString += SET_BG_COLOR_WHITE + " " + pieceString + " " + RESET_BG_COLOR;
+                String cellColor = getWhiteCellBackgroundColor(row, i);
+                rowString += cellColor + " " + pieceString + " " + RESET_BG_COLOR;
             }
             else {
-                rowString += SET_BG_COLOR_BLACK + " " + pieceString + " " + RESET_BG_COLOR;
+                String cellColor = getBlackCellBackgroundColor(row, i);
+                rowString += cellColor + " " + pieceString + " " + RESET_BG_COLOR;
             }
         }
         return rowString + SET_BG_COLOR_LIGHT_GREY + " " + String.valueOf(row) + " " + RESET_BG_COLOR + "\n";
+    }
+
+    private String getWhiteCellBackgroundColor(int row, int col) {
+        ChessPosition position = new ChessPosition(row, col);
+        if (highlightPositions.contains(position)) {
+            return SET_BG_COLOR_PALE_YELLOW;
+        }
+        return SET_BG_COLOR_WHITE;
+    }
+
+    private String getBlackCellBackgroundColor(int row, int col) {
+        ChessPosition position = new ChessPosition(row, col);
+        if (highlightPositions.contains(position)) {
+            return SET_BG_COLOR_DARK_YELLOW;
+        }
+        return SET_BG_COLOR_BLACK;
     }
 
     String getPieceWithColor(int row, int col) {
@@ -77,10 +98,12 @@ public class BoardDisplay {
         for (int i = 1; i < 9; i++) {
             String pieceString = getPieceWithColor(row, i);
             if (i % 2 == 0) {
-                rowString += SET_BG_COLOR_WHITE + " " + pieceString + " " + RESET_BG_COLOR;
+                String cellColor = getWhiteCellBackgroundColor(row, i);
+                rowString += cellColor + " " + pieceString + " " + RESET_BG_COLOR;
             }
             else {
-                rowString += SET_BG_COLOR_BLACK + " " + pieceString + " " + RESET_BG_COLOR;
+                String cellColor = getBlackCellBackgroundColor(row, i);
+                rowString += cellColor + " " + pieceString + " " + RESET_BG_COLOR;
             }
         }
         return rowString + SET_BG_COLOR_LIGHT_GREY + " " + String.valueOf(row) + " " + RESET_BG_COLOR + "\n";
@@ -91,10 +114,12 @@ public class BoardDisplay {
         for (int i = 8; i >= 1; i--) {
             String pieceString = getPieceWithColor(row, i);
             if (i % 2 == 1) {
-                rowString += SET_BG_COLOR_WHITE + " " + pieceString + " " + RESET_BG_COLOR;
+                String cellColor = getWhiteCellBackgroundColor(row, i);
+                rowString += cellColor + " " + pieceString + " " + RESET_BG_COLOR;
             }
             else {
-                rowString += SET_BG_COLOR_BLACK + " " + pieceString + " " + RESET_BG_COLOR;
+                String cellColor = getBlackCellBackgroundColor(row, i);
+                rowString += cellColor + " " + pieceString + " " + RESET_BG_COLOR;
             }
         }
         return rowString + SET_BG_COLOR_LIGHT_GREY + " " + String.valueOf(row) + " " + RESET_BG_COLOR + "\n";
