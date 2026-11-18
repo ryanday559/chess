@@ -170,7 +170,7 @@ public class PostLoginREPL {
                 help""";
     }
 
-    private static String makeStringRed(String input) {
+    public static String makeStringRed(String input) {
         return SET_TEXT_COLOR_RED + input + RESET_TEXT_COLOR;
     }
 }

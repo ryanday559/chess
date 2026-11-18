@@ -1,7 +1,6 @@
 package client;
 
-import chess.ChessBoard;
-import chess.ChessGame;
+import chess.*;
 import client.websocket.WebSocketFacade;
 import exception.ResponseException;
 import service.UserService;
@@ -12,6 +11,7 @@ import java.util.Scanner;
 import static client.ClientMain.authToken;
 import static client.ClientMain.quit;
 import static client.PostLoginREPL.currentGameID;
+import static client.PostLoginREPL.makeStringRed;
 
 public class GameREPL {
     public enum UserStatus {
@@ -19,7 +19,7 @@ public class GameREPL {
         WHITEPLAYER,
         BLACKPLAYER
     }
-    private WebSocketFacade webSocketFacade;
+    private static WebSocketFacade webSocketFacade;
     private String url;
     private static UserStatus userStatus;
 
@@ -95,7 +95,44 @@ public class GameREPL {
     }
 
     private static String move(String[] arguments) {
-        return "NOT YET IMPLEMENTED";
+        ChessMove move;
+        try {
+            move = parseChessMoveFromUserMoveInputs(arguments);
+            webSocketFacade.makeMove(authToken, currentGameID, move);
+        } catch (ResponseException ex) {
+            return makeStringRed(ex.getMessage());
+        }
+        return "Successful move!";
+    }
+
+    private static ChessMove parseChessMoveFromUserMoveInputs(String[] arguments) throws ResponseException {
+        if (arguments.length < 2 || arguments.length > 3) {
+            throw new ResponseException("Error: Move must fit the format 'move <starting position> <end position> <promotion if applicable - Q | K | N | R | B >'");
+        }
+        if (arguments[0].length() != 2 && arguments[1].length() != 2) {
+            throw new ResponseException(String.format("Error: Invalid Move Format: %s %s", arguments[0], arguments[1]));
+        }
+        String firstArg = arguments[0].toLowerCase();
+        String secondArg = arguments[1].toLowerCase();
+        int firstPositionRow = (int) firstArg.charAt(0) - 96;
+        int firstPositionCol = Character.getNumericValue(firstArg.charAt(1));
+        int secondPositionRow = (int) secondArg.charAt(0) - 96;
+        int secondPositionCol = Character.getNumericValue(secondArg.charAt(1));
+        ChessPosition firstPosition = new ChessPosition(firstPositionRow, firstPositionCol);
+        ChessPosition secondPosition = new ChessPosition(secondPositionRow, secondPositionCol);
+        ChessPiece.PieceType promotionType = null;
+        if (arguments.length == 3) {
+            String thirdArg = arguments[2].toLowerCase();
+            promotionType = switch (thirdArg) {
+                case "q" -> ChessPiece.PieceType.QUEEN;
+                case "k" -> ChessPiece.PieceType.KING;
+                case "n" -> ChessPiece.PieceType.KNIGHT;
+                case "r" -> ChessPiece.PieceType.ROOK;
+                case "b" -> ChessPiece.PieceType.BISHOP;
+                default -> throw new ResponseException("Error: Unknown promotion piece " + arguments[2]);
+            };
+        }
+        return new ChessMove(firstPosition, secondPosition, promotionType);
     }
 
     private static String resign() {
@@ -110,7 +147,7 @@ public class GameREPL {
         return """
                 redraw
                 highlight <position>
-                move <starting position> <end position>
+                move <starting position> <end position> <promotion if applicable - Q | K | N | R | B >
                 resign
                 leave
                 help""";
