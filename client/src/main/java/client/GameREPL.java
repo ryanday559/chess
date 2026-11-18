@@ -108,17 +108,8 @@ public class GameREPL {
         if (arguments.length < 2 || arguments.length > 3) {
             throw new ResponseException("Error: Move must fit the format 'move <starting position> <end position> <promotion if applicable - Q | K | N | R | B >'");
         }
-        if (arguments[0].length() != 2 && arguments[1].length() != 2) {
-            throw new ResponseException(String.format("Error: Invalid Move Format: %s %s", arguments[0], arguments[1]));
-        }
-        String firstArg = arguments[0].toLowerCase();
-        String secondArg = arguments[1].toLowerCase();
-        int firstPositionCol = (int) firstArg.charAt(0) - 96;
-        int firstPositionRow = Character.getNumericValue(firstArg.charAt(1));
-        int secondPositionCol = (int) secondArg.charAt(0) - 96;
-        int secondPositionRow = Character.getNumericValue(secondArg.charAt(1));
-        ChessPosition firstPosition = new ChessPosition(firstPositionRow, firstPositionCol);
-        ChessPosition secondPosition = new ChessPosition(secondPositionRow, secondPositionCol);
+        ChessPosition firstPosition = getChessPositionFromPositionString(arguments[0]);
+        ChessPosition secondPosition = getChessPositionFromPositionString(arguments[1]);
         ChessPiece.PieceType promotionType = null;
         if (arguments.length == 3) {
             String thirdArg = arguments[2].toLowerCase();
@@ -132,6 +123,16 @@ public class GameREPL {
             };
         }
         return new ChessMove(firstPosition, secondPosition, promotionType);
+    }
+
+    private static ChessPosition getChessPositionFromPositionString(String positionString) throws ResponseException {
+        if (positionString.length() != 2) {
+            throw new ResponseException(String.format("Error: Invalid Position Format: '%s'. Should be [a-h][1-8]", positionString));
+        }
+        String lowerPositionString = positionString.toLowerCase();
+        int positionCol = (int) lowerPositionString.charAt(0) - 96;
+        int positionRow = Character.getNumericValue(lowerPositionString.charAt(1));
+        return new ChessPosition(positionRow, positionCol);
     }
 
     private static String resign() {
