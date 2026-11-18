@@ -102,7 +102,7 @@ public class GameREPL {
         } catch (ResponseException ex) {
             return makeStringRed(ex.getMessage());
         }
-        return "Successful move!";
+        return "";
     }
 
     private static ChessMove parseChessMoveFromUserMoveInputs(String[] arguments) throws ResponseException {

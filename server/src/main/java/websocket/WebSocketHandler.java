@@ -18,6 +18,7 @@ import websocket.commands.MakeMoveCommand;
 import org.eclipse.jetty.websocket.api.Session;
 import websocket.messages.ErrorMessage;
 import websocket.messages.LoadGameMessage;
+import websocket.messages.NotificationMessage;
 import websocket.messages.ServerMessage;
 
 import java.io.IOException;
@@ -87,6 +88,10 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
             authService.authenticate(authToken);
             ChessMove move = moveCommand.getMove();
             ChessGame game = gameService.makeMove(gameID, move);
+            String user = authService.getAuthData(authToken).username();
+            NotificationMessage moveMessage = new NotificationMessage(
+                    ServerMessage.ServerMessageType.NOTIFICATION,
+                    user + " moved from " + move);
             LoadGameMessage broadcastMessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game);
             connections.broadcastGameUpdate(gameID, broadcastMessage);
         } catch(UnauthorizedException | DataAccessException | InvalidMoveException ex) {
