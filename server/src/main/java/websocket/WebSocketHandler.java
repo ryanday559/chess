@@ -5,6 +5,7 @@ import chess.ChessMove;
 import chess.ChessPosition;
 import chess.InvalidMoveException;
 import com.google.gson.Gson;
+import dataaccess.AuthentificationDataAccess;
 import dataaccess.DataAccessException;
 import dataaccess.UnauthorizedException;
 import io.javalin.websocket.*;
@@ -15,11 +16,14 @@ import service.UserService;
 import websocket.commands.RequestLegalMovesCommand;
 import websocket.commands.UserGameCommand;
 import websocket.commands.MakeMoveCommand;
+
 import org.eclipse.jetty.websocket.api.Session;
 import websocket.messages.ErrorMessage;
 import websocket.messages.LoadGameMessage;
 import websocket.messages.NotificationMessage;
 import websocket.messages.ServerMessage;
+
+import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
@@ -76,7 +80,7 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
             connections.add(gameID, session);
             GameData gameData = gameService.getGameData(gameID);
             LoadGameMessage gameBroadcast = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, gameData.game());
-            connections.broadcastJoinMessage(gameData, user, session);
+            connections.broadcastJoinMessage(gameData, user);
             connections.selfBroadcastGameUpdate(gameBroadcast, session);
         } catch(UnauthorizedException | DataAccessException ex) {
             ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, ex.getMessage());
@@ -98,7 +102,7 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
             NotificationMessage moveMessage = new NotificationMessage(
                     ServerMessage.ServerMessageType.NOTIFICATION,
                     user + " moved from " + move + "!");
-            connections.broadcastToOtherSessionsInGame(gameID, moveMessage, session);
+            connections.broadcastMessage(gameID, moveMessage);
             LoadGameMessage broadcastMessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game);
             connections.broadcastGameUpdate(gameID, broadcastMessage);
             sendCheckMessages(gameData, gameID);
@@ -162,7 +166,7 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
             NotificationMessage moveMessage = new NotificationMessage(
                     ServerMessage.ServerMessageType.NOTIFICATION,
                     user + " left the game!");
-            connections.broadcastToOtherSessionsInGame(gameID, moveMessage, session) ;
+            connections.broadcastMessage(gameID, moveMessage);
             authService.authenticate(authToken);
             ChessGame.TeamColor color = getTeamColor(gameID, user);
             if (color != null) {
