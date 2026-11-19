@@ -259,8 +259,11 @@ public class ChessGame {
     }
 
 
-    private boolean isMoveTurn(ChessMove move) {
+    private boolean isMoveTurn(ChessMove move) throws InvalidMoveException {
         ChessPiece piece = board.getPiece(move.getStartPosition());
+        if (piece == null) {
+            throw new InvalidMoveException("Error: No piece selected!");
+        }
         TeamColor pieceTeam = piece.getTeamColor();
         if (pieceTeam == getTeamTurn()) {
             return true;
