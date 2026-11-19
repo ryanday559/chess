@@ -94,21 +94,30 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
             Integer gameID = moveCommand.getGameID();
             String authToken = moveCommand.getAuthToken();
             authService.authenticate(authToken);
-            ChessMove move = moveCommand.getMove();
-            ChessGame game = gameService.makeMove(gameID, move);
+            GameData gameData = gameService.getGameData(gameID);
             String user = authService.getAuthData(authToken).username();
+            ChessMove move = moveCommand.getMove();
+            checkMoveMatchesUserColor(gameData, user, move);
+            ChessGame game = gameService.makeMove(gameID, move);
             NotificationMessage moveMessage = new NotificationMessage(
                     ServerMessage.ServerMessageType.NOTIFICATION,
                     user + " moved from " + move + "!");
             connections.broadcastMessage(gameID, moveMessage);
             LoadGameMessage broadcastMessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game);
             connections.broadcastGameUpdate(gameID, broadcastMessage);
-            GameData gameData = gameService.getGameData(gameID);
             sendCheckMessages(gameData, gameID);
             sendCheckmateMessages(gameData, gameID);
         } catch(UnauthorizedException | DataAccessException | ArrayIndexOutOfBoundsException | InvalidMoveException ex) {
             ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, ex.getMessage());
             connections.selfBroadcastErrorMessage(errorMessage, session);
+        }
+    }
+
+    private void checkMoveMatchesUserColor(GameData gameData, String user, ChessMove move) throws DataAccessException, InvalidMoveException {
+        chess.ChessGame.TeamColor playerColor = getTeamColor(gameData.gameID(), user);
+        ChessPosition startPosition = move.getStartPosition();
+        if (gameData.game().getBoard().getPiece(startPosition).getTeamColor() != playerColor) {
+            throw new InvalidMoveException("Error: Cannot move opposing player's piece!");
         }
     }
 
