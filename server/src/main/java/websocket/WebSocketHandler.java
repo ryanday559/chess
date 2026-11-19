@@ -80,7 +80,7 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
             connections.add(gameID, session);
             GameData gameData = gameService.getGameData(gameID);
             LoadGameMessage gameBroadcast = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, gameData.game());
-            connections.broadcastJoinMessage(gameData, user);
+            connections.broadcastJoinMessage(gameData, user, session);
             connections.selfBroadcastGameUpdate(gameBroadcast, session);
         } catch(UnauthorizedException | DataAccessException ex) {
             ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, ex.getMessage());
@@ -95,6 +95,9 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
             String authToken = moveCommand.getAuthToken();
             authService.authenticate(authToken);
             GameData gameData = gameService.getGameData(gameID);
+            if (gameData.gameOver()) {
+                throw new InvalidMoveException("Error: Game already over!");
+            }
             String user = authService.getAuthData(authToken).username();
             ChessMove move = moveCommand.getMove();
             checkMoveMatchesUserColor(gameData, user, move);
@@ -102,7 +105,7 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
             NotificationMessage moveMessage = new NotificationMessage(
                     ServerMessage.ServerMessageType.NOTIFICATION,
                     user + " moved from " + move + "!");
-            connections.broadcastMessage(gameID, moveMessage);
+            connections.broadcastMessage(gameID, moveMessage, session);
             LoadGameMessage broadcastMessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game);
             connections.broadcastGameUpdate(gameID, broadcastMessage);
             sendCheckMessages(gameData, gameID);
@@ -128,32 +131,34 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
                     ServerMessage.ServerMessageType.NOTIFICATION,
                     gameData.whiteUsername() + checkBaseMessage
             );
-            connections.broadcastMessage(gameID, checkMessage);
+            connections.broadcastMessageToAll(gameID, checkMessage);
         }
         else if (gameData.game().isInCheck(ChessGame.TeamColor.BLACK)) {
             NotificationMessage checkMessage = new NotificationMessage(
                     ServerMessage.ServerMessageType.NOTIFICATION,
                     gameData.blackUsername() + checkBaseMessage
             );
-            connections.broadcastMessage(gameID, checkMessage);
+            connections.broadcastMessageToAll(gameID, checkMessage);
         }
     }
 
-    private void sendCheckmateMessages(GameData gameData, int gameID) throws IOException {
+    private void sendCheckmateMessages(GameData gameData, int gameID) throws IOException, DataAccessException {
         String checkmateBaseMessage = "CHECKMATE! %s wins!";
         if (gameData.game().isInCheckmate(ChessGame.TeamColor.WHITE)) {
             NotificationMessage checkMessage = new NotificationMessage(
                     ServerMessage.ServerMessageType.NOTIFICATION,
                     String.format(checkmateBaseMessage, gameData.whiteUsername())
             );
-            connections.broadcastMessage(gameID, checkMessage);
+            connections.broadcastMessageToAll(gameID, checkMessage);
+            gameService.setGameOver(gameID);
         }
         else if (gameData.game().isInCheckmate(ChessGame.TeamColor.BLACK)) {
             NotificationMessage checkMessage = new NotificationMessage(
                     ServerMessage.ServerMessageType.NOTIFICATION,
                     String.format(checkmateBaseMessage, gameData.blackUsername())
             );
-            connections.broadcastMessage(gameID, checkMessage);
+            connections.broadcastMessageToAll(gameID, checkMessage);
+            gameService.setGameOver(gameID);
         }
     }
 
@@ -166,7 +171,7 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
             NotificationMessage moveMessage = new NotificationMessage(
                     ServerMessage.ServerMessageType.NOTIFICATION,
                     user + " left the game!");
-            connections.broadcastMessage(gameID, moveMessage);
+            connections.broadcastMessage(gameID, moveMessage, session);
             authService.authenticate(authToken);
             ChessGame.TeamColor color = getTeamColor(gameID, user);
             if (color != null) {

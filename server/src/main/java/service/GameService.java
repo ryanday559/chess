@@ -57,4 +57,8 @@ public class GameService {
     public void removePlayer(int gameID, ChessGame.TeamColor color) throws DataAccessException {
         gameDAO.removePlayerColor(color, gameID);
     }
+
+    public void setGameOver(int gameID) throws DataAccessException {
+        gameDAO.setGameOver(gameID);
+    }
 }

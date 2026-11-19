@@ -98,4 +98,17 @@ public class MemoryGameDataAccess implements GameDataAccess {
         } while (gameMap.containsKey(gameID));
         return gameID;
     }
+
+    public void setGameOver(int gameID) throws DataAccessException {
+        GameData gameData = gameMap.get(gameID);
+        GameData updatedGameData = new GameData(
+                gameData.gameID(),
+                gameData.whiteUsername(),
+                gameData.blackUsername(),
+                gameData.gameName(),
+                gameData.game(),
+                true
+        );
+        gameMap.put(gameID, updatedGameData);
+    }
 }

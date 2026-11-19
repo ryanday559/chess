@@ -12,4 +12,5 @@ public interface GameDataAccess {
     public void clear() throws DataAccessException;
     public void updateGameState(ChessGame game, int gameID) throws DataAccessException;
     public void removePlayerColor(ChessGame.TeamColor playerColor, int gameID) throws DataAccessException;
+    public void setGameOver(int gameID) throws DataAccessException;
 }
