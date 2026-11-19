@@ -2,14 +2,15 @@ package model;
 
 import chess.ChessGame;
 
-public record GameData(int gameID, String whiteUsername, String blackUsername, String gameName, ChessGame game) {
+public record GameData(int gameID, String whiteUsername, String blackUsername, String gameName, ChessGame game, Boolean gameOver) {
     public GameData updateBlackUsername(String username) {
         return new GameData(
             gameID,
             whiteUsername,
             username,
             gameName,
-            game
+            game,
+            gameOver
         );
     }
 
@@ -19,7 +20,8 @@ public record GameData(int gameID, String whiteUsername, String blackUsername, S
                 username,
                 blackUsername,
                 gameName,
-                game
+                game,
+                gameOver
         );
     }
 }

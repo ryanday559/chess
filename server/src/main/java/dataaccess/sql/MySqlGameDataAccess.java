@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import dataaccess.*;
 import model.GameData;
 
+import javax.xml.crypto.Data;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -17,7 +18,7 @@ public class MySqlGameDataAccess implements GameDataAccess {
 
     @Override
     public Collection<GameData> getGames() throws DataAccessException {
-        var games = getFromDatabase("SELECT id, whitePlayer, blackPlayer, gameName, chessGame FROM games");
+        var games = getFromDatabase("SELECT id, whitePlayer, blackPlayer, gameName, chessGame, gameOver FROM games");
         ArrayList<GameData> gamesData = new ArrayList<>();
         for (var game : games) {
             ChessGame chessGame = new Gson().fromJson((String) game.get(4), ChessGame.class);
@@ -26,7 +27,8 @@ public class MySqlGameDataAccess implements GameDataAccess {
                     (String) game.get(1),
                     (String) game.get(2),
                     (String) game.get(3),
-                    chessGame);
+                    chessGame,
+                    (Boolean) game.get(5));
             gamesData.add(gameData);
         }
         return gamesData;
@@ -36,13 +38,13 @@ public class MySqlGameDataAccess implements GameDataAccess {
     public int createGame(String gameName) throws DataAccessException {
         ChessGame game = new ChessGame();
         String jsonGame = new Gson().toJson(game);
-        return addToDatabase("INSERT INTO games (gameName, blackPlayer, WhitePlayer, chessGame) VALUES(?, ?, ?, ?)",
-                gameName, null, null, jsonGame);
+        return addToDatabase("INSERT INTO games (gameName, blackPlayer, WhitePlayer, chessGame, gameOver) VALUES(?, ?, ?, ?, ?)",
+                gameName, null, null, jsonGame, false);
     }
 
     @Override
     public GameData getGame(int gameID) throws DataAccessException {
-        var databaseValues = getFromDatabase("SELECT id, whitePlayer, blackPlayer, gameName, chessGame FROM games WHERE id=?", gameID);
+        var databaseValues = getFromDatabase("SELECT id, whitePlayer, blackPlayer, gameName, chessGame, gameOver FROM games WHERE id=?", gameID);
         if (databaseValues.isEmpty()) {
             throw new DataAccessException(String.format("Error: No game with number %d exists!", gameID));
         }
@@ -53,7 +55,8 @@ public class MySqlGameDataAccess implements GameDataAccess {
                 (String) gameValues.get(1),
                 (String) gameValues.get(2),
                 (String) gameValues.get(3),
-                chessGame);
+                chessGame,
+                (Boolean) gameValues.get(5));
         return gameData;
     }
 
@@ -100,6 +103,11 @@ public class MySqlGameDataAccess implements GameDataAccess {
         addToDatabase("UPDATE games SET chessGame=? WHERE id=?", jsonGame, gameID);
     }
 
+    public void setGameOver(int gameID) throws DataAccessException {
+        addToDatabase("UPDATE games set gameOver=? WHERE id=?", true, gameID);
+    }
+
+
     private final String[] createStatements = {
             """
             CREATE TABLE IF NOT EXISTS games(
@@ -108,6 +116,7 @@ public class MySqlGameDataAccess implements GameDataAccess {
                 `blackPlayer` varchar(256),
                 `whitePlayer` varchar(256),
                 `chessGame` text,
+                `gameOver` bool,
                 PRIMARY KEY (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
             """

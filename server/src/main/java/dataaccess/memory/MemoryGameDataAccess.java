@@ -28,7 +28,7 @@ public class MemoryGameDataAccess implements GameDataAccess {
         }
         int gameID = createGameID();
         ChessGame game = new ChessGame();
-        gameMap.put(gameID, new GameData(gameID, null, null, gameName, game));
+        gameMap.put(gameID, new GameData(gameID, null, null, gameName, game, false));
         return gameID;
     }
 
@@ -84,7 +84,8 @@ public class MemoryGameDataAccess implements GameDataAccess {
                 gameData.whiteUsername(),
                 gameData.blackUsername(),
                 gameData.gameName(),
-                game
+                game,
+                false
         );
         gameMap.put(gameID, updatedGameData);
     }

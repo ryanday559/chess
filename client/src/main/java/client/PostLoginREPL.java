@@ -52,7 +52,7 @@ public class PostLoginREPL {
         if (arguments.length != 1) {
             return makeStringRed("Error: correct format is 'create <GAME NAME>'");
         }
-        GameData gameData = new GameData(-1, null, null, arguments[0], null);
+        GameData gameData = new GameData(-1, null, null, arguments[0], null, false);
         try {
             FACADE.createGame(authToken, gameData);
         } catch (ResponseException e) {
