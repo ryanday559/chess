@@ -82,10 +82,10 @@ public class ConnectionManager {
     }
 
     public void broadcastMessageToAll(Integer gameID, NotificationMessage message) throws IOException {
-        String msg = message.toString();
+        String msgToBroadcast = message.toString();
         for (Session c : connections.get(gameID)) {
             if (c.isOpen()) {
-                c.getRemote().sendString(msg);
+                c.getRemote().sendString(msgToBroadcast);
             }
         }
     }

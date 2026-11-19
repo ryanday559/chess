@@ -34,15 +34,7 @@ public class BoardDisplay {
     private String prepareWhiteFirstSpaceRow(int row) {
         String rowString = SET_BG_COLOR_LIGHT_GREY + " " + String.valueOf(row) + " " + RESET_BG_COLOR;
         for (int i = 1; i < 9; i++) {
-            String pieceString = getPieceWithColor(row, i);
-            if (i % 2 == 1) {
-                String cellColor = getWhiteCellBackgroundColor(row, i);
-                rowString += cellColor + " " + pieceString + " " + RESET_BG_COLOR;
-            }
-            else {
-                String cellColor = getBlackCellBackgroundColor(row, i);
-                rowString += cellColor + " " + pieceString + " " + RESET_BG_COLOR;
-            }
+            rowString += setCellWhiteColumnOdd(row, i);
         }
         return rowString + SET_BG_COLOR_LIGHT_GREY + " " + String.valueOf(row) + " " + RESET_BG_COLOR + "\n";
     }
@@ -50,15 +42,7 @@ public class BoardDisplay {
     private String prepareReverseWhiteFirstSpaceRow(int row) {
         String rowString = SET_BG_COLOR_LIGHT_GREY + " " + String.valueOf(row) + " " + RESET_BG_COLOR;
         for (int i = 8; i >= 1; i--) {
-            String pieceString = getPieceWithColor(row, i);
-            if (i % 2 == 0) {
-                String cellColor = getWhiteCellBackgroundColor(row, i);
-                rowString += cellColor + " " + pieceString + " " + RESET_BG_COLOR;
-            }
-            else {
-                String cellColor = getBlackCellBackgroundColor(row, i);
-                rowString += cellColor + " " + pieceString + " " + RESET_BG_COLOR;
-            }
+            rowString += setCellWhiteColumnEven(row, i);
         }
         return rowString + SET_BG_COLOR_LIGHT_GREY + " " + String.valueOf(row) + " " + RESET_BG_COLOR + "\n";
     }
@@ -96,33 +80,41 @@ public class BoardDisplay {
     private String prepareBlackFirstSpaceRow(int row) {
         String rowString = SET_BG_COLOR_LIGHT_GREY + " " + String.valueOf(row) + " " + RESET_BG_COLOR;
         for (int i = 1; i < 9; i++) {
-            String pieceString = getPieceWithColor(row, i);
-            if (i % 2 == 0) {
-                String cellColor = getWhiteCellBackgroundColor(row, i);
-                rowString += cellColor + " " + pieceString + " " + RESET_BG_COLOR;
-            }
-            else {
-                String cellColor = getBlackCellBackgroundColor(row, i);
-                rowString += cellColor + " " + pieceString + " " + RESET_BG_COLOR;
-            }
+            rowString += setCellWhiteColumnEven(row, i);
         }
         return rowString + SET_BG_COLOR_LIGHT_GREY + " " + String.valueOf(row) + " " + RESET_BG_COLOR + "\n";
+    }
+
+    private String setCellWhiteColumnEven(int row, int col) {
+        String pieceString = getPieceWithColor(row, col);
+        if (col % 2 == 0) {
+            String cellColor = getWhiteCellBackgroundColor(row, col);
+            return cellColor + " " + pieceString + " " + RESET_BG_COLOR;
+        }
+        else {
+            String cellColor = getBlackCellBackgroundColor(row, col);
+            return cellColor + " " + pieceString + " " + RESET_BG_COLOR;
+        }
     }
 
     private String prepareReverseBlackFirstSpaceRow(int row) {
         String rowString = SET_BG_COLOR_LIGHT_GREY + " " + String.valueOf(row) + " " + RESET_BG_COLOR;
         for (int i = 8; i >= 1; i--) {
-            String pieceString = getPieceWithColor(row, i);
-            if (i % 2 == 1) {
-                String cellColor = getWhiteCellBackgroundColor(row, i);
-                rowString += cellColor + " " + pieceString + " " + RESET_BG_COLOR;
-            }
-            else {
-                String cellColor = getBlackCellBackgroundColor(row, i);
-                rowString += cellColor + " " + pieceString + " " + RESET_BG_COLOR;
-            }
+            rowString += setCellWhiteColumnOdd(row, i);
         }
         return rowString + SET_BG_COLOR_LIGHT_GREY + " " + String.valueOf(row) + " " + RESET_BG_COLOR + "\n";
+    }
+
+    private String setCellWhiteColumnOdd(int row, int col) {
+        String pieceString = getPieceWithColor(row, col);
+        if (col % 2 == 1) {
+            String cellColor = getWhiteCellBackgroundColor(row, col);
+            return cellColor + " " + pieceString + " " + RESET_BG_COLOR;
+        }
+        else {
+            String cellColor = getBlackCellBackgroundColor(row, col);
+            return cellColor + " " + pieceString + " " + RESET_BG_COLOR;
+        }
     }
 
     public String getBlackView() {

@@ -35,12 +35,12 @@ public class GameREPL {
             return;
         }
         Scanner scanner = new Scanner(System.in);
-        String result = "";
-        while (!result.equals("leave")) {
+        String userInput = "";
+        while (!userInput.equals("leave")) {
             System.out.print("\n>>> ");
             try {
-                result = evaluate(scanner.nextLine());
-                System.out.print(result);
+                userInput = evaluate(scanner.nextLine());
+                System.out.print(userInput);
             } catch (Throwable e) {
                 System.out.print(e.getMessage());
             }
