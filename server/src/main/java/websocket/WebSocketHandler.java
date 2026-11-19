@@ -59,6 +59,7 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
                 case LEAVE -> leave(ctx.message(), ctx.session);
                 case RESIGN -> resign(ctx.message(), ctx.session);
                 case REQUEST_MOVES -> getValidMoves(ctx.message(), ctx.session);
+                case REDRAW -> redraw(ctx.message(), ctx.session);
             }
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -262,5 +263,20 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
             endPositions.add(move.getEndPosition());
         }
         return endPositions;
+    }
+
+    private void redraw(String message, Session session) throws IOException {
+        try {
+            UserGameCommand command = new Gson().fromJson(message, UserGameCommand.class);
+            Integer gameID = command.getGameID();
+            String authToken = command.getAuthToken();
+            authService.authenticate(authToken);
+            ChessGame game = gameService.getGameData(gameID).game();
+            LoadGameMessage broadcastMessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game);
+            connections.selfBroadcastGameUpdate(broadcastMessage, session);
+        } catch (DataAccessException | UnauthorizedException ex) {
+            ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, ex.getMessage());
+            connections.selfBroadcastErrorMessage(errorMessage, session);
+        }
     }
 }

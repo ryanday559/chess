@@ -85,7 +85,12 @@ public class GameREPL {
     }
 
     private static String redraw() {
-        return "NOT YET IMPLEMENTED";
+        try {
+            webSocketFacade.redraw(authToken, currentGameID);
+        } catch (ResponseException ex) {
+            return makeStringRed(ex.getMessage());
+        }
+        return "";
     }
 
     private static String highlight(String[] arguments) {

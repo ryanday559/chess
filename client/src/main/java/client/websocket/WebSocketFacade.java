@@ -94,4 +94,13 @@ public class WebSocketFacade extends Endpoint {
             throw new ResponseException(ex.getMessage());
         }
     }
+
+    public void redraw(String authToken, Integer gameID) throws ResponseException {
+        try {
+            UserGameCommand action = new UserGameCommand(UserGameCommand.CommandType.REDRAW, authToken, gameID);
+            this.session.getBasicRemote().sendText(new Gson().toJson(action));
+        } catch (IOException ex) {
+            throw new ResponseException("Connection Error: Cannot Redraw Board!");
+        }
+    }
 }
