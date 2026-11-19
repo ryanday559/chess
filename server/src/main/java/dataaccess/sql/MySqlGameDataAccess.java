@@ -46,7 +46,7 @@ public class MySqlGameDataAccess implements GameDataAccess {
     public GameData getGame(int gameID) throws DataAccessException {
         var databaseValues = getFromDatabase("SELECT id, whitePlayer, blackPlayer, gameName, chessGame, gameOver FROM games WHERE id=?", gameID);
         if (databaseValues.isEmpty()) {
-            return null;
+            throw new DataAccessException(String.format("Error: Game number %d does not exist!", gameID));
         }
         var gameValues = databaseValues.getFirst();
         ChessGame chessGame = new Gson().fromJson((String) gameValues.get(4), ChessGame.class);
