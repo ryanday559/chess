@@ -6,6 +6,7 @@ import chess.ChessPosition;
 import chess.InvalidMoveException;
 import com.google.gson.Gson;
 import dataaccess.AuthentificationDataAccess;
+import dataaccess.BadRequestException;
 import dataaccess.DataAccessException;
 import dataaccess.UnauthorizedException;
 import io.javalin.websocket.*;
@@ -286,8 +287,11 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         }
     }
 
-    private Collection<ChessPosition> getValidEndPositionsFromPosition(ChessGame game, ChessPosition startPosition) {
+    private Collection<ChessPosition> getValidEndPositionsFromPosition(ChessGame game, ChessPosition startPosition) throws UnauthorizedException {
         Set<ChessPosition> endPositions = new HashSet<ChessPosition>();
+        if (game.getBoard().getPiece(startPosition) == null) {
+            throw new UnauthorizedException("Error: Selected position does not contain a piece!");
+        }
         Collection<ChessMove> moves = game.validMoves(startPosition);
         for (ChessMove move : moves) {
             endPositions.add(move.getEndPosition());
