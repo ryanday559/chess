@@ -145,7 +145,12 @@ public class GameREPL {
     }
 
     private static String resign() {
-        return "NOT YET IMPLEMENTED";
+        try {
+            webSocketFacade.resign(authToken, currentGameID);
+        } catch (ResponseException ex) {
+            return makeStringRed(ex.getMessage());
+        }
+        return "";
     }
 
     private static String leave() {
@@ -154,6 +159,7 @@ public class GameREPL {
         } catch (ResponseException ex) {
             return makeStringRed(ex.getMessage());
         }
+        System.out.print("Left the game!");
         currentGameID = null;
         activeREPL = "postLogin";
         startREPL();

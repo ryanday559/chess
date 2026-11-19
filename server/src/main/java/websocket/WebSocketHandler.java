@@ -174,16 +174,16 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
             Integer gameID = command.getGameID();
             String authToken = command.getAuthToken();
             String user = authService.getAuthData(authToken).username();
-            NotificationMessage moveMessage = new NotificationMessage(
-                    ServerMessage.ServerMessageType.NOTIFICATION,
-                    user + " left the game!");
-            connections.broadcastMessage(gameID, moveMessage, session);
             authService.authenticate(authToken);
             ChessGame.TeamColor color = getTeamColor(gameID, user);
             if (color != null) {
                 gameService.removePlayer(gameID, color);
             }
             connections.remove(gameID, session);
+            NotificationMessage moveMessage = new NotificationMessage(
+                    ServerMessage.ServerMessageType.NOTIFICATION,
+                    user + " left the game!");
+            connections.broadcastMessage(gameID, moveMessage, session);
         } catch(UnauthorizedException | DataAccessException ex) {
             ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, ex.getMessage());
             connections.selfBroadcastErrorMessage(errorMessage, session);
