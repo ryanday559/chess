@@ -3,7 +3,6 @@ package client;
 import chess.*;
 import client.websocket.WebSocketFacade;
 import exception.ResponseException;
-import service.UserService;
 
 import java.util.Arrays;
 import java.util.Scanner;
