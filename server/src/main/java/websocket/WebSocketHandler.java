@@ -196,6 +196,40 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
     }
 
     private void resign(String message, Session session) throws IOException {
+        try {
+            UserGameCommand command = new Gson().fromJson(message, UserGameCommand.class);
+            Integer gameID = command.getGameID();
+            String authToken = command.getAuthToken();
+            authService.authenticate(authToken);
+            GameData gameData = gameService.getGameData(gameID);
+            if (gameData.gameOver()) {
+                throw new UnauthorizedException("Error: Game already over!");
+            }
+            String user = authService.getAuthData(authToken).username();
+            if (!gameData.whiteUsername().equals(user) && !gameData.blackUsername().equals(user)) {
+                throw new UnauthorizedException("Error: Observers cannot resign!");
+            }
+            gameService.setGameOver(gameID);
+            createResignMessage(user, gameData);
+        } catch (UnauthorizedException | DataAccessException ex) {
+            ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, ex.getMessage());
+            connections.selfBroadcastErrorMessage(errorMessage, session);
+        }
+    }
+
+    private void createResignMessage(String user, GameData gameData) throws DataAccessException, IOException {
+        ChessGame.TeamColor userColor = getTeamColor(gameData.gameID(), user);
+        String otherUser;
+        if (userColor == ChessGame.TeamColor.WHITE) {
+            otherUser = gameData.blackUsername();
+        }
+        else {
+            otherUser = gameData.whiteUsername();
+        }
+        NotificationMessage moveMessage = new NotificationMessage(
+                ServerMessage.ServerMessageType.NOTIFICATION,
+                String.format("%s resigned! %s wins!", user, otherUser));
+        connections.broadcastMessageToAll(gameData.gameID(), moveMessage);
     }
 
     private void getValidMoves(String message, Session session) throws IOException {
