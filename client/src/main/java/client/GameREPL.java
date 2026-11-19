@@ -151,6 +151,17 @@ public class GameREPL {
     }
 
     private static String resign() {
+        String userInput = "";
+        Scanner resignScanner = new Scanner(System.in);
+        while (!userInput.equals("y") && !userInput.equals("n")) {
+            System.out.println("Are you sure you want to resign? Type y or n.");
+            System.out.print(">>> ");
+            userInput = resignScanner.nextLine();
+        }
+        if (userInput.equals("n")) {
+            System.out.println("Canceled resignation.");
+            return "";
+        }
         try {
             webSocketFacade.resign(authToken, currentGameID);
         } catch (ResponseException ex) {

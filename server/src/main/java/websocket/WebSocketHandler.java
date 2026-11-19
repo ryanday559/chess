@@ -128,6 +128,9 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
     private void checkMoveMatchesUserColor(GameData gameData, String user, ChessMove move) throws DataAccessException, InvalidMoveException {
         chess.ChessGame.TeamColor playerColor = getTeamColor(gameData.gameID(), user);
         ChessPosition startPosition = move.getStartPosition();
+        if (!gameData.game().getBoard().isValidMove(move)) {
+            throw new InvalidMoveException("Error: Invalid move!");
+        }
         if (gameData.game().getBoard().getPiece(startPosition) == null) {
             throw new InvalidMoveException("Error: No piece selected");
         }
