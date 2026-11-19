@@ -110,6 +110,10 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
             connections.broadcastMessage(gameID, moveMessage, session);
             LoadGameMessage broadcastMessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game);
             connections.broadcastGameUpdate(gameID, broadcastMessage);
+            boolean isStalemate = sendStalemateMessages(newGameData, gameID);
+            if (isStalemate) {
+                return;
+            }
             boolean isCheckmate = sendCheckmateMessages(newGameData, gameID);
             if (!isCheckmate) {
                 sendCheckMessages(newGameData, gameID);
@@ -123,6 +127,9 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
     private void checkMoveMatchesUserColor(GameData gameData, String user, ChessMove move) throws DataAccessException, InvalidMoveException {
         chess.ChessGame.TeamColor playerColor = getTeamColor(gameData.gameID(), user);
         ChessPosition startPosition = move.getStartPosition();
+        if (gameData.game().getBoard().getPiece(startPosition) == null) {
+            throw new InvalidMoveException("Error: No piece selected");
+        }
         if (gameData.game().getBoard().getPiece(startPosition).getTeamColor() != playerColor) {
             throw new InvalidMoveException("Error: Cannot move opposing player's piece!");
         }
@@ -144,6 +151,29 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
             );
             connections.broadcastMessageToAll(gameID, checkMessage);
         }
+    }
+
+    private boolean sendStalemateMessages(GameData gameData, int gameID) throws IOException, DataAccessException {
+        String stalemateMessage = "Stalemate! Game is a tie!";
+        if (gameData.game().isInStalemate(ChessGame.TeamColor.WHITE)) {
+            NotificationMessage checkMessage = new NotificationMessage(
+                    ServerMessage.ServerMessageType.NOTIFICATION,
+                    stalemateMessage
+            );
+            connections.broadcastMessageToAll(gameID, checkMessage);
+            gameService.setGameOver(gameID);
+            return true;
+        }
+        else if (gameData.game().isInStalemate(ChessGame.TeamColor.BLACK)) {
+            NotificationMessage checkMessage = new NotificationMessage(
+                    ServerMessage.ServerMessageType.NOTIFICATION,
+                    stalemateMessage
+            );
+            connections.broadcastMessageToAll(gameID, checkMessage);
+            gameService.setGameOver(gameID);
+            return true;
+        }
+        return false;
     }
 
     private boolean sendCheckmateMessages(GameData gameData, int gameID) throws IOException, DataAccessException {
