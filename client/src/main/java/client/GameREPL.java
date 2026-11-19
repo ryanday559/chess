@@ -35,12 +35,12 @@ public class GameREPL {
             return;
         }
         Scanner scanner = new Scanner(System.in);
-        String scannerResult = "";
-        while (!scannerResult.equals("leave")) {
+        String result = "";
+        while (!result.equals("leave")) {
             System.out.print("\n>>> ");
             try {
-                scannerResult = evaluate(scanner.nextLine());
-                System.out.print(scannerResult);
+                result = evaluate(scanner.nextLine());
+                System.out.print(result);
             } catch (Throwable e) {
                 System.out.print(e.getMessage());
             }
@@ -114,7 +114,9 @@ public class GameREPL {
 
     private static ChessMove parseChessMoveFromUserMoveInputs(String[] arguments) throws ResponseException {
         if (arguments.length < 2 || arguments.length > 3) {
-            throw new ResponseException("Error: Move must fit the format 'move <starting position> <end position> <promotion if applicable - Q | K | N | R | B >'");
+            throw new ResponseException(
+                    "Error: Move must fit the format 'move <starting position> <end position> <promotion if applicable - Q | K | N | R | B >'"
+            );
         }
         ChessPosition firstPosition = getChessPositionFromPositionString(arguments[0]);
         ChessPosition secondPosition = getChessPositionFromPositionString(arguments[1]);
