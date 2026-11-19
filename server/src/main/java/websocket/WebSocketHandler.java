@@ -102,14 +102,17 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
             ChessMove move = moveCommand.getMove();
             checkMoveMatchesUserColor(gameData, user, move);
             ChessGame game = gameService.makeMove(gameID, move);
+            GameData newGameData = gameService.getGameData(gameID);
             NotificationMessage moveMessage = new NotificationMessage(
                     ServerMessage.ServerMessageType.NOTIFICATION,
                     user + " moved from " + move + "!");
             connections.broadcastMessage(gameID, moveMessage, session);
             LoadGameMessage broadcastMessage = new LoadGameMessage(ServerMessage.ServerMessageType.LOAD_GAME, game);
             connections.broadcastGameUpdate(gameID, broadcastMessage);
-            sendCheckMessages(gameData, gameID);
-            sendCheckmateMessages(gameData, gameID);
+            boolean isCheckmate = sendCheckmateMessages(newGameData, gameID);
+            if (!isCheckmate) {
+                sendCheckMessages(newGameData, gameID);
+            }
         } catch(UnauthorizedException | DataAccessException | ArrayIndexOutOfBoundsException | InvalidMoveException ex) {
             ErrorMessage errorMessage = new ErrorMessage(ServerMessage.ServerMessageType.ERROR, ex.getMessage());
             connections.selfBroadcastErrorMessage(errorMessage, session);
@@ -142,7 +145,7 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
         }
     }
 
-    private void sendCheckmateMessages(GameData gameData, int gameID) throws IOException, DataAccessException {
+    private boolean sendCheckmateMessages(GameData gameData, int gameID) throws IOException, DataAccessException {
         String checkmateBaseMessage = "CHECKMATE! %s wins!";
         if (gameData.game().isInCheckmate(ChessGame.TeamColor.WHITE)) {
             NotificationMessage checkMessage = new NotificationMessage(
@@ -151,6 +154,7 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
             );
             connections.broadcastMessageToAll(gameID, checkMessage);
             gameService.setGameOver(gameID);
+            return true;
         }
         else if (gameData.game().isInCheckmate(ChessGame.TeamColor.BLACK)) {
             NotificationMessage checkMessage = new NotificationMessage(
@@ -159,7 +163,9 @@ public class WebSocketHandler implements WsConnectHandler, WsMessageHandler, WsC
             );
             connections.broadcastMessageToAll(gameID, checkMessage);
             gameService.setGameOver(gameID);
+            return true;
         }
+        return false;
     }
 
     private void leave(String message, Session session) throws IOException {
