@@ -52,7 +52,7 @@ public class ConnectionManager {
         }
     }
 
-    public void broadcastJoinMessage(GameData gameData, String username) throws IOException {
+    public void broadcastJoinMessage(GameData gameData, String username, Session session) throws IOException {
         String whitePlayer = gameData.whiteUsername();
         String blackPlayer = gameData.blackUsername();
         String colorMessage;
@@ -69,7 +69,16 @@ public class ConnectionManager {
                 ServerMessage.ServerMessageType.NOTIFICATION,
                 username + " joined" + colorMessage
             );
-        broadcastMessage(gameData.gameID(), notificationMessage);
+        broadcastToOtherSessionsInGame(gameData.gameID(), notificationMessage, session) ;
+    }
+
+    public void broadcastToOtherSessionsInGame(int gameID, NotificationMessage message, Session session) throws IOException {
+        String msg = message.toString();
+        for (Session c : connections.get(gameID)) {
+            if (c.isOpen() && c != session) {
+                c.getRemote().sendString(msg);
+            }
+        }
     }
 
     public void broadcastMessage(Integer gameID, NotificationMessage message) throws IOException {
